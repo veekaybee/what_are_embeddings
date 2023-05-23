@@ -19,7 +19,7 @@
 %	PACKAGES
 %----------------------------------------------------------------------------------------
 
-\documentclass[draft, 11pt]{diazessay} % Font size (can be 10pt, 11pt or 12pt)
+\documentclass[11pt]{diazessay} % Font size (can be 10pt, 11pt or 12pt)
 
 \usepackage[
     type={CC},
@@ -1111,7 +1111,7 @@ PCA uses the same initial input feature matrix as one-hot encoding, but, whereas
 The resulting model is a projection of all the words, clustered into a single space based on these dimensions. If we were to cluster-map our input data, it might look something like this. 
 
 
-As you can see from the chart, it’s not clear what the “components” mean, but it’s clear that the clusters of words, aka features, are \textbf{semantically similar}, that is they are close to each other in meaning\footnote{There are many definitions of semantic similarity - what does it mean for "king" and "queen" to be close to each other? - but a high-level approach involves using original sources like thesauri and dictionaries to create a structured knowledge base and offer a structured representation of terms and concepts based on nodes and edges, aka how often they appear near each other. \cite{handrasekaran2021evolution}}
+As you can see from the chart, it’s not clear what the “components” mean, but it’s clear that the clusters of words, aka features, are \textbf{semantically similar}, that is they are close to each other in meaning\footnote{There are many definitions of semantic similarity - what does it mean for "king" and "queen" to be close to each other? - but a high-level approach involves using original sources like thesauri and dictionaries to create a structured knowledge base and offer a structured representation of terms and concepts based on nodes and edges, aka how often they appear near each other. \cite{chandrasekaran2021evolution}}
 
 
 To put this in the context of our initial dataset, let's say we again have our Flutter bird data, except now we have it formulated as input data rather than the raw quotes: 
