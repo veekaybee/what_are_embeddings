@@ -1,0 +1,31 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{CBOW}\PYG{p}{(}\PYG{n}{torch}\PYG{o}{.}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}  \PYG{c+c1}{\PYGZsh{} we pass in vocab\PYGZus{}size and embedding\PYGZus{}dim as hyperparams}
+        \PYG{n+nb}{super}\PYG{p}{(}\PYG{n}{CBOW}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{num\PYGZus{}epochs} \PYG{o}{=} \PYG{l+m+mi}{3}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{context\PYGZus{}size} \PYG{o}{=} \PYG{l+m+mi}{2}  \PYG{c+c1}{\PYGZsh{} 2 words to the left, 2 words to the right}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{embedding\PYGZus{}dim} \PYG{o}{=} \PYG{l+m+mi}{100}  \PYG{c+c1}{\PYGZsh{} Size of your embedding vector}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{learning\PYGZus{}rate} \PYG{o}{=} \PYG{l+m+mf}{0.001}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{device}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}cuda\PYGZsq{}} \PYG{k}{if} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{cuda}\PYG{o}{.}\PYG{n}{is\PYGZus{}available}\PYG{p}{()} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}cpu\PYGZsq{}}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab} \PYG{o}{=} \PYG{n}{TextPreProcessor}\PYG{p}{()}\PYG{o}{.}\PYG{n}{build\PYGZus{}vocab}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{word\PYGZus{}to\PYGZus{}ix} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab}\PYG{o}{.}\PYG{n}{get\PYGZus{}stoi}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ix\PYGZus{}to\PYGZus{}word} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab}\PYG{o}{.}\PYG{n}{get\PYGZus{}itos}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab\PYGZus{}list} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab}\PYG{o}{.}\PYG{n}{get\PYGZus{}stoi}\PYG{p}{()}\PYG{o}{.}\PYG{n}{keys}\PYG{p}{())}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab\PYGZus{}size} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab}\PYG{p}{)}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model} \PYG{o}{=} \PYG{k+kc}{None}
+
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model\PYGZus{}path} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}model.ckpt\PYGZsq{}}
+
+        \PYG{c+c1}{\PYGZsh{} out: 1 x embedding\PYGZus{}dim}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{embeddings} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Embedding}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab\PYGZus{}size}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{embedding\PYGZus{}dim}
+        \PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} initialize an Embedding matrix based on our inputs}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{linear1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{embedding\PYGZus{}dim}\PYG{p}{,} \PYG{l+m+mi}{128}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{activation\PYGZus{}function1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} out: 1 x vocab\PYGZus{}size}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{linear2} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{l+m+mi}{128}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{vocab\PYGZus{}size}\PYG{p}{)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{activation\PYGZus{}function2} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{LogSoftmax}\PYG{p}{(}\PYG{n}{dim}\PYG{o}{=\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\end{Verbatim}

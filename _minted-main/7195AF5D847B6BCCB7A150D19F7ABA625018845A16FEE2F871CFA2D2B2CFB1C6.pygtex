@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{pairwise}
+
+\PYG{n}{v1} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{]}
+\PYG{n}{v2} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{,}\PYG{l+m+mi}{7}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} need to be in numpy data format}
+\PYG{n}{pairwise}\PYG{o}{.}\PYG{n}{cosine\PYGZus{}similarity}\PYG{p}{([}\PYG{n}{v1}\PYG{p}{],[}\PYG{n}{v2}\PYG{p}{])}
+\PYG{c+c1}{\PYGZsh{} array([[0.95440741]])}
+
+\end{Verbatim}

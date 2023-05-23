@@ -1,0 +1,34 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{EncoderDecoder}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{   	Defining the encoder/decoder steps}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{encoder}\PYG{p}{,} \PYG{n}{decoder}\PYG{p}{,} \PYG{n}{src\PYGZus{}embed}\PYG{p}{,} \PYG{n}{tgt\PYGZus{}embed}\PYG{p}{,} \PYG{n}{generator}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{(}\PYG{n}{EncoderDecoder}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{encoder} \PYG{o}{=} \PYG{n}{encoder}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{decoder} \PYG{o}{=} \PYG{n}{decoder}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{src\PYGZus{}embed} \PYG{o}{=} \PYG{n}{src\PYGZus{}embed}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{tgt\PYGZus{}embed} \PYG{o}{=} \PYG{n}{tgt\PYGZus{}embed}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{generator} \PYG{o}{=} \PYG{n}{generator}
+
+    \PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{src}\PYG{p}{,} \PYG{n}{tgt}\PYG{p}{,} \PYG{n}{src\PYGZus{}mask}\PYG{p}{,} \PYG{n}{tgt\PYGZus{}mask}\PYG{p}{):}
+        \PYG{l+s+s2}{\PYGZdq{}Take in and process masked src and target sequences.\PYGZdq{}}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{decode}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{encode}\PYG{p}{(}\PYG{n}{src}\PYG{p}{,} \PYG{n}{src\PYGZus{}mask}\PYG{p}{),} \PYG{n}{src\PYGZus{}mask}\PYG{p}{,}
+                            \PYG{n}{tgt}\PYG{p}{,} \PYG{n}{tgt\PYGZus{}mask}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{encode}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{src}\PYG{p}{,} \PYG{n}{src\PYGZus{}mask}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{encoder}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{src\PYGZus{}embed}\PYG{p}{(}\PYG{n}{src}\PYG{p}{),} \PYG{n}{src\PYGZus{}mask}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{decode}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{memory}\PYG{p}{,} \PYG{n}{src\PYGZus{}mask}\PYG{p}{,} \PYG{n}{tgt}\PYG{p}{,} \PYG{n}{tgt\PYGZus{}mask}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{decoder}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{tgt\PYGZus{}embed}\PYG{p}{(}\PYG{n}{tgt}\PYG{p}{),} \PYG{n}{memory}\PYG{p}{,} \PYG{n}{src\PYGZus{}mask}\PYG{p}{,} \PYG{n}{tgt\PYGZus{}mask}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{Generator}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+    \PYG{l+s+s2}{\PYGZdq{}Define standard linear + softmax generation step.\PYGZdq{}}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{d\PYGZus{}model}\PYG{p}{,} \PYG{n}{vocab}\PYG{p}{):}
+        \PYG{n+nb}{super}\PYG{p}{(}\PYG{n}{Generator}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{p}{)}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{proj} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Linear}\PYG{p}{(}\PYG{n}{d\PYGZus{}model}\PYG{p}{,} \PYG{n}{vocab}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{F}\PYG{o}{.}\PYG{n}{log\PYGZus{}softmax}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{proj}\PYG{p}{(}\PYG{n}{x}\PYG{p}{),} \PYG{n}{dim}\PYG{o}{=\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+\end{Verbatim}

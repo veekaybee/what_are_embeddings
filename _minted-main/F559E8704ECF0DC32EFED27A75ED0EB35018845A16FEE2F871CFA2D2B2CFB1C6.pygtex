@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{],}
+       \PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{],}
+       \PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{]])}
+\end{Verbatim}

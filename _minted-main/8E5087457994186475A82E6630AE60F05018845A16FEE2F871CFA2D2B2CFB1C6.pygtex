@@ -1,0 +1,45 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\PYG{k+kn}{import} \PYG{n+nn}{math}
+
+\PYG{n}{documentA} \PYG{o}{=}  \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Hold\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}fast\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}to\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}dreams,\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}for\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}if\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}dreams\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}die,\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}life\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}is\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}a\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}broken\PYGZhy{}winged\PYGZsq{}}\PYG{p}{,}
+\PYG{l+s+s1}{\PYGZsq{}bird\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}that\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}cannot\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}fly.\PYGZsq{}}\PYG{p}{]}
+ \PYG{n}{documentB} \PYG{o}{=}  \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}No\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}bird\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}soars\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}too\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}high\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}if\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}he\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}soars\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}with\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}his\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}own\PYGZsq{}}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}wings.\PYGZsq{}}\PYG{p}{]}
+
+\PYG{k}{def} \PYG{n+nf}{tf}\PYG{p}{(}\PYG{n}{term}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{document}\PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{flota}\PYG{p}{:}
+	\PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Term frequency of a word in a document  over total words in document\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+	
+	\PYG{n}{term\PYGZus{}count} \PYG{o}{=} \PYG{l+m+mi}{0}
+	\PYG{n}{total\PYGZus{}count} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+	\PYG{k}{for} \PYG{n}{word} \PYG{o+ow}{in} \PYG{n}{document}\PYG{p}{:}
+		\PYG{n}{total\PYGZus{}count} \PYG{o}{+=}\PYG{l+m+mi}{1}
+		\PYG{k}{if} \PYG{n}{word} \PYG{o}{==} \PYG{n}{term}\PYG{p}{:}
+			\PYG{n}{term\PYGZus{}count} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+	\PYG{k}{return} \PYG{p}{(}\PYG{n}{term\PYGZus{}count} \PYG{o}{/} \PYG{n}{total\PYGZus{}count}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{idf}\PYG{p}{(}\PYG{n}{term}\PYG{p}{:}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{doc\PYGZus{}list}\PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{float}\PYG{p}{:}
+	\PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Inverse frequency of term across a set of documents\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+	
+	\PYG{n}{total\PYGZus{}docs} \PYG{o}{=} \PYG{l+m+mi}{0}
+	\PYG{n}{total\PYGZus{}docs\PYGZus{}with\PYGZus{}term} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+	\PYG{k}{for} \PYG{n}{doc} \PYG{o+ow}{in} \PYG{n}{doc\PYGZus{}list}\PYG{p}{:}
+		\PYG{n}{total\PYGZus{}docs} \PYG{o}{+=}\PYG{l+m+mi}{1}
+		\PYG{k}{if} \PYG{n}{term} \PYG{o+ow}{in} \PYG{n}{doc}\PYG{p}{:}
+			\PYG{n}{total\PYGZus{}docs\PYGZus{}with\PYGZus{}term} \PYG{o}{+=}\PYG{l+m+mi}{1}
+
+	\PYG{n}{idf} \PYG{o}{=} \PYG{n}{math}\PYG{o}{.}\PYG{n}{log}\PYG{p}{(}\PYG{n}{total\PYGZus{}docs} \PYG{o}{/} \PYG{n}{total\PYGZus{}docs\PYGZus{}with\PYGZus{}term}\PYG{p}{)}
+	\PYG{k}{return} \PYG{n}{idf}
+
+\PYG{k}{def} \PYG{n+nf}{tf\PYGZus{}idf}\PYG{p}{(}\PYG{n}{tf}\PYG{p}{:}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{idf}\PYG{p}{:}\PYG{n+nb}{float}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{float}\PYG{p}{:}
+
+	\PYG{n}{tfidf} \PYG{o}{=} \PYG{n}{tf}\PYG{o}{*}\PYG{n}{idf}
+	\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}tf\PYGZhy{}idf:}\PYG{l+s+si}{\PYGZob{}:0.3f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{tfidf}\PYG{p}{))}
+
+\PYG{n}{tf\PYGZus{}bird} \PYG{o}{=} \PYG{n}{tf}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}bird\PYGZsq{}}\PYG{p}{,} \PYG{n}{documentA}\PYG{p}{)}
+\PYG{n}{idf\PYGZus{}docs} \PYG{o}{=} \PYG{n}{idf}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}bird,[documentA, documentB])}
+
+\PYG{n}{tf\PYGZus{}idf}\PYG{p}{(}\PYG{n}{tf\PYGZus{}bird}\PYG{p}{,} \PYG{n}{idf\PYGZus{}docs}\PYG{p}{)}
+\end{Verbatim}

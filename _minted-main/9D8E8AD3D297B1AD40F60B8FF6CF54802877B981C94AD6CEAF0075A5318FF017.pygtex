@@ -1,0 +1,51 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\PYG{k}{def} \PYG{n+nf}{make\PYGZus{}context\PYGZus{}vector}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{context}\PYG{p}{,} \PYG{n}{word\PYGZus{}to\PYGZus{}ix}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{LongTensor}\PYG{p}{:}
+    \PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{    For each word in the vocab, find sliding windows of [\PYGZhy{}2,1,0,1,2] indexes}
+\PYG{l+s+sd}{    relative to the position of the word}
+\PYG{l+s+sd}{    :param vocab: list of words in the vocab}
+\PYG{l+s+sd}{    :return: torch.LongTensor}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+    \PYG{n}{idxs} \PYG{o}{=} \PYG{p}{[}\PYG{n}{word\PYGZus{}to\PYGZus{}ix}\PYG{p}{[}\PYG{n}{w}\PYG{p}{]} \PYG{k}{for} \PYG{n}{w} \PYG{o+ow}{in} \PYG{n}{context}\PYG{p}{]}
+    \PYG{n}{tensor} \PYG{o}{=} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{LongTensor}\PYG{p}{(}\PYG{n}{idxs}\PYG{p}{)}
+
+
+\PYG{k}{def} \PYG{n+nf}{train\PYGZus{}model}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+
+    \PYG{c+c1}{\PYGZsh{} Loss and optimizer}
+    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model} \PYG{o}{=} \PYG{n}{CBOW}\PYG{p}{()}\PYG{o}{.}\PYG{n}{to}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{device}\PYG{p}{)}
+    \PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{optim}\PYG{o}{.}\PYG{n}{Adam}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model}\PYG{o}{.}\PYG{n}{parameters}\PYG{p}{(),} \PYG{n}{lr}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{learning\PYGZus{}rate}\PYG{p}{)}
+    \PYG{n}{loss\PYGZus{}function} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{NLLLoss}\PYG{p}{()}
+
+    \PYG{n}{logging}\PYG{o}{.}\PYG{n}{warning}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Building training data\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{build\PYGZus{}training\PYGZus{}data}\PYG{p}{()}
+
+    \PYG{n}{logging}\PYG{o}{.}\PYG{n}{warning}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Starting forward pass\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{epoch} \PYG{o+ow}{in} \PYG{n}{tqdm}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{num\PYGZus{}epochs}\PYG{p}{)):}
+        \PYG{c+c1}{\PYGZsh{} we start tracking how accurate our intial words are}
+        \PYG{n}{total\PYGZus{}loss} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+        \PYG{c+c1}{\PYGZsh{} for the x, y in the training data:}
+        \PYG{k}{for} \PYG{n}{context}\PYG{p}{,} \PYG{n}{target} \PYG{o+ow}{in} \PYG{n}{data}\PYG{p}{:}
+            \PYG{n}{context\PYGZus{}vector} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{make\PYGZus{}context\PYGZus{}vector}\PYG{p}{(}\PYG{n}{context}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{word\PYGZus{}to\PYGZus{}ix}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} we look at loss}
+            \PYG{n}{log\PYGZus{}probs} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model}\PYG{p}{(}\PYG{n}{context\PYGZus{}vector}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} we compare the loss from what the actual word is related to the probaility of the words}
+            \PYG{n}{total\PYGZus{}loss} \PYG{o}{+=} \PYG{n}{loss\PYGZus{}function}\PYG{p}{(}
+                \PYG{n}{log\PYGZus{}probs}\PYG{p}{,} \PYG{n}{torch}\PYG{o}{.}\PYG{n}{tensor}\PYG{p}{([}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{word\PYGZus{}to\PYGZus{}ix}\PYG{p}{[}\PYG{n}{target}\PYG{p}{]])}
+            \PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} optimize at the end of each epoch}
+        \PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{zero\PYGZus{}grad}\PYG{p}{()}
+        \PYG{n}{total\PYGZus{}loss}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+        \PYG{n}{optimizer}\PYG{o}{.}\PYG{n}{step}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} Log out some metrics to see if loss decreases}
+        \PYG{n}{logging}\PYG{o}{.}\PYG{n}{warning}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}end of epoch }\PYG{l+s+si}{\PYGZob{}\PYGZcb{}}\PYG{l+s+s2}{ | loss }\PYG{l+s+si}{\PYGZob{}:2.3f\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{epoch}\PYG{p}{,} \PYG{n}{total\PYGZus{}loss}\PYG{p}{))}
+
+    \PYG{n}{torch}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model}\PYG{o}{.}\PYG{n}{state\PYGZus{}dict}\PYG{p}{(),} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model\PYGZus{}path}\PYG{p}{)}
+    \PYG{n}{logging}\PYG{o}{.}\PYG{n}{warning}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s1}{\PYGZsq{}Save model to }\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model\PYGZus{}path}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\end{Verbatim}

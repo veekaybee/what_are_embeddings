@@ -1,0 +1,33 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.feature\PYGZus{}extraction.text} \PYG{k+kn}{import} \PYG{n}{CountVectorizer}
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k}{as} \PYG{n+nn}{pd}
+
+\PYG{n}{vect} \PYG{o}{=} \PYG{n}{CountVectorizer}\PYG{p}{()}
+
+\PYG{n}{responses} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Hold fast to dreams, for if dreams die, }\PYG{l+s+se}{\PYGZbs{}}
+\PYG{l+s+s2}{life is a broken\PYGZhy{}winged bird that cannot fly.\PYGZdq{}}\PYG{p}{,}
+\PYG{l+s+s2}{\PYGZdq{}No bird soars too high if he soars with his own wings.\PYGZdq{}}\PYG{p}{,}
+\PYG{l+s+s2}{\PYGZdq{}A bird does not sing because it has an answer, it sings because it has a song.\PYGZdq{}}\PYG{p}{]}
+
+\PYG{n}{doc} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{responses}\PYG{p}{)))}
+
+\PYG{n}{td} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{vects}\PYG{o}{.}\PYG{n}{todense}\PYG{p}{())}\PYG{o}{.}\PYG{n}{iloc}\PYG{p}{[:}\PYG{l+m+mi}{5}\PYG{p}{]}
+\PYG{n}{td}\PYG{o}{.}\PYG{n}{columns} \PYG{o}{=} \PYG{n}{vect}\PYG{o}{.}\PYG{n}{get\PYGZus{}feature\PYGZus{}names\PYGZus{}out}\PYG{p}{()}
+\PYG{n}{term\PYGZus{}document\PYGZus{}matrix} \PYG{o}{=} \PYG{n}{td}\PYG{o}{.}\PYG{n}{T}
+\PYG{n}{term\PYGZus{}document\PYGZus{}matrix}\PYG{o}{.}\PYG{n}{columns} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}Doc \PYGZsq{}}\PYG{o}{+}\PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{i}\PYG{p}{)} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{)]}
+\PYG{n}{term\PYGZus{}document\PYGZus{}matrix}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}total\PYGZus{}count\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{term\PYGZus{}document\PYGZus{}matrix}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{term\PYGZus{}document\PYGZus{}matrix}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}total\PYGZus{}count\PYGZsq{}}\PYG{p}{])}\PYG{o}{.}\PYG{n}{head}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{))}
+
+         \PYG{n}{Doc} \PYG{l+m+mi}{1}  \PYG{n}{Doc} \PYG{l+m+mi}{2}  \PYG{n}{Doc} \PYG{l+m+mi}{3}
+\PYG{n}{an}           \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{1}
+\PYG{n}{answer}       \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{1}
+\PYG{n}{because}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{2}
+\PYG{n}{bird}         \PYG{l+m+mi}{1}      \PYG{l+m+mi}{1}      \PYG{l+m+mi}{1}
+\PYG{n}{broken}       \PYG{l+m+mi}{1}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}
+\PYG{n}{cannot}       \PYG{l+m+mi}{1}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}
+\PYG{n}{die}          \PYG{l+m+mi}{1}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}
+\PYG{n}{does}         \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{1}
+\PYG{n}{dreams}       \PYG{l+m+mi}{2}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}
+\PYG{n}{fast}         \PYG{l+m+mi}{1}      \PYG{l+m+mi}{0}      \PYG{l+m+mi}{0}
+\end{Verbatim}

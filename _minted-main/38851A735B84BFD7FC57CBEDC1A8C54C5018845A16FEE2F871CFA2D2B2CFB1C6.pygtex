@@ -1,0 +1,46 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.feature\PYGZus{}extraction.text} \PYG{k+kn}{import} \PYG{n}{TfidfVectorizer}
+\PYG{n}{corpus} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Hold fast to dreams, for if dreams die, life is a broken\PYGZhy{}winged bird that cannot fly.\PYGZdq{}}\PYG{p}{,}
+\PYG{l+s+s2}{\PYGZdq{}No bird soars too high if he soars with his own wings.\PYGZdq{}}\PYG{p}{,}
+\PYG{l+s+s2}{\PYGZdq{}A bird does not sing because it has an answer, it sings because it has a song.\PYGZdq{}}\PYG{p}{]}
+
+\PYG{n}{vectorizer} \PYG{o}{=} \PYG{n}{TfidfVectorizer}\PYG{p}{()}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{vectorizer}\PYG{o}{.}\PYG{n}{fit\PYGZus{}transform}\PYG{p}{(}\PYG{n}{corpus}\PYG{p}{)}
+\PYG{n+nb}{dict}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{vectorizer}\PYG{o}{.}\PYG{n}{get\PYGZus{}feature\PYGZus{}name\PYGZus{}outs}\PYG{p}{(),} \PYG{n}{X}\PYG{o}{.}\PYG{n}{toarray}\PYG{p}{()[}\PYG{l+m+mi}{0}\PYG{p}{]))}
+
+\PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}an\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}answer\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}because\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}bird\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.14355303576663192}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}broken\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}cannot\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}die\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}does\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}dreams\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.4861128355381877}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}fast\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}fly\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}for\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}has\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}he\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}high\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}his\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}hold\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}if\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.1848506706027212}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}is\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}it\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}life\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}no\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}not\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}own\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}sing\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}sings\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}soars\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}song\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}that\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}to\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}too\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}winged\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.24305641776909384}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}wings\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{,}
+ \PYG{l+s+s1}{\PYGZsq{}with\PYGZsq{}}\PYG{p}{:} \PYG{l+m+mf}{0.0}\PYG{p}{\PYGZcb{}}
+
+\end{Verbatim}

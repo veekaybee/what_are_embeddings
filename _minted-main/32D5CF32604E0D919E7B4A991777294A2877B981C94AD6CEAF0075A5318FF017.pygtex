@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{In} \PYG{p}{[}\PYG{l+m+mi}{11}\PYG{p}{]:} \PYG{n}{data} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{asarray}\PYG{p}{([[}\PYG{l+s+s2}{\PYGZdq{}Hold fast to dreams, for if dreams die, life is a}
+    \PYG{o}{...}\PYG{p}{:} \PYG{n}{broken}\PYG{o}{\PYGZhy{}}\PYG{n}{winged} \PYG{n}{bird} \PYG{n}{that} \PYG{n}{cannot} \PYG{n}{fly}\PYG{o}{.}\PYG{l+s+s2}{\PYGZdq{},}
+    \PYG{o}{...}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}No bird soars too high if he soars with his own wings.\PYGZdq{}}\PYG{p}{,}
+    \PYG{o}{...}\PYG{p}{:} \PYG{l+s+s2}{\PYGZdq{}A bird does not sing because it has an answer, it sings because it has}
+    \PYG{o}{...}\PYG{p}{:}  \PYG{n}{a} \PYG{n}{song}\PYG{o}{.}\PYG{l+s+s2}{\PYGZdq{}]]}
+    \PYG{o}{...}\PYG{p}{:} \PYG{p}{)}
+
+\PYG{n}{In} \PYG{p}{[}\PYG{l+m+mi}{12}\PYG{p}{]:} \PYG{n}{enc}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}
+\PYG{n}{Out}\PYG{p}{[}\PYG{l+m+mi}{12}\PYG{p}{]:} \PYG{n}{OneHotEncoder}\PYG{p}{(}\PYG{n}{handle\PYGZus{}unknown}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ignore\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{In} \PYG{p}{[}\PYG{l+m+mi}{13}\PYG{p}{]:} \PYG{n}{onehotlabels} \PYG{o}{=} \PYG{n}{enc}\PYG{o}{.}\PYG{n}{transform}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}\PYG{o}{.}\PYG{n}{toarray}\PYG{p}{()}
+
+\PYG{n}{In} \PYG{p}{[}\PYG{l+m+mi}{14}\PYG{p}{]:} \PYG{n}{onehotlabels}
+\PYG{n}{Out}\PYG{p}{[}\PYG{l+m+mi}{14}\PYG{p}{]:} \PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{]])}
+\end{Verbatim}

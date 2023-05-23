@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.preprocessing} \PYG{k+kn}{import} \PYG{n}{OneHotEncoder}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+
+\PYG{n}{enc} \PYG{o}{=} \PYG{n}{OneHotEncoder}\PYG{p}{(}\PYG{n}{handle\PYGZus{}unknown}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ignore\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{asarray}\PYG{p}{([[}\PYG{l+s+s1}{\PYGZsq{}US\PYGZsq{}}\PYG{p}{],} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}UK\PYGZsq{}}\PYG{p}{],} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}NZ\PYGZsq{}}\PYG{p}{]])}
+\PYG{n}{enc}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}
+\PYG{n}{enc}\PYG{o}{.}\PYG{n}{categories\PYGZus{}}
+\PYG{c+c1}{\PYGZsh{} Result: [array([\PYGZsq{}NZ\PYGZsq{}, \PYGZsq{}UK\PYGZsq{}, \PYGZsq{}US\PYGZsq{}], dtype=\PYGZsq{}\PYGZlt{}U2\PYGZsq{})]}
+\PYG{n}{onehotlabels} \PYG{o}{=} \PYG{n}{enc}\PYG{o}{.}\PYG{n}{transform}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}\PYG{o}{.}\PYG{n}{toarray}\PYG{p}{()}
+\PYG{n}{onehotlabels}
+\PYG{c+c1}{\PYGZsh{} Result:}
+\PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{],}
+       \PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{],}
+       \PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{,} \PYG{l+m+mf}{0.}\PYG{p}{]])}
+\end{Verbatim}

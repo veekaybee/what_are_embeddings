@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{torch}
+\PYG{k+kn}{from} \PYG{n+nn}{transformers} \PYG{k+kn}{import} \PYG{n}{BertTokenizer}\PYG{p}{,} \PYG{n}{BertModel}
+
+\PYG{c+c1}{\PYGZsh{} Load pre\PYGZhy{}trained model tokenizer (vocabulary)}
+\PYG{n}{tokenizer} \PYG{o}{=} \PYG{n}{BertTokenizer}\PYG{o}{.}\PYG{n}{from\PYGZus{}pretrained}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}bert\PYGZhy{}base\PYGZhy{}uncased\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{text} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Not to beat around the bush,}
+\PYG{l+s+s2}{but the butterfly bush is the best flower for hummingbirds.\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+\PYG{c+c1}{\PYGZsh{} Lots of BERT code truncated for clarity of this example}
+
+\PYG{n+nb}{print} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Shape is: }\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s1}{ x }\PYG{l+s+si}{\PYGZpc{}d}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{embeddings}\PYG{p}{),} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{embeddings}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])))}
+
+\PYG{p}{[}\PYG{n}{tensor}\PYG{p}{([} \PYG{l+m+mf}{1.0265e\PYGZhy{}01}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{2.2793e+00}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{2.0930e\PYGZhy{}01}\PYG{p}{,}  \PYG{l+m+mf}{2.9740e\PYGZhy{}01}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{1.2967e+00}\PYG{p}{,}
+         \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{4.9467e\PYGZhy{}01}\PYG{p}{,}  \PYG{l+m+mf}{7.1440e\PYGZhy{}01}\PYG{p}{,}  \PYG{l+m+mf}{2.1999e+00}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{4.0721e\PYGZhy{}01}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{4.2629e\PYGZhy{}01}\PYG{p}{,} \PYG{o}{...}
+         \PYG{l+m+mf}{1.5620e+00}\PYG{p}{])}
+
+\end{Verbatim}

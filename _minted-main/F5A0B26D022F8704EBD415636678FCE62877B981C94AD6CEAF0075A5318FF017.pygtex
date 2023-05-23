@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{TextPreProcessor}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} TODO: create utility class for reading relative paths across the project}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}file} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}word2vec\PYGZus{}input.csv\PYGZdq{}}
+
+        \PYG{c+c1}{\PYGZsh{} TODO: split into training and test set}
+
+    \PYG{k}{def} \PYG{n+nf}{generate\PYGZus{}tokens}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+
+        \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{input\PYGZus{}file}\PYG{p}{,} \PYG{n}{encoding}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}utf\PYGZhy{}8\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{line} \PYG{o+ow}{in} \PYG{n}{f}\PYG{p}{:}
+                \PYG{n}{line} \PYG{o}{=} \PYG{n}{line}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZbs{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} Strip extra \PYGZbs{}\PYGZbs{} in input text}
+                \PYG{k}{yield} \PYG{n}{line}\PYG{o}{.}\PYG{n}{strip}\PYG{p}{()}\PYG{o}{.}\PYG{n}{split}\PYG{p}{()}
+
+    \PYG{k}{def} \PYG{n+nf}{build\PYGZus{}vocab}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Vocab}\PYG{p}{:}
+
+        \PYG{n}{vocab} \PYG{o}{=} \PYG{n}{build\PYGZus{}vocab\PYGZus{}from\PYGZus{}iterator}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{generate\PYGZus{}tokens}\PYG{p}{(),} \PYG{n}{specials}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}\PYGZlt{}unk\PYGZgt{}\PYGZdq{}}\PYG{p}{],} \PYG{n}{min\PYGZus{}freq}\PYG{o}{=}\PYG{l+m+mi}{100}
+        \PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{vocab}
+\end{Verbatim}

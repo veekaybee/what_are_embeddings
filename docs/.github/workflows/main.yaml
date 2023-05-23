@@ -1,0 +1,26 @@
+name: Build LaTeX document
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: embeddings.tex
+          latexmk_shell_escape: true
+          continue_on_error: true
+      - name: Upload PDF file
+        uses: actions/upload-artifact@v3
+        with:
+          name: PDF
+          path: embeddings.pdf
+      - name: Commit changes
+        run: |
+          git config --local user.email "vicki.boykis@gmail.com"
+          git config --local user.name "Vicki Boykis"
+          git add embeddings.pdf
+          git commit -m "Generated PDF"
+          git push

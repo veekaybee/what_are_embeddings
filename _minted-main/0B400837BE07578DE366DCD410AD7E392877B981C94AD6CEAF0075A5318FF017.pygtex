@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.preprocessing} \PYG{k+kn}{import} \PYG{n}{OrdinalEncoder}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}
+\PYG{p}{[[}\PYG{l+s+s1}{\PYGZsq{}US\PYGZsq{}}\PYG{p}{]}
+ \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}UK\PYGZsq{}}\PYG{p}{]}
+ \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}NZ\PYGZsq{}}\PYG{p}{]]}
+
+\PYG{c+c1}{\PYGZsh{} our label features}
+\PYG{n}{encoder} \PYG{o}{=} \PYG{n}{OrdinalEncoder}\PYG{p}{()}
+\PYG{n}{result} \PYG{o}{=} \PYG{n}{encoder}\PYG{o}{.}\PYG{n}{fit\PYGZus{}transform}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{result}\PYG{p}{)}
+\PYG{p}{[[}\PYG{l+m+mf}{2.}\PYG{p}{]}
+ \PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{]}
+ \PYG{p}{[}\PYG{l+m+mf}{0.}\PYG{p}{]]}
+\end{Verbatim}

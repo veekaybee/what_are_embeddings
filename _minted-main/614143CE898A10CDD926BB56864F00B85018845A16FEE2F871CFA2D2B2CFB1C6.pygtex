@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{v1} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{]}
+\PYG{n}{v2} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{,}\PYG{l+m+mi}{7}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{]}
+
+\PYG{k}{def} \PYG{n+nf}{dot}\PYG{p}{(}\PYG{n}{v1}\PYG{p}{,} \PYG{n}{v2}\PYG{p}{):}
+	\PYG{n}{dot\PYGZus{}product} \PYG{o}{=} \PYG{n+nb}{sum}\PYG{p}{((}\PYG{n}{a} \PYG{o}{*} \PYG{n}{b}\PYG{p}{)} \PYG{k}{for} \PYG{n}{a}\PYG{p}{,}\PYG{n}{b} \PYG{o+ow}{in} \PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{v1}\PYG{p}{,}\PYG{n}{v2}\PYG{p}{))}
+	\PYG{k}{return} \PYG{n}{dot\PYGZus{}product}
+
+\PYG{k}{def} \PYG{n+nf}{cosine\PYGZus{}similarity}\PYG{p}{(}\PYG{n}{v1}\PYG{p}{,} \PYG{n}{v2}\PYG{p}{):}
+	\PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{	(v1 dot v2)/||v1|| *||v2||)}
+\PYG{l+s+sd}{	\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+	\PYG{n}{products} \PYG{o}{=} \PYG{n}{dot}\PYG{p}{(}\PYG{n}{v1}\PYG{p}{,}\PYG{n}{v2}\PYG{p}{)}
+	\PYG{n}{denominator} \PYG{o}{=} \PYG{p}{(} \PYG{p}{(}\PYG{n}{dot}\PYG{p}{(}\PYG{n}{v1}\PYG{p}{,}\PYG{n}{v1}\PYG{p}{)} \PYG{o}{**}\PYG{l+m+mf}{.5}\PYG{p}{)} \PYG{o}{*} \PYG{p}{(}\PYG{n}{dot}\PYG{p}{(}\PYG{n}{v2}\PYG{p}{,}\PYG{n}{v2}\PYG{p}{)} \PYG{o}{**} \PYG{l+m+mf}{.5}\PYG{p}{)} \PYG{p}{)}
+	\PYG{n}{similarity} \PYG{o}{=} \PYG{n}{products} \PYG{o}{/} \PYG{n}{denominator}
+	\PYG{k}{return} \PYG{n}{similarity}
+
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{cosine\PYGZus{}similarity}\PYG{p}{(}\PYG{n}{v1}\PYG{p}{,} \PYG{n}{v2}\PYG{p}{))}
+\PYG{c+c1}{\PYGZsh{} 0.9544074144996451}
+\end{Verbatim}
