@@ -2107,41 +2107,55 @@ We've now reached the forefront of what's possible with embeddings in this paper
 
 \section{Embeddings in Production}
 
-The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic. 
-
-As we've seen previously in ML systems, we need several key pieces: 
-
-\textbf{Embeddings Generation}
-
-ata is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. 
+Given how complex embeddings can be to generate, store, and use efficiently, should we use them? And more importantly, where do they make sense to use in an industrial search/recommendation environment? Let’s again focus outward from the model and engineering considerations to the organization and let's take a look at where embeddings fit into the larger machine learning ecosystem at Flutter. 
 
 You need a lot of good, specific data to generate good embeddings for your dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but you still need access to heavy computational machinery for all of this. 
 
+The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic. 
+
+In ML systems, we need several key pieces to operationalize any given system: 
+
+\begin{formal}
+\begin{itemize}
+  \item Input data and a way to track it
+  \item A way to generate that data
+  \item A way to retrieve the model
+\end{itemize}
+\end{formal}
+
+\textbf{Embeddings Generation}
+
+We spent a large part of this document understanding different ways to generate and train embeddings models. For any donstream tasks, we need to have our embeddings ready to go. To generate good embeddings for a ny given project, we can start with Word2Vec or BERT as a baseline, but we also want the ability to fine-tune our own.
+
+Data is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. We need a lot of data to generate good embeddings for our dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but ywe still need access to heavy computational machinery for all of this. 
+
 There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own. 
 
-Pretrained embeddings are based on enormous internet corpuses. 
+Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available. The key is storing them and fine-tuninig for your specific tasks. 
 
-There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available. The key is storing them and fine-tuninig for your specific tasks. 
 
-In order to perform computations on embeddings, you will need a system that is amenable to performing lookups on vectors, and to store vectors and their related components. 
 
 \textbf{Embeddings Storage and Retrieval }
 
-In early it
- 
+Once we've trained embeddings, we need a special place to store them so we can use them in downstream modeling tasks and for immediate infrence in tasks like semantic search wehre, for example, the user enters a query. That query is translated into embedings and that model does a nearest neighbors similarity search in the embedding space ot find the word or item most similar to others. 
 
+In order to perform computations on embeddings, we will need a system that is amenable to performing lookups on vectors, and to store vectors and their related components. 
+
+In early iterations, model objects themselves acted as storage layers for embeddings, and in GenSim, you can still get the embeddings from the object. 
+
+Once companies saw a need to formalize this, they started building in-house solutions. 
 
 \subsection{Embeddings Performance}
 
-Given how complex embeddings can be to generate, store, and use efficiently, should you use them? And more importantly, where do they make sense to use in an industrial search/recommendation environment? Let’s again focus outward from the model and engineering considerations to the organization and let's take a look at where embeddings fit into the larger machine learning ecosystem at Flutter. 
+
 
 Initially, they might be used in that model, that predicts flit similar to the ones we wanted to look at.  
 
 What is needed to work with embeddings? 
 
-You need a lot of good, specific data to generate good embeddings for your dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but you still need access to heavy computational machinery for all of this. 
 
-Given how time-intensive embeddings are to cultivate, do you have someone who can work on them, update them, and decide how best to use them. 
+
+
 
 %------------------------------------------------
 
