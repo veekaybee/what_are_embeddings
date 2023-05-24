@@ -1,5 +1,5 @@
 name: Build LaTeX document
-on: [push]
+on: on: [push, pull_request]
 jobs:
   build_latex:
     runs-on: ubuntu-latest
@@ -24,3 +24,4 @@ jobs:
           git add embeddings.pdf
           git commit -m "Generated PDF"
           git push
+        if: github.event_name != 'pull_request'
