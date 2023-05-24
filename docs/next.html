@@ -64,6 +64,29 @@
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
+
+        .blue-div {
+            background-color: #a8cbfe;
+            ;
+        }
+
+        .indigo-text {
+            color: #228c3a !important;
+        }
+
+        .left-align {
+            text-align: left;
+        }
+
+        .custom-padding {
+            padding-top: 20px;
+        }
+
+        img {
+            width: auto;
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 
 
@@ -85,33 +108,6 @@
             </div>
         </header>
 
-
-        <style>
-            .blue-div {
-                background-color: #a8cbfe;
-                ;
-            }
-
-            .indigo-text {
-                color: #228c3a !important;
-            }
-
-            .left-align {
-                text-align: left;
-            }
-
-            .custom-padding {
-                padding-top: 20px;
-            }
-
-            img {
-                width: auto;
-                max-width: 100%;
-                height: auto;
-            }
-        </style>
-
-
         <main class="px-3">
             <div class="container my-5">
                 <div class="p-5 text-center blue-div rounded-3">
@@ -119,58 +115,42 @@
                     <h1 class="text-body-emphasis text-primary indigo-text">What are embeddings?</h1>
 
                     <p class="lead">
-                        <a href="https://github.com/veekaybee/embeddings2/blob/main/embeddings.pdf"
-                            class="btn btn-lg btn-success btn-block">Download PDF </a>
-                        <a href="https://github.com/veekaybee/embeddings2/blob/main/embeddings.pdf"
-                            class="btn btn-lg btn-success btn-block">Get Code </a>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="https://github.com/veekaybee/embeddings2/blob/main/embeddings.pdf" button
+                                type="button" class="btn btn-lg btn-success mb-2 mb-md-0">Get PDF</a>
+                            <a href="https://github.com/veekaybee/embeddings2/blob/main/embeddings.pdf" button
+                                type="button" class="btn btn-lg btn-success">Get Code</a>
+                        </div>
+                    </div>
                     </p>
-                    <ul class="nav nav-tabs gap-2 flex-nowrap">
+
+                    <ul class="nav nav-tabs gap-2">
                         <li class="nav-item">
                             <a class="nav-link" href="index.html">Why?</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about.html">About Vicki</a>
+                            <a class="nav-link active" aria-current="page" href="about.html">Who</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="thanks.html">Thanks</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="next.html">Reading List</a>
+                            <a class="nav-link" href="next.html">Reading List</a>
                         </li>
 
                     </ul>
+
                     <div class="row custom-padding">
-                        <div class="text-left gap-3">
-                            <p class="left-align">If you've read the paper and have more questions than answers or
-                                are dying to read more about embeddings, here's a short reading list to get you started.
-                            <h2> Transformers
-                            </h2>
-                            <ul class="list-group">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                            <h2> Embeddings
-                            </h2>
-                            <ul class="list-group">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                            <h2> Vector Databases
-                            </h2>
-                            <ul class="list-group">
-                                <li class="list-group-item">Cras justo odio</li>
-                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                <li class="list-group-item">Morbi leo risus</li>
-                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                <li class="list-group-item">Vestibulum at eros</li>
-                            </ul>
-                            </p>
+                        <div class="text-left gap-2">
+                            <p class="left-align"> <a href="https://vickiboykis.com/">I am</a> a
+                                machine learning engineer. My interests include <a
+                                    href="https://github.com/igorbrigadir/awesome-twitter-algo">recommender systems</a>,
+                                information retrieval, <a
+                                    href="https://vickiboykis.com/2020/06/09/getting-machine-learning-to-production/">MLOps
+                                    and production</a>, and <a
+                                    href="https://vickiboykis.com/2022/12/05/the-cloudy-layers-of-modern-day-programming/">engineering
+                                    best practices.</a> I'm working on <a
+                                    href="https://github.com/veekaybee/viberary">Viberary, a side project for
+                                    semantic search.</a> I like pizza. My email is <a
+                                    href="mailto:vickiboykis@gmail.com">vickiboykis@gmail.com</a>.
 
                         </div>
 
@@ -179,7 +159,7 @@
             </div>
         </main>
         <hr>
-    </div></a>
+    </div>
 
 
     <footer class="mt-auto text-black-50">
