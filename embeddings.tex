@@ -2004,15 +2004,19 @@ class Generator(nn.Module):
 \end{figure}
 
 
-We then get the predicted word, just like in Word2Vec. 
+We then get the predicted word, just like in Word2Vec.
+
+Other than learning context well, Transfomers are also able to parallelize their training by passing multiple tokens to the encoder at the same time, computing states for all positions in the input text. 
 
 \subsection{BERT}
 
-After the success of "Attention is All you Need", a variety of transformer architectures arose. \textbf{BERT} is a transformer model, also developed at Google, based on the attention mechanism, but its architecture is such that it only includes the encoder piece. 
+After the success of "Attention is All you Need", a variety of transformer architectures arose. \textbf{BERT} 
+stands for Bi-Directional Encoder and was released 2018\citep{devlin2018bert}, based of a paper written by Google as a way to solve common natural language tasks like sentiment analysis, question-answering, and text summarization. BERT is a transformer model, also developed at Google, based on the attention mechanism, but its architecture is such that it only includes the encoder piece. Its most prominent usage is in Google Search, where it's the algorithm powering surfacing relevant search results. In the blog post they released on including BERT in search ranking in 2019, Google specifically discussed adding context to queries as a replacement for keyword-based methods as a reason they did this.\footnote{\href{https://blog.google/products/search/search-language-understanding-bert/}{BERT search announcement}}
 
-The canonical model used these days for the same things that Word2Vec and LSA/LDA were used for previously is BERT. BERT stands for Bi-Directional Encoder and was released 2018\citep{devlin2018bert}, based of a paper written by Google as a way to solve common natural language tasks like sentiment analysis, question-answering, and text summarization. Perhaps its most prominent usage is in Google Search, where it's the algorithm powering surfacing relevant search results. In the blog post they released on including BERT in search ranking in 2019, Google specifically discussed adding context to queries as a replacement for keyword-based methods as a reason they did this.\footnote{\href{https://blog.google/products/search/search-language-understanding-bert/}{BERT search announcement}}
+BERT works as a \textbf{masked language model}. Masking is simply what we did when we implemented Word2Vec by removing words and building our context window. When we created our representations with Word2Vec, we only looked at sliding windows moving forward. The B in Bert is for bi-directional, which means it pays attention to words in both ways through scaled dot-product attention. 
+ BERT has 12 transfomer layers. It starts by using WordPiece, an algorithm that semgents words into subwords, into tokens. To train BERT, the goal is to predict a token given its context. 
 
-BERT is a model based on the mechanism behind transformers, but it takes it a step further. When we created our representations with Word2Vec, we only looked at sliding windows moving forward. The B in Bert is for bi-directional, which means it pays attention to words in both ways through scaled dot-product attention. 
+ The output of BERT is latent representations of words and their context --- a set of embeddings. BERT is, essentially, an enormous parallelized Word2Vec. 
 
 \begin{figure}
 \centering
@@ -2033,13 +2037,13 @@ BERT is a model based on the mechanism behind transformers, but it takes it a st
     shorten <=2pt, 
   }
 }
-    \def\a{3}  % width of trapezium
-    \def\b{.9} % small height of trapezium
-    \def\c{2}  % tall height of trapezium
+\def\a{3}  % width of trapezium
+\def\b{.9} % small height of trapezium
+\def\c{2}  % tall height of trapezium
 
 \begin{tikzpicture}
 [
-  node distance=1mm, % space between drawn parts
+  node distance=5mm, % updated node distance value
   every node/.style={align=center},
 ]
 
@@ -2065,11 +2069,27 @@ BERT is a model based on the mechanism behind transformers, but it takes it a st
 \caption{BERT architecture}
 \end{figure}
 
+Given how flexible BERT is, it can be used for a number of tasks, from translation, to summarization, to autocomplete. Because it doesn't have a decoder component, it can't generate text, which paved the way for GPT models to pick up where BERT left off. 
+
+The other major difference between BERT and Word2Vec is that Word2Vec generates one embedding per token, whereas BERT learns multiple contexts for each given word. 
+
+\subsection{Modern Embedding Architectures in Recommendations and Beyond}
+
+Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits? 
+
+We can now base recommendations on content instad of inferring the context from usage patterns as we do in collaborative filtering. We can start by genrating embeddings for all our flits in the dataset. 
+
+...
+
+In fact this is what companies like Twitter, YouTube, Google, and Etsy have done. Particularly at Twitter, the use of graph embeddings ....
+
+
+Twice, specifically......
 
 
 \subsection{Fine-Tuning Embeddings}
 
-The output of BERT is only the encoder step, where each word has a numerical representation; that is, the output of BERT is a set of pre-trained embeddings. 
+Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems. 
 
 One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset.
 
@@ -2077,39 +2097,38 @@ These transformer-based models are intensively computationally intensive to buil
 
 There are numerous more compact models for BERT, and for many of the larger models in places like the HuggingFace model Hub.\footnote{For a great writeup on the development of open-source machine learning deep learning, see  \href{https://colinraffel.com/blog/a-call-to-build-models-like-we-build-open-source-software.html}{"A Call to Build Models Like We Build Open-Source Software"}}
 
-\subsection{GPT and Beyond}
+\subsection{GPT}
+BERT is now an industry-standard tool an dhas been used in many different ways. Around the same time that BERT was being developed, another transfomer architecture, the GPT series, was being developed at OpenAI. GPT differs from BERT in that it encodes as well as decodes text from ebmeddings and therefore can be used for probabilistic inference. 
 
-We've now reached the forefront of what's possible with embeddings in this paper. With the rise of generative methods and methods based on Reinforcement Learning with Human Feedback like OpenAI's ChatGPT and Microsoft's Sydney , anything written in this paper would already be impossibly out of date by the time it was published. 
+the original GPT model was trained as a 12-layer, 12-headed transfomer with only a decoder piece, on data from Book Corpus. Subsequent versions modified it, and the largest breakthrough was in GPT-4, which was trained with Reinforcement Learning from Human Feedback, a property which allows it to make inference that feels much closer to what a human would write. 
 
-Let's spend a bit of time talking specifically about the GPT series of models and how large language models work in context. 
-
-But these methods do not exist in isolation. They are built on years 
-
+We've now reached the forefront of what's possible with embeddings in this paper. With the rise of generative methods and methods based on Reinforcement Learning with Human Feedback like OpenAI's ChatGPT and Microsoft's Sydney, as well as the nascent open-source Llama, Alpaca, and other models,  anything written in this paper would already be impossibly out of date by the time it was published. 
 
 
 \section{Embeddings in Production}
 
-Now that we have embeddings, generated in a number of different ways, we can use them for downstream machine learning tasks. In the context of recommendations, we can build recommender models that will use these embeddings as features and perform any given number of tasks, from predicting whether a user will like a flit, to offering similar flit to users to recommend. 
+The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic. 
 
-compare words, sentences, and other groups of speech elements programmatically and mathematically through a variety of distance measures, most commonly cosine similarity, to look for similarity between them. 
+As we've seen previously in ML systems, we need several key pieces: 
 
-Word2Vec gives us a handy way to perform recommendations: 
+\textbf{Embeddings Generation}
 
-Let’s say we, in this case, have a matrix of Flutter users and flit that they’ve rated. Just as always, we create a matrix. Except, instead of users and words as our feature generation step, we put users on the X-axis and image names on the Y-axis. It feels like we’re again creating a feature matrix. But in the case of collaborative filtering, we perform matrix factorization. 
+ata is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. 
 
-We again decompose, or factor, the matrix into two lower-dimensional matrices, with the first having rows per user and the second having columns per item. Initially, we want to get the weights of all our features, so we’d get the preference for each flit, and more specifically, each word in each favorited flit, on a per-user basis, to give us a ratings matrix for each type of flit content per user. 
+You need a lot of good, specific data to generate good embeddings for your dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but you still need access to heavy computational machinery for all of this. 
 
-We then use singular value decomposition to find two matrices that minimize the mean squared error, or the chance that the user won’t like the content. 
+There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own. 
 
-In the process of finding these two matrices and minimizing the error, and generating the possible rankings, we generate embeddings, or a given location for an item in the embedding space, as it relates to other items and users. 
+Pretrained embeddings are based on enormous internet corpuses. 
 
-\subsection{Modern Embedding Architectures in Industry}
+There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available. The key is storing them and fine-tuninig for your specific tasks. 
 
-The Transformer paper keys in on something important: 
+In order to perform computations on embeddings, you will need a system that is amenable to performing lookups on vectors, and to store vectors and their related components. 
 
-Now that we've built the example from beginning to end, let's look at some real-world implementations. In particular, here's a paper on contnet embeddings from Twitter. The baseline is a pretrained BERT model 
+\textbf{Embeddings Storage and Retrieval }
 
-There are numerous other places that content embeddings are used: are a plethora of places. Once you understand the context of embeddings, you start seeing them everywhere.  
+In early it
+ 
 
 
 \subsection{Embeddings Performance}
@@ -2122,20 +2141,7 @@ What is needed to work with embeddings?
 
 You need a lot of good, specific data to generate good embeddings for your dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but you still need access to heavy computational machinery for all of this. 
 
-Given how time-intensive embeddings are to cultivate, do you hae someone who can work on them, update them, and decide how best to use them. 
-
-\subsection{Generating and storing Embeddings}
-Data is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. 
-
-You need a lot of good, specific data to generate good embeddings for your dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but you still need access to heavy computational machinery for all of this. 
-
-There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own. 
-
-Pretrained embeddings are based on enormous internet corpuses. 
-
-There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available. The key is storing them and fine-tuninig for your specific tasks. 
-
-In order to perform computations on embeddings, you will need a system that is amenable to performing lookups on vectors, and to store vectors and their related components. 
+Given how time-intensive embeddings are to cultivate, do you have someone who can work on them, update them, and decide how best to use them. 
 
 %------------------------------------------------
 
