@@ -76,24 +76,41 @@
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <header class="mb-auto">
             <div>
-                <nav class="nav nav-masthead justify-content-center float-md-end">
-                    <a class="nav-link fw-bold py-1 px-0 active" aria-current="page"
+                <nav class="nav nav-masthead justify-content-center text-primary float-md-end">
+                    <a class="nav-link fw-bold py-1 px-0 active  text-primary" aria-current="page"
                         href="https://www.vickiboykis.com/what_are_embeddings">Home</a>
-                    <a class="nav-link fw-bold py-1 px-0"
+                    <a class="nav-link fw-bold py-1 px-0  text-primary"
                         href="https://github.com/veekaybee/what-are-embeddings">GitHub</a>
                 </nav>
             </div>
         </header>
 
 
+        <style>
+            .blue-div {
+                background-color: #a8cbfe;
+                ;
+            }
 
+            .indigo-text {
+                color: #228c3a !important;
+            }
+
+            .left-align {
+                text-align: left;
+            }
+
+            .custom-padding {
+                padding-top: 20px;
+            }
+        </style>
 
 
         <main class="px-3">
             <div class="container my-5">
-                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                <div class="p-5 text-center blue-div rounded-3">
                     <p><img src="assets/embeddings.png" width="150" height="150"></p>
-                    <h1 class="text-body-emphasis">What are embeddings?</h1>
+                    <h1 class="text-body-emphasis text-primary indigo-text">What are embeddings?</h1>
                     <p class="lead">
                         A thing from <a href="https://vickiboykis.com/">Vicki Boykis</span></h1>
                     </p>
@@ -103,7 +120,7 @@
                             class="btn btn-lg btn-success">Download PDF </a>
                     </p>
                     <hr>
-                    <ul class="nav nav-tabs">
+                    <ul class="nav nav-tabs gap-2">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="index.html">Why?</a>
                         </li>
@@ -111,25 +128,85 @@
                             <a class="nav-link" href="about.html">About Vicki</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="thanks.html">Acknowledgements</a>
-
+                            <a class="nav-link" href="thanks.html">Thanks</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="next.html">Reading List</a>
+                        </li>
+
                     </ul>
-                    Thanks to Vassily Kandinsky for providing the artwork for this project and inspiration for the vibe
-                    space.
+                    <div class="row custom-padding">
+                        <div class="text-left gap-3">
+                            <p class="left-align">If you go to the <a href="https://museupicassobcn.cat/en"> Museu Pablo
+                                    Picasso in Barcelona</a>, you
+                                will see most of the famous artist's early works. They don't look anything like we think
+                                of
+                                when we think of Picasso. His early works, all painted before he was 16, are carefully
+                                constructed
+                                displays of his technical genius, only as a classical painter. </p>
 
+                            <p class="left-align">Some particularly prominent examples are <a
+                                    href="https://en.wikipedia.org/wiki/Science_and_Charity">"Science
+                                    and Charity"</a> and <a
+                                    href="https://www.wikiart.org/en/pablo-picasso/first-communion-1896">"First
+                                    Communion"</a>,
+                                which
+                                was
+                                completed when the artist was just fifteen. One of my favorites is "Portrait of the
+                                Artist's Mother", from 1896, where you can see both the artist's immense talent
+                                and his ability to harvest all his energy to draw in the classical style. </p>
 
+                            <p><img src="assets/portrait.png" width="300"></p>
 
+                            <p class="left-align">In order to get to the level of technical abstract mastery that we
+                                associate Picasso with
+                                today,
+                                he had to put in a lot of time mastering fundamental methods and techniques that then
+                                allowed
+                                him to fully express himself on his terms. </p>
 
+                            <p class="left-align"> The same is the case with machine learning approaches. There's a
+                                whole universe
+                                of exciting developments at the forefront of large language models, but if we don't
+                                understand
+                                the historical context and fundamentals of how we get from a word to a BERT
+                                representation,
+                                we will not be able to fully riff on them, and the machine will control us, other
+                                than the other way around.</p>
 
+                            <p class="left-align"> A few years ago, after hearing so much about embeddings, but not a
+                                lot about what they
+                                actually were,
+                                I decided to dive into a long project to understand them, and, in the process,
+                                understand the fundamental building
+                                blocks of machine learning and natural language processing, particularly as they
+                                relate to the context of use in recommendation systems today.</p>
+
+                            <p class="left-align"> Something else Picasso left us with was the quote, "When art critics
+                                get together they talk about Form and Structure and Meaning. When artists get together
+                                they talk about where you can buy cheap turpentine," and it's my hope that this document
+                                is not
+                                only an introduction to the theory around embeddings, but also places them fully in
+                                living, breathing
+                                business and engineering context so that engineers, PMs, students, and anyone looking to
+                                learn more about
+                                fundamentals finds it useful.
+
+                                Machine learning, like all good engineering and like good art, is ultimately, also a
+                                beautiful craft made up of patterns, and I hope you find as much joy in exploring them
+                                as I did.
+
+                                Good luck!
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </main>
+        <hr>
     </div></a>
 
-
-
-    </main>
 
     <footer class="mt-auto text-white-50">
         <p>A project from <a href="https://vickiboykis.com/">Vicki Boykis</a>.</p>
