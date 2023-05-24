@@ -1,8 +1,12 @@
 name: Build LaTeX document
 run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
-on: [push, pull-request]
-  branches:
+push:
+    branches:
       - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build_latex:
     runs-on: ubuntu-latest
