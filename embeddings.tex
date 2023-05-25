@@ -22,7 +22,6 @@
 
 \usepackage{graphicx}
 \usepackage{anyfontsize}
-\usepackage{sectsty}
 \usepackage{tikz}
 \usetikzlibrary{calc}
 
@@ -222,13 +221,13 @@ Google's \href{https://arxiv.org/abs/1301.3781}{Word2Vec paper} made an importan
 \end{abstract}
 
 \section*{Colophon }
-This paper is typeset with  \LaTeX. The cover art is Kandinsky's "Circles in a Circle" , 1923. \href{https://vickiboykis.com/2023/02/26/what-should-you-use-chatgpt-for/}{ChatGPT was used} to generate some of the figures. 
+This paper is typeset with \LaTeX. The cover art is Kandinsky's "Circles in a Circle" , 1923. \href{https://vickiboykis.com/2023/02/26/what-should-you-use-chatgpt-for/}{ChatGPT was used} to generate some of the figures. 
 
-\section*{Code}
-The latest version of the paper and code examples are available here. \href{http://vickiboykis.com/what_are_embeddings/}{here}. The code examples is available \href{https://github.com/veekaybee/what_are_embeddings}{here}. PRs welcome.
+\section*{Code, \LaTeX, and Website}
+The latest version of the paper and code examples \href{https://github.com/veekaybee/what_are_embeddings}{are available here.} The   \href{http://vickiboykis.com/what_are_embeddings/}{website for this project is here.}
 
 \section*{About the Author}
-Vicki Boykis is a machine learning engineer. Her website is \href{https://www.vickiboykis.com}{vickiboykis.com} and Viberary, her semantic search side project is \href{https://www.viberary.pizza}{viberary.pizza}. Her email is \href{mailto:vickiboykis@gmail.com}{vickiboykis@gmail.com}.
+Vicki Boykis is a machine learning engineer. Her website is \href{https://www.vickiboykis.com}{vickiboykis.com} and her semantic search side project is \href{https://www.viberary.pizza}{viberary.pizza}. Her email is \href{mailto:vickiboykis@gmail.com}{vickiboykis@gmail.com}.
 
 %----------------------------------------------------------------------------------------
 %	CREATIVE COMMONS LICENSE
@@ -573,7 +572,7 @@ Within the model, in order to evaluate the results, we have to formulate our inp
 
 For traditional \textbf{supervised} modeling approaches using tabular data, we start with our input data, or a \textbf{corpus} as it's generally known in machine learning problems that deal with text in the field known as \textbf{NLP} (natural language processing). We then shape this data to select the pieces of it we'd like to use for modeling. These are our \textbf{features}.  We take two parts of this data as holdout data that we don't feed into the model. The first part, the \textbf{test set}, we use to validate the final model on data it's never seen before. We use the second split, called the \textbf{validation set}, to check our \textbf{hyperparameters} during the model training phase. 
 
-\subsection{The Task of Recommendations}
+\subsubsection{The Task of Recommendations}
 
 When our business question is, "What content should we show our users," we are facing the machine learning task for recommendation. Recommender systems are systems set up for \textbf{information retrieval}, a field closely related to NLP that's focused on finding relevant information in large collections of documents.   The goal of information retrieval is to synthesize large collections of unstructured text documents. Within information retrieval, there are two complementary industry solutions in how we can offer users the correct content in our app: search, and recommendations. 
 
@@ -622,7 +621,7 @@ Databases have become the fundamental tool in building backend infrastructure th
 \end{figure}
 
 
-\subsection{Machine learning features}
+\subsubsection{Machine learning features}
 
 Now that we have a high-level conceptual view of recommender systems, let's build towards the candidate generation model that will offer relevant flits. 
 
@@ -662,7 +661,7 @@ These are all discrete features that we can feed into our model and learn weight
 
 The process of formatting data correctly to feed into a model is called \textbf{feature engineering}. When we have a single continuous, numerical feature, like “the age of the flit in days”, it’s easy to feed these features into a model. But, when we have textual data, we need to turn it into numerical representations so that we can compare these representations.  
 
-\subsection{Numerical Feature Vectors}
+\subsubsection{Numerical Feature Vectors}
 Within the context of working with text in machine learning, we represent features as numerical vectors. We can think of each row in our tabular feature data as a vector. And a collection of features, or our tabular representation, is a matrix. For example, in the vector for our first user, $[012, 2, 'US', 5]$, we can see that this particular value is represented by four features. When we create vectors, we can run algorithmic computations over them and use them as inputs into ML models in the numerical form we require. 
 
 Mathematically, vectors are collections of coordinates that tell us where a given point is in space among many dimensions. For example, in two dimensions, we have a point $[2,5]$, representing \mintinline{python}{bird_posts} and \mintinline{python}{bird_likes}. 
@@ -2090,11 +2089,11 @@ The original GPT model was trained as a 12-layer, 12-headed transfomer with only
 
 We've now reached the forefront of what's possible with embeddings in this paper. With the rise of generative methods and methods based on Reinforcement Learning with Human Feedback like OpenAI's ChatGPT and Microsoft's Sydney, as well as the nascent open-source Llama, Alpaca, and other models,  anything written in this paper would already be impossibly out of date by the time it was published. 
 
-\section{Modern Embedding Architectures in Recommendations and Beyond}
+\section{Embeddings in Production}
 
 With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel through multiple layers. 
 
-Now that we understand what embeddings are, what can we do with them from a machine learning perspective? 
+
 
 \begin{formal}
 \begin{itemize}
@@ -2109,8 +2108,7 @@ There are numerous cases of companies training models for their own domain and t
 \end{itemize}
 \end{formal}
 
-
-Given the flexibility of embeddings as data structures that can be used anywhere, several key uses came from them:
+Now that we understand what embeddings are, what can we do with them from a machine learning perspective? Given the flexibility of embeddings as data structures that can be used anywhere, several key uses came from them:
 
 \begin{formal}
 \begin{itemize}
