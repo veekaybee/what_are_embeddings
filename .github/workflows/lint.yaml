@@ -3,12 +3,12 @@ name: Lint notebooks
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - notebooks/**
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - notebooks/**
 
