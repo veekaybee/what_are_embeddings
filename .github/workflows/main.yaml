@@ -3,10 +3,10 @@ run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build_latex:
