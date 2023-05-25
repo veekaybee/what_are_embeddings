@@ -18,9 +18,13 @@
 %----------------------------------------------------------------------------------------
 %	PACKAGES
 %----------------------------------------------------------------------------------------
-\documentclass[11pt]{diazessay} % Font size (can be 10pt, 11pt or 12pt)
+\documentclass[11pt, table]{diazessay} % Font size (can be 10pt, 11pt or 12pt)
 
 \usepackage{graphicx}
+\usepackage{anyfontsize}
+\usepackage{sectsty}
+\usepackage{tikz}
+\usetikzlibrary{calc}
 
 \usepackage[
     type={CC},
@@ -33,8 +37,7 @@
 %	LINK COLORS
 %----------------------------------------------------------------------------------------
 \usepackage{hyperref}
-\usepackage[table]{xcolor}
-\usepackage[normalem]{ulem}
+\usepackage[]{xcolor}
 \hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
 %% or
 % \hypersetup{colorlinks=false,pdfborder=000}
@@ -93,7 +96,7 @@
  % 3D plots and tikz images
 \usepackage{tikz}
 \usepackage{tikz-3dplot} 
-\usetikzlibrary{shapes,arrows,chains,positioning,shapes.geometric,arrows.meta,backgrounds,fit, shapes}
+\usetikzlibrary{shapes,arrows,chains,positioning,shapes.geometric,arrows.meta,backgrounds,fit, shapes, calc, matrix}
 
 \usepackage{forest} % trees
 \usepackage{float}
@@ -135,7 +138,6 @@
 %----------------------------------------------------------------------------------------
 %	MATRIX
 %----------------------------------------------------------------------------------------
-\usetikzlibrary{matrix,calc,positioning}
 \definecolor{dgreen}{RGB}{72,127,30}
 \makeatletter
 \tikzset{matrix dividers/.style={execute at end matrix={
@@ -164,7 +166,6 @@ coordinate (aux) (aux-|\tikz@fig@name.west)
 }}
 
 \usepackage{tikz-qtree,tikz-qtree-compat}
-\usetikzlibrary{calc}
 
 
 %----------------------------------------------------------------------------------------
@@ -184,17 +185,28 @@ coordinate (aux) (aux-|\tikz@fig@name.west)
 
 \thispagestyle{empty}
 
-\begin{tikzpicture}[remember picture, overlay]
-\node[anchor=north west, inner sep=0pt] at (current page.north west) {\includegraphics[width=\paperwidth, height=.5\paperheight]{figures/kandinsky.jpg}};
-\node[below=1cm of current page.center, align=center, font=\Huge\bfseries] {What are embeddings};
-\node[below=2cm of current page.center, align=center, font=\Large\bfseries] {Vicki Boykis};
-\node[below=3cm of current page.center, align=center, font=\large\bfseries] {\today};
+\thispagestyle{empty}
+
+\begin{tikzpicture}[overlay,remember picture]
+
+% Background color
+\fill[black!2] (current page.south west) rectangle (current page.north east);
+
+% Image
+\node at ($(current page.north)+(0,-1/2.5*\paperheight)$) {\includegraphics[width=0.5\textwidth]{figures/kandinsky.png}};
+
+% Title
+\node[align=center] at ($(current page.center)+(0,-5)$) 
+{
+{\fontsize{40}{44} \selectfont {What are embeddings}} \\[1cm] 
+\rule[0.5ex]{4cm}{0.4pt} \\[1cm]
+{\fontsize{30}{19.2} \selectfont \textcolor{blue}{\bfseries Vicki Boykis}}\\[3pt]
+
+};
+
+
 \end{tikzpicture}
 
-\begin{tikzpicture}[remember picture, overlay]
-
-  \draw[line width=2pt] (current page.south west) ++(0,2cm) -- ++(\paperwidth,0);
-\end{tikzpicture}
 
 \newpage
 
@@ -210,7 +222,7 @@ Google's \href{https://arxiv.org/abs/1301.3781}{Word2Vec paper} made an importan
 \end{abstract}
 
 \section*{Colophon }
-This paper is typeset with  \LaTeX. The cover art is Kandinsky's "Composition, VII" , 1913. \href{https://vickiboykis.com/2023/02/26/what-should-you-use-chatgpt-for/}{ChatGPT was used} to generate some of the figures. 
+This paper is typeset with  \LaTeX. The cover art is Kandinsky's "Circles in a Circle" , 1923. \href{https://vickiboykis.com/2023/02/26/what-should-you-use-chatgpt-for/}{ChatGPT was used} to generate some of the figures. 
 
 \section*{Code}
 The latest version of the paper and code examples are available here. \href{http://vickiboykis.com/what_are_embeddings/}{here}. The code examples is available \href{https://github.com/veekaybee/what_are_embeddings}{here}. PRs welcome.
@@ -1712,7 +1724,7 @@ linenos
         torch.save(self.model.state_dict(), self.model_path)
         logging.warning(f'Save model to {self.model_path}')
 \end{minted}
-\caption{Word2Vec CBOW implementation in Pytorch}
+\caption Word2Vec CBOW implementation in Pytorch, \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{ see full implementation here}
 \end{figure}
 
 Once we've completed our iteration through our training set, we have learned a model that retrieves both the probability of a given word being the correct word, and the entire embedding space for our vocabulary\footnote{For an illustrated walkthrough of Word2Vec, check  \href{https://jalammar.github.io/illustrated-word2vec/}{here}}. 
