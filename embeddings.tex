@@ -2116,27 +2116,58 @@ Now that we understand what embeddings are, what can we do with them from a mach
 \end{itemize}
 \end{formal}
 
-There are numerous cases of companies training models for their own domain and their own use. For example, YouTube was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale and flexibility given the large size of YouTube's user base
+Many companies are working with embeddings today.  For example, \textbf{YouTube }was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale and flexibility given the large size of YouTube's user base and need to filter and personalize recommendations. They explain their recommender system, which contains two neural networks, one for candidate generation and one for ranking. 
 
-The second large use-case is to use embeddings as lookups. 
+\begin{figure}[H]
+\centering{\includegraphics[width=\textwidth]{figures/youtube.png}}
+\caption{YouTube's multi-step neural network model for video recommendations using input embeddings\citep{covington2016deep}}
+\end{figure}
+
+The candidate generator works using collaborative filtering by looking at a user's YouTube activity history as the user piece of the matrix and YouTube videos as the items. The generator filters down the corpus to hundreds of items. 
+
+Initially, this first network used pure matrix factorization with only the user's watches as behavior. However, the updated model included user watch history to learn user embeddings. There are several steps: for each video, researchers engineers learned embeddings given a fixed vocabulary and projected those embeddings into a feed-forward network. A given user's watch history was also an input feature, represented by a sparsee vector, projected into the embedding space via embedding averaging. Other model parameters, including video age, search history also projected into the embedding space, geographic region, and device, are also fed into the model. We notice here that we have both embeddings learned via a model and typical tabular features, all as inputs into another neural network.  
+
+The neural network has five layers, which eventually result in a learned representation of the user. The final ouput layer results in an item vector with an output probability determined via softmax of how long the user will spend watching the video. These items are then fed into a secondary model, a ranker, that assigns a score to each particular video impression with the likelihood the user will click on it. The list of videos is sorted based on this score and served to the user. 
+
+Then, a secondary neural network, a ranker, ranks those items based on predicted time spent watching. 
+
+Finally, at inference time, or the time the model is served, videos and users are matched in a nearest neighbor lookup. 
+
+
+\textbf{Twitter}, our model for Flutter, embeddings were a critical part of tweet recommendation. Twitter generated their own content-based embedding model, Twice (Twitter Content Embeddings)\citep{liu2022twice} for serving as signals in downstream predictive tasks, such as whether users were likely to click on tweets, which were then used as input signals into how to rank Tweets in the Home Timeline, Notifications, and Topics Models. Twice learns embeddings at the sentence level, capturing a dense representation of sentences and caputring similarity. When we read the paper, we notice mentions of Word2Vec, particularly the Skipgram model, which Twice Builds on. 
+
+\begin{figure}[H]
+\centering{\includegraphics[width=\textwidth]{figures/twice.png}}
+\caption{Twitter's TWICe Embeddings, a trained BERT model\citep{liu2022twice}}
+\end{figure}
+
+Twice is a BERT-based model that's trained on a multi-stak loss function, including topic prediction (aka the topic associated with a tweet), engagement prediction (the likelihood a user is to engage with a tweet), and language prediction because we'd like for tweets of the same language to be clustered closer together. The model is trained on 200 million tweets sampled over 90 days, for five epochs.
+
+Twitter also has TWHIN
+
+Finally, Spo
 
 
 
+There are numerous other examples of embeddings in use in production at various companies: at Spotify 
 
-Many companies are working with embeddings today. 
+
+Now that we know all the formal vo
 
 
-Twitter, our model for flitter, of course, 
+
 
 Pinterest
 
+
 Within Flutter, 
-Embeddings at Flutter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can now base recommendations on content instad of inferring the context from usage patterns as we do in collaborative filtering. We can start by genrating embeddings for all our flits in the dataset. 
+Embeddings at Flutter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can do it any number of ways. We can train our own model, we can use deep learning in collaborative filtering in either the inputs or the outputs, we can combine modalities......
 
-We can use embeddings either as inputs into the data model, or as 
+Embeddings are endlessly flexible and endlessly useful, and empower all of our machine learning workflows. 
 
+\subsection{Embeddings as an Engineering Problem}
 
-\subsection{Considerations for Embeddings in Production}
+Embeddings are great, but now we have a problem: we have to operationalize them. 
 
 The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them.
 
