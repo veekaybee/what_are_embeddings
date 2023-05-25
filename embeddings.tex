@@ -2075,16 +2075,15 @@ The other major difference between BERT and Word2Vec is that Word2Vec generates 
 
 \subsection{Modern Embedding Architectures in Recommendations and Beyond}
 
+With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel through multiple layers. 
+
+Companies began using deep learning for all sorts of NLP-related and recommendation-adjacent tasks. For example, YouTube was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale given the large size of YouTube's user base
+
+Now that we've seen a couple examples at 
+
 Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits? 
 
 We can now base recommendations on content instad of inferring the context from usage patterns as we do in collaborative filtering. We can start by genrating embeddings for all our flits in the dataset. 
-
-...
-
-In fact this is what companies like Twitter, YouTube, Google, and Etsy have done. Particularly at Twitter, the use of graph embeddings ....
-
-
-Twice, specifically......
 
 
 \subsection{Fine-Tuning Embeddings}
@@ -2107,7 +2106,11 @@ We've now reached the forefront of what's possible with embeddings in this paper
 
 \section{Embeddings in Production}
 
-Given how complex embeddings can be to generate, store, and use efficiently, should we use them? And more importantly, where do they make sense to use in an industrial search/recommendation environment? Let’s again focus outward from the model and engineering considerations to the organization and let's take a look at where embeddings fit into the larger machine learning ecosystem at Flutter. 
+Many companies are working with embeddings today. 
+
+Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
+
+And more importantly, where do they make sense to use in an industrial search/recommendation environment? Let’s again focus outward from the model and engineering considerations to the organization and let's take a look at where embeddings fit into the larger machine learning ecosystem at Flutter. 
 
 You need a lot of good, specific data to generate good embeddings for your dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but you still need access to heavy computational machinery for all of this. 
 
