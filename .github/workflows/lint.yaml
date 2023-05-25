@@ -1,0 +1,33 @@
+name: Lint notebooks
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - notebooks/**
+  pull_request:
+    branches:
+      - master
+    paths:
+      - notebooks/**
+
+jobs:
+  lint:
+    name: Lint code base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Convert notebooks to Python
+        run: find . -type f -name "*.ipynb" -exec jupyter nbconvert --to python --TemplateExporter.exclude_markdown=true {} \;
+
+      - name: Convert notebooks to Markdown
+        run: find . -type f -name "*.ipynb" -exec jupyter nbconvert --to markdown --TemplateExporter.exclude_code_cell=true {} \;
+
+      - name: Run Super-Linter
+        uses: github/super-linter@v3
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
