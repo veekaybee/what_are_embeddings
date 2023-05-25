@@ -843,7 +843,7 @@ print(result)
  [1.]
  [0.]]
 \end{minted}
-\caption{Ordinal Encoding in Scikit-Learn}
+\caption{Ordinal Encoding in Scikit-Learn \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_22_ordinal.ipynb}{source}}
 \end{figure}
 
 \subsubsection{Dummy and one-hot encoding}
@@ -880,7 +880,7 @@ array([[0., 0., 1.],
        [0., 1., 0.],
        [1., 0., 0.]])
 \end{minted}
-\caption{One-Hot Encoding in Scikit-learn}
+\caption{One-Hot Encoding in Scikit-learn\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_22_ordinal.ipynb}{source}}
 \end{figure}
 
 
@@ -1024,7 +1024,8 @@ fast          1       0       0
 
 
 \end{minted}
-\caption{Creating a matrix frequency table to create a user-item matrix}
+\caption{Creating a matrix frequency table to create a user-item matrix
+\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_22_ordinal.ipynb}{source}}
 \end{figure}
 
 
@@ -1122,7 +1123,7 @@ idf_docs = idf('dreams',[documentA, documentB])
 tf_idf(tf, idf_docs)
 # TF-IDF:0.0866
 \end{minted}
-\caption{Implementation of TF-IDF}
+\caption{Implementation of TF-IDF\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb}{source}}
 \end{figure}
 
 Once we understand the underlying fundamental concept, we can use the scikit-learn implementation which does the same thing, and also surfaces the TF-IDF of each word in the vocabulary.
@@ -1154,7 +1155,7 @@ dict(zip(vectorizer.get_feature_names_out(), X.toarray()[0]))
  'fast': 0.24244659260336252,
 ......}
 \end{minted}
-\caption{Implementation of TF-IDF in scikit-learn}
+\caption{Implementation of TF-IDF in scikit-learn\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb}{source}}
 \end{figure}
 
 Given that inverse document frequency is a measure of whether the word is common or not across the documents, we can see that "dreams" is important because they are rare across the documents and therefore interesting to us more so than "bird." You'll also note the results are different than in our from-scratch implementation and this is dependent on how scikit processes the vocabulary.  
@@ -1240,7 +1241,8 @@ def cosine_similarity(v1, v2):
 print(cosine_similarity(v1, v2))
 # 0.9544074144996451
 \end{minted}
-\caption{Implementation of cosine similarity from scratch}
+\caption{Implementation of cosine similarity from scratch
+\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_29_cos_sim_from_scratch.ipynb}{source}}
 \end{figure}
 
 Or, once again, in scikit-learn, as a pairwise metric: 
@@ -1264,7 +1266,7 @@ pairwise.cosine_similarity([v1],[v2])
 # array([[0.95440741]])
 
 \end{minted}
-\caption{Implementation of cosine similarity in scikit}
+\caption{Implementation of cosine similarity in scikit\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_29_cos_sim_from_scratch.ipynb}{source}}
 \end{figure}
 
 
@@ -1601,18 +1603,14 @@ class TextPreProcessor:
         )
         return vocab
 \end{minted}
-\caption{Processing our input vocabulary and building a Vocabulary object from our dataset in PyTorch}
+\caption{Processing our input vocabulary and building a Vocabulary object from our dataset in PyTorch\href{https://github.com/veekaybee/viberary/tree/main/word2vec}{source}}
 \end{figure}
 
 Now that we have an input vocabulary object we can work with, the next step is to create one-hot encodings of each word to a numerical position, and each position back to a word, so that we can easily reference both our words and vectors. The goal is to be able to map back and forth when we do lookups and retrieval. 
 
-
 This occurs in the Embedding layer. Within the Embedding layer of PyTorch, we initialize an Embedding matrix based on the size we specify and size of our vocabulary, and the layer indexes the vocabulary into a dictionary for retrieval. The embedding layer is a lookup table\footnote{\href{https://pytorch.org/docs/stable/generated/torch.nn.Embedding.html}{Embedding Layer PyTorch documents}} that matches a word to the corresponding word vector on an index by index basis. Initially, we create our one-hot encoded word to term dictionary. Then, we create a mapping of each word to a dictionary entry and a dictionary entry to each word. This is known as \textbf{bijection}. In this way, the Embedding layer is like a one-hot encoded matrix, and allows us to perform lookups. The lookup values in this layer layer is initialized to a set of random weights, which we next pass onto the linear layer. 
 
 Embeddings resemble hash maps and also have their performance characteristics ($O(1)$ retrieval and insert time), which is why they can scale easily when other approaches cannot. In the embedding layer, Word2Vec where each value in the vector represents the word on a specific dimension, and more importantly, unlike many of the other methods, the value of each vector is in direct relationship to the other words in the input dataset.
-
-
-
 
 \begin{figure}[H]
 \begin{minted}
@@ -1651,9 +1649,8 @@ class CBOW(torch.nn.Module):
         self.linear2 = nn.Linear(128, self.vocab_size)
         self.activation_function2 = nn.LogSoftmax(dim=-1)
 \end{minted}
-\caption{Word2Vec CBOW implementation in Pytorch}
+\caption{Word2Vec CBOW implementation in Pytorch\href{https://github.com/veekaybee/viberary/tree/main/word2vec}{source}}
 \end{figure}
-
 
 
 Once we have our lookup values, we can process all our words in their relationship to each other. For CBOW, we take a single word and we pick a sliding window, in our case, two words before, and two words after, and try to infer what the actual word is. This is called the \textbf{context vector}, and in other cases, we'll see that it's called attention. For example, if we have the phrase "No bird [blank] too high", we're trying to predict that the answer is "soars" with a given softmax probability, aka ranked against other words. Once we have the context vector, we look at the loss --- the difference between the true word and the predicted word as ranked by probability --- and then we continue. 
@@ -1662,7 +1659,7 @@ The way we train this model is through context windows. For each given word in t
 
 We activate the linear layer with a \textbf{ReLu} activation function, which decides whether a given weight is important or not. In this case, ReLu squashes all the negative values we initialize our embeddings layer with down to zero since we can't have inverse word relationships, and we perform linear regression by learning the weights of the model of the relationship of the words. Then, for each batch we examine the \textbf{loss}, the difference between the real word and the word that we predicted should be there given the context window -  and we minimize it. 
 
-At the end of each epoch, or pass through the model, we pass the weights, or \textbf{backpropogate} them, back to the linear layer,and then again, update the embeddings table with the distance between the words, based on the probability. The probability is calculated through a \textbf{softmax} function, which converts a vector of real numbers into a probability distribution - that is, each number in the fector, i.e. the value of the probability of each words, is in the interval between 0 and 1 and all of the word numbers add up to one.   The distance, as backpropogated to the embeddings table, should converge or shrink depending on the model understanding how close specific words are. 
+At the end of each epoch, or pass through the model, we pass the weights, or \textbf{backpropogate} them, back to the linear layer,and then again, update the weights of each word, based on the probability. The probability is calculated through a \textbf{softmax} function, which converts a vector of real numbers into a probability distribution - that is, each number in the fector, i.e. the value of the probability of each words, is in the interval between 0 and 1 and all of the word numbers add up to one.   The distance, as backpropogated to the embeddings table, should converge or shrink depending on the model understanding how close specific words are. 
 
 \begin{figure}[H]
 \begin{minted}
@@ -2091,9 +2088,9 @@ We've now reached the forefront of what's possible with embeddings in this paper
 
 \section{Embeddings in Production}
 
-With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel through multiple layers. 
+With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel. 
 
-
+We've gone through the process of training embeddings end to end here, but ther eare several modalities for working with embeddings. We can: 
 
 \begin{formal}
 \begin{itemize}
@@ -2103,10 +2100,12 @@ With the advent of Transformer models, and more importantly, BERT, generating re
 Now, we have the ability to treat the output of the layers of BERT as input into a next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and update the final weights. 
 
 
-There are numerous cases of companies training models for their own domain and their own use. For example, 
+
 
 \end{itemize}
 \end{formal}
+
+\subsection{Embeddings in the Real World}
 
 Now that we understand what embeddings are, what can we do with them from a machine learning perspective? Given the flexibility of embeddings as data structures that can be used anywhere, several key uses came from them:
 
@@ -2117,22 +2116,22 @@ Now that we understand what embeddings are, what can we do with them from a mach
 \end{itemize}
 \end{formal}
 
+There are numerous cases of companies training models for their own domain and their own use. For example, YouTube was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale and flexibility given the large size of YouTube's user base
+
+The second large use-case is to use embeddings as lookups. 
 
 
 
-\subsection{Embeddings in the Real World}
 
 Many companies are working with embeddings today. 
 
-
-Given these endless variations and use-cases, companies began using deep learning for all sorts of NLP-related and recommendation-adjacent tasks. For example, YouTube was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale given the large size of YouTube's user base
 
 Twitter, our model for flitter, of course, 
 
 Pinterest
 
-
-Embeddings at Flitter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can now base recommendations on content instad of inferring the context from usage patterns as we do in collaborative filtering. We can start by genrating embeddings for all our flits in the dataset. 
+Within Flutter, 
+Embeddings at Flutter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can now base recommendations on content instad of inferring the context from usage patterns as we do in collaborative filtering. We can start by genrating embeddings for all our flits in the dataset. 
 
 We can use embeddings either as inputs into the data model, or as 
 
@@ -2172,7 +2171,7 @@ There are pre-trained embeddings available from models, embeddings available fro
 
 Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available. The key is storing them and fine-tuninig for your specific tasks. 
 
-
+\textbf{Data Quality, Reporducibility, Data Drift, Interpretability}
 
 \subsubsection{Storage and Retrieval }
 
