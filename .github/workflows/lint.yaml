@@ -27,7 +27,7 @@ jobs:
         run: find . -type f -name "*.ipynb" -exec jupyter nbconvert --to markdown --TemplateExporter.exclude_code_cell=true {} \;
 
       - name: Run Super-Linter
-        uses: github/super-linter@v3
+        uses: github/super-linter@v4
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
