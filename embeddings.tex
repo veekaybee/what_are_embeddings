@@ -2071,62 +2071,88 @@ BERT works as a \textbf{masked language model}. Masking is simply what we did wh
 
 Given how flexible BERT is, it can be used for a number of tasks, from translation, to summarization, to autocomplete. Because it doesn't have a decoder component, it can't generate text, which paved the way for GPT models to pick up where BERT left off. 
 
-The other major difference between BERT and Word2Vec is that Word2Vec generates one embedding per token, whereas BERT learns multiple contexts for each given word. 
-
-\subsection{Modern Embedding Architectures in Recommendations and Beyond}
-
-With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel through multiple layers. 
-
-Companies began using deep learning for all sorts of NLP-related and recommendation-adjacent tasks. For example, YouTube was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale given the large size of YouTube's user base
-
-Now that we've seen a couple examples at 
-
-Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits? 
-
-We can now base recommendations on content instad of inferring the context from usage patterns as we do in collaborative filtering. We can start by genrating embeddings for all our flits in the dataset. 
-
-
-\subsection{Fine-Tuning Embeddings}
-
-Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems. 
-
-One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset.
-
-These transformer-based models are intensively computationally intensive to build from scratch given that they use what is essentially the entire internet as training data. 
-
-There are numerous more compact models for BERT, and for many of the larger models in places like the HuggingFace model Hub.\footnote{For a great writeup on the development of open-source machine learning deep learning, see  \href{https://colinraffel.com/blog/a-call-to-build-models-like-we-build-open-source-software.html}{"A Call to Build Models Like We Build Open-Source Software"}}
-
 \subsection{GPT}
-BERT is now an industry-standard tool an dhas been used in many different ways. Around the same time that BERT was being developed, another transfomer architecture, the GPT series, was being developed at OpenAI. GPT differs from BERT in that it encodes as well as decodes text from ebmeddings and therefore can be used for probabilistic inference. 
+BERT is now an industry-standard tool. Around the same time that BERT was being developed, another transfomer architecture, the GPT series, was being developed at OpenAI. GPT differs from BERT in that it encodes as well as decodes text from ebmeddings and therefore can be used for probabilistic inference. 
 
-the original GPT model was trained as a 12-layer, 12-headed transfomer with only a decoder piece, on data from Book Corpus. Subsequent versions modified it, and the largest breakthrough was in GPT-4, which was trained with Reinforcement Learning from Human Feedback, a property which allows it to make inference that feels much closer to what a human would write. 
+The original GPT model was trained as a 12-layer, 12-headed transfomer with only a decoder piece, on data from Book Corpus. Subsequent versions modified it, and the largest breakthrough was in GPT-4, which was trained with Reinforcement Learning from Human Feedback, a property which allows it to make inference that feels much closer to what a human would write. 
 
 We've now reached the forefront of what's possible with embeddings in this paper. With the rise of generative methods and methods based on Reinforcement Learning with Human Feedback like OpenAI's ChatGPT and Microsoft's Sydney, as well as the nascent open-source Llama, Alpaca, and other models,  anything written in this paper would already be impossibly out of date by the time it was published. 
 
+\section{Modern Embedding Architectures in Recommendations and Beyond}
 
-\section{Embeddings in Production}
+With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel through multiple layers. 
+
+Now that we understand what embeddings are, what can we do with them from a machine learning perspective? 
+
+\begin{formal}
+\begin{itemize}
+\item \textbf{Train our own embeddings model} - We can train BERT or some variation of BERT from scratch. BERT uses an enormous amount of training data, so this is not really advantageous to us, unless we want to better understand the internals and have access to a lot of GPUS
+\item \textbf{Use pretrained embeddings and fine-tune } - There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. There are numerous more compact models for BERT, such as Distilbert and RoBERTA and for many of the larger models in places like the HuggingFace model Hub.\footnote{For a great writeup on the development of open-source machine learning deep learning, see  \href{https://colinraffel.com/blog/a-call-to-build-models-like-we-build-open-source-software.html}{"A Call to Build Models Like We Build Open-Source Software"}}.  There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. 
+
+Now, we have the ability to treat the output of the layers of BERT as input into a next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and update the final weights. 
+
+
+There are numerous cases of companies training models for their own domain and their own use. For example, 
+
+\end{itemize}
+\end{formal}
+
+
+Given the flexibility of embeddings as data structures that can be used anywhere, several key uses came from them:
+
+\begin{formal}
+\begin{itemize}
+\item\textbf{Feeding them into another model} - For example, we can now perform collaborative filtering using both user and item embeddings that were learned from our data instead of coding the users and items themselves. 
+\item\textbf{Using them directly} - We can use item embeddings directly for content filtering - finding items that are closest to other items, a task recommendation shares with search. There are a host of algorithms used to perform vector similarity lookups. 
+\end{itemize}
+\end{formal}
+
+
+
+
+\subsection{Embeddings in the Real World}
 
 Many companies are working with embeddings today. 
+
+
+Given these endless variations and use-cases, companies began using deep learning for all sorts of NLP-related and recommendation-adjacent tasks. For example, YouTube was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale given the large size of YouTube's user base
+
+Twitter, our model for flitter, of course, 
+
+Pinterest
+
+
+Embeddings at Flitter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can now base recommendations on content instad of inferring the context from usage patterns as we do in collaborative filtering. We can start by genrating embeddings for all our flits in the dataset. 
+
+We can use embeddings either as inputs into the data model, or as 
+
+
+\subsection{Considerations for Embeddings in Production}
+
+The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them.
+
+Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic. 
+
+In ML systems, we need several key pieces to operationalize any given system. There are many more, but these will become important to understand for embeddings. 
+
+\begin{formal}
+\begin{itemize}
+  \item Data storage
+  \item Model updating
+  \item Artifact versioning
+\end{itemize}
+\end{formal}
+
+
+
+When considering how to use embed
 
 Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
 
 And more importantly, where do they make sense to use in an industrial search/recommendation environment? Let’s again focus outward from the model and engineering considerations to the organization and let's take a look at where embeddings fit into the larger machine learning ecosystem at Flutter. 
 
-You need a lot of good, specific data to generate good embeddings for your dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but you still need access to heavy computational machinery for all of this. 
 
-The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic. 
-
-In ML systems, we need several key pieces to operationalize any given system: 
-
-\begin{formal}
-\begin{itemize}
-  \item Input data and a way to track it
-  \item A way to generate that data
-  \item A way to retrieve the model
-\end{itemize}
-\end{formal}
-
-\textbf{Embeddings Generation}
+\subsubsection{Embeddings Generation}
 
 We spent a large part of this document understanding different ways to generate and train embeddings models. For any donstream tasks, we need to have our embeddings ready to go. To generate good embeddings for a ny given project, we can start with Word2Vec or BERT as a baseline, but we also want the ability to fine-tune our own.
 
@@ -2138,7 +2164,7 @@ Pretrained embeddings are based on enormous internet corpuses.  There are a lot 
 
 
 
-\textbf{Embeddings Storage and Retrieval }
+\subsubsection{Storage and Retrieval }
 
 Once we've trained embeddings, we need a special place to store them so we can use them in downstream modeling tasks and for immediate infrence in tasks like semantic search wehre, for example, the user enters a query. That query is translated into embedings and that model does a nearest neighbors similarity search in the embedding space ot find the word or item most similar to others. 
 
@@ -2148,15 +2174,12 @@ In early iterations, model objects themselves acted as storage layers for embedd
 
 Once companies saw a need to formalize this, they started building in-house solutions. 
 
-\subsection{Embeddings Performance}
+\subsubsection{Versioning}
 
 
+\subsubsection{embeddings Caveats}
 
-Initially, they might be used in that model, that predicts flit similar to the ones we wanted to look at.  
-
-What is needed to work with embeddings? 
-
-
+We've already seen how flexible embeddings are 
 
 
 
@@ -2164,13 +2187,13 @@ What is needed to work with embeddings?
 
 \section{Conclusion}
 
-We have now walked through an end-to-end example of what it means to generate and need embeddings, from the historical context, to the early approaches, to modern-day approaches using Transformers and BERT. 
+We have now walked through an end-to-end example of what it means to generate and need embeddings, from the early approaches, to modern-day approaches using Transformers and BERT. 
 
-As we can see, it's not easy to understand, maintain, and generate them, the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
+Embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
 
 However, given how quickly over the past decade, embeddings have become a foundational data structure in the vocabulary of machine learning architectures. Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio. 
 
-Good luck navigating embeddings,  see you in the latent space. 
+Good luck navigating embeddings.  See you in the latent space. 
 
 
 \newpage
