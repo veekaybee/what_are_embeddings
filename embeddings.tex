@@ -1947,7 +1947,7 @@ As input into the model, we read in our corpus of flits. Each of the encoder's i
 
 Then, those embeddings are propagated to two layers: the self-attention model, and the feed-forward network. We pass the tokens through multi-headed self-attention using scaled dot product attention, which is specific to the transformer architecture. 
 
-Attention is a mechanism used in a feed-forward network model that creates an embedding matrix on several different dimensions\citep{amatriain2023transformer}. Attention is just a term for how much we want to weigh the embeddings in a given matrix relative to the other embeddings. It allows us to capture the context in a sentence or group of sentences. The first layer is self-attention. This layer tells the other layers what to pay attention to in the context of the sentence.  For each embedding, we generate a weighted average of each embedding based on attention weights. In transformer models, this is done using scaled dot-product attention. 
+Attention is a mechanism used in a feed-forward network model that creates an embedding matrix on several different dimensions. Attention is just a term for how much we want to weigh the embeddings in a given matrix relative to the other embeddings. It allows us to capture the context in a sentence or group of sentences. The first layer is self-attention. This layer tells the other layers what to pay attention to in the context of the sentence.  For each embedding, we generate a weighted average of each embedding based on attention weights. In transformer models, this is done using scaled dot-product attention. 
 
 The scaled dot-product attention is  the product of three matrices: key, query, and value. These are initially all the same values that are outputs of previous layers - in the first pass through the model, they are initially all the same, initialized at random and adjusted at each step by gradient descent. For each embedding, we generate a weighted average value based on these learned attention weights. We calculate the dot product between query and key, and finally normalize the weights via softmax. 
 
@@ -2141,33 +2141,31 @@ Finally, at inference time, or the time the model is served, videos and users ar
 \caption{Twitter's TWICe Embeddings, a trained BERT model\citep{liu2022twice}}
 \end{figure}
 
-Twice is a BERT-based model that's trained on a multi-stak loss function, including topic prediction (aka the topic associated with a tweet), engagement prediction (the likelihood a user is to engage with a tweet), and language prediction because we'd like for tweets of the same language to be clustered closer together. The model is trained on 200 million tweets sampled over 90 days, for five epochs.
+Twice is a BERT-based model that's trained on a multi-task loss function, including topic prediction (aka the topic associated with a tweet), engagement prediction (the likelihood a user is to engage with a tweet), and language prediction because we'd like for tweets of the same language to be clustered closer together. The model is trained on 200 million tweets sampled over 90 days, for five epochs.
 
-Twitter also has TWHIN
+Twitter also developed TWHIN\citep{el2022twhin}, Twitter Heterogeneous Information Network, a set of graph-based embeddings\citep{el2022twhin}, developed for tasks like personalized ads rankings, account follow-recommendation, offensive content detection, and search ranking, based on nodes (such as users and advertisers) and edges that represent entity interactions. 
 
-Finally, Spo
+\begin{figure}[H]
+\centering{\includegraphics[width=\textwidth]{figures/twhin.png}}
+\caption{Twitter's TWICe Embeddings, a trained BERT model\citep{el2022twhin}}
+\end{figure}
+
+Joint embedding is performed to by using data from user-tweet engagement, advertising, and following data, to create multi-model embeddings. TWHin is used for candidate generation. The candidate generator starts by finding users to follow or tweets to engage with with an HNSW or Faiss to retrieve candidate items. TWHin embeddings are then used to query candidate items and increase diversity in the candidate pool. 
+
+In fact, there are so many uses for embeddings at twitter that the ML platform engineeering team created a centralized repository and store for them
+
+Finally, at Pinterest, researchers and engineers developed PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. 
+
+There are multiple examples of deep learning embeddings being used in recommendation tasks: a wide and deep model for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real},  
 
 
-
-There are numerous other examples of embeddings in use in production at various companies: at Spotify 
-
-
-Now that we know all the formal vo
-
-
-
-
-Pinterest
-
-
-Within Flutter, 
 Embeddings at Flutter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can do it any number of ways. We can train our own model, we can use deep learning in collaborative filtering in either the inputs or the outputs, we can combine modalities......
 
 Embeddings are endlessly flexible and endlessly useful, and empower all of our machine learning workflows. 
 
 \subsection{Embeddings as an Engineering Problem}
 
-Embeddings are great, but now we have a problem: we have to operationalize them. 
+Now that we have a single model that generates embeddings  but now we have a problem: we have to operationalize them. Embeddings are great representations of our know 
 
 The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them.
 
@@ -2183,7 +2181,7 @@ In ML systems, we need several key pieces to operationalize any given system. Th
 \end{itemize}
 \end{formal}
 
-
+KNowled
 
 When considering how to use embed
 
@@ -2200,7 +2198,7 @@ Data is the most critical part of the model, and Transformers removed the necess
 
 There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own. 
 
-Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available. The key is storing them and fine-tuninig for your specific tasks. 
+Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  You can also query OpenAI embeddings, although doing so comes at a fairly steep cost. 
 
 \textbf{Data Quality, Reporducibility, Data Drift, Interpretability}
 
@@ -2212,14 +2210,24 @@ In order to perform computations on embeddings, we will need a system that is am
 
 In early iterations, model objects themselves acted as storage layers for embeddings, and in GenSim, you can still get the embeddings from the object. 
 
-Once companies saw a need to formalize this, they started building in-house solutions. 
+
 
 \subsubsection{Versioning}
+
+Embeddings, like any machine learning pipeline, need to be refreshed. How do you compare your model if you have two representations of your data? 
+
+
 
 
 \subsubsection{embeddings Caveats}
 
-We've already seen how flexible embeddings are 
+There are s
+
+
+Low latency - many embeddings are used in production settings. For retrieval, many of them need to be low-latency applications. TWHin addresses this by using quantization and pinn ffective lossy data-based compres-
+sion scheme via product quantization
+
+Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space? 
 
 
 
