@@ -122,7 +122,7 @@
 %	TOC
 %----------------------------------------------------------------------------------------
 \setcounter{secnumdepth}{4} % how many sectioning levels to assign numbers to
-\setcounter{tocdepth}{4}    % how many sectioning levels to show in ToC
+\setcounter{tocdepth}{3}    % how many sectioning levels to show in ToC
 
 %----------------------------------------------------------------------------------------
 %	CAPTIONS
@@ -216,7 +216,7 @@ coordinate (aux) (aux-|\tikz@fig@name.west)
 \begin{abstract}
 Over the past decade, embeddings --- numerical representations of non-tabular machine learning features used as input to deep learning models --- have become a foundational data structure in industrial machine learning systems. TF-IDF, PCA, and one-hot encoding have always been key tools in machine learning systems as ways to compress and make sense of large amounts of textual data.  However, traditional approaches were limited in the amount of context they could reason about with increasing amounts of data. As the volume, velocity, and variety of data captured by modern applications has exploded, creating approaches specifically tailored to scale has become increasingly important. 
 
-Google's \href{https://arxiv.org/abs/1301.3781}{Word2Vec paper} made an important step in moving from simple statistical representations to semantic meaning of words. The subsequent rise of the \href{https://arxiv.org/abs/1706.03762}{Transformer architecture} and transfer learning, as well as the latest surge in generative methods has enabled the growth of embeddings as a foundational machine learning data structure. This survey paper aims provide both a deep dive into what embeddings are, their history, and usage patterns in industry. 
+Google's \href{https://arxiv.org/abs/1301.3781}{Word2Vec paper} made an important step in moving from simple statistical representations to semantic meaning of words. The subsequent rise of the \href{https://arxiv.org/abs/1706.03762}{Transformer architecture} and transfer learning, as well as the latest surge in generative methods has enabled the growth of embeddings as a foundational machine learning data structure. This survey paper aims provide a deep dive into what embeddings are, their history, and usage patterns in industry. 
 
 \end{abstract}
 
@@ -661,7 +661,7 @@ These are all discrete features that we can feed into our model and learn weight
 
 The process of formatting data correctly to feed into a model is called \textbf{feature engineering}. When we have a single continuous, numerical feature, like “the age of the flit in days”, it’s easy to feed these features into a model. But, when we have textual data, we need to turn it into numerical representations so that we can compare these representations.  
 
-\subsubsection{Numerical Feature Vectors}
+\subsection{Numerical Feature Vectors}
 Within the context of working with text in machine learning, we represent features as numerical vectors. We can think of each row in our tabular feature data as a vector. And a collection of features, or our tabular representation, is a matrix. For example, in the vector for our first user, $[012, 2, 'US', 5]$, we can see that this particular value is represented by four features. When we create vectors, we can run algorithmic computations over them and use them as inputs into ML models in the numerical form we require. 
 
 Mathematically, vectors are collections of coordinates that tell us where a given point is in space among many dimensions. For example, in two dimensions, we have a point $[2,5]$, representing \mintinline{python}{bird_posts} and \mintinline{python}{bird_likes}. 
@@ -789,7 +789,7 @@ The earlier approaches were \textbf{count-based} methods, meaning simply that th
 In looking at these approaches programmatically, we'll start by using \mintinline{python}{scikit-learn}, the de-facto standard machine learning library for smaller datasets, with some implementations in native Python for clarity in understanding functionality that scikit wraps.  As we move into deep learning, we'll move to PyTorch, a deep learning library that's quickly becoming industry-standard for deep learning implementation. There are many different ways of implementing the concepts we discuss here, these are just the easiest to illustrate using Python's ML lingua franca libraries. 
 \end{formal}
 
-\subsection{Count-based Methods}
+\subsection{Early Approaches}
 
 The first approaches to generating textual features were count-based, relying on simple counts or high-level understanding of statistical properties: they were \textbf{descriptive} instead of models, which are \textbf{predictive} and attempt to guess a value based on a set of input values.  The first methods were \textbf{encoding methods}, a precursor to embedding. Encoding is often a process that still happens as the first stage of data preparation for input into more complex modeling approaches.  There are several methods to create text features using a process known as encoding so that we can map the geography feature into the vector space:
 
@@ -801,7 +801,8 @@ The first approaches to generating textual features were count-based, relying on
 
 In all these cases, what we are doing is creating a new feature that maps to the text feature column but is a numerical representation of the variable so that we can project it into that space for modelling purposes. We'll motivate these examples with simple code snippets from sklearn, the most common library for demonstrating basic ML concepts. We'll start with \textbf{count-based} approaches.
 
-\subsubsection{Ordinal encoding}
+\subsection{encoding}
+\textbf{Ordinal encoding}
 Let's again come back to our dataset of flits. We encode our data using sequential numbers. For example, "1" is "finch", "2" is "bluejay" and so on. We can use this method only if the variables have a natural ordered relationship to each other. For example, in this case "bluejay" is not "more" than "finch" and so would be incorrectly represented in our model. The case is the same, if, in our flit data, we encode "US" as 1 and "UK" as 2.
 
 \begin{table}[H]
@@ -846,7 +847,7 @@ print(result)
 \caption{Ordinal Encoding in Scikit-Learn \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_22_ordinal.ipynb}{source}}
 \end{figure}
 
-\subsubsection{Dummy and one-hot encoding}
+\textbf{Dummy and one-hot encoding}
 
 Dummy encoding is, given $n$ categories (i.e. "US", "UK", and "NZ") encodes the variables into $n-1$ categories, creating a new feature for each category. So, if we have three variables, dummy encoding encodes into two dummy variables.  Why would we do this? If the categories are mutually exclusive, as they usually are in point-in-time geolocation estimates, if someone is in the US, we know for sure they're not in the UK and not in NZ, so it reduces computational overhead.
 
@@ -1338,8 +1339,7 @@ The resulting model is a projection of all the words, clustered into a single sp
 The difference between the two is often confusing (people admitted as much in the 80s \cite{gerbrands1981relationships} when these approaches were still being worked out), and for the purposes of this survey paper we'll say that PCA can often be implemented using SVD \footnote{\href{https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html}{This is how it's implemented in the scikit-learn package}}.  
 
 
-\subsection{Model-based methods}
-\subsubsection{LSA and LDA}
+\subsection{LDA and LSA}
 
 Because PCA performs computation on on each combination of features to generate the two dimensions, it becomes immensely computationally expensive as the number of features grows.  Many of these early methods, like PCA, worked well for smaller datasets, like many of the ones used in traditional NLP research,  but as datasets continued to grow, they didn’t quite scale.  
 
@@ -2097,43 +2097,76 @@ We've gone through the process of training embeddings end to end here, but ther 
 \item \textbf{Train our own embeddings model} - We can train BERT or some variation of BERT from scratch. BERT uses an enormous amount of training data, so this is not really advantageous to us, unless we want to better understand the internals and have access to a lot of GPUS
 \item \textbf{Use pretrained embeddings and fine-tune } - There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. There are numerous more compact models for BERT, such as Distilbert and RoBERTA and for many of the larger models in places like the HuggingFace model Hub.\footnote{For a great writeup on the development of open-source machine learning deep learning, see  \href{https://colinraffel.com/blog/a-call-to-build-models-like-we-build-open-source-software.html}{"A Call to Build Models Like We Build Open-Source Software"}}.  There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. 
 
-Now, we have the ability to treat the output of the layers of BERT as input into a next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and update the final weights. 
-
-
-
+Now, we have the ability to treat the output of the layers of BERT as input into a next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and then we update the final weights. 
 
 \end{itemize}
 \end{formal}
 
-\subsection{Embeddings in the Real World}
+\subsection{Three Real Use-Cases}
 
 Now that we understand what embeddings are, what can we do with them from a machine learning perspective? Given the flexibility of embeddings as data structures that can be used anywhere, several key uses came from them:
 
 \begin{formal}
 \begin{itemize}
 \item\textbf{Feeding them into another model} - For example, we can now perform collaborative filtering using both user and item embeddings that were learned from our data instead of coding the users and items themselves. 
-\item\textbf{Using them directly} - We can use item embeddings directly for content filtering - finding items that are closest to other items, a task recommendation shares with search. There are a host of algorithms used to perform vector similarity lookups. 
+\item\textbf{Using them directly} - We can use item embeddings directly for content filtering - finding items that are closest to other items, a task recommendation shares with search. There are a host of algorithms used to perform vector similarity lookups by projecting items into our embedding space and performing similarity search using algorithms like Faiss and HNSWLib.   
 \end{itemize}
 \end{formal}
 
-Many companies are working with embeddings today.  For example, \textbf{YouTube }was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. In it, they discuss the need for scale and flexibility given the large size of YouTube's user base and need to filter and personalize recommendations. They explain their recommender system, which contains two neural networks, one for candidate generation and one for ranking. 
+Many companies are working with embeddings in all of these contexts today, across areas that span search, recommendation, and everything in between. There are multiple examples of deep learning embeddings being used in recommendation tasks: a wide and deep model for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real}, using embeddings for content understanding at Netflix\citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock\citep{gomez2022learning}, and many more cases.  Let's take a look at some specific ones. 
+
+\subsubsection{YouTube}
+
+
+\textbf{YouTube }was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. YouTube has over 800 million pieces of content (videos) and 2.6 billion active users as of 2023 that they'd like to recommend those videos to. The application needs to be able to recommend content to users, quickly, while also generalizing the recommender model to new content, and to blend new content with already-established videos. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency. 
+
+In this paper, we create a two-stage recommender (in Tensorflow) consisting of a \textbf{candidate generator} that reduces the candidate set to hundreds of items and a second model, similar in size and shape, that's a \textbf{ranker} that ranks these videos by probability that the user will click on them.
 
 \begin{figure}[H]
-\centering{\includegraphics[width=\textwidth]{figures/youtube.png}}
+\centering{\includegraphics[width=\textwidth]{figures/youtube_recsys.png}}
+\caption{YouTube's recommender system, including a candidate generator and ranker\citep{covington2016deep}}
+\end{figure}
+
+With respect to the machine learning task, we'd like to ultimately predict, given a user, $U$ and \textbf{context} $C$\footnote{In recommender systems, we often think of \href{https://md.ekstrandom.net/blog/2015/10/search-and-recsys}{four relevant items} to formulate our recommender problem - user, item, context, and query. The context is usually the environment, for example the time of day or the geography of the user at inference time } the probability that the user is likely to click on a video at a specific time, based on two sets of embeddings: the user and the context, and a set of video items. 
+
+\begin{figure}[H]
+\centering{\includegraphics[width=\textwidth]{figures/youtube_model.png}}
 \caption{YouTube's multi-step neural network model for video recommendations using input embeddings\citep{covington2016deep}}
 \end{figure}
 
-The candidate generator works using collaborative filtering by looking at a user's YouTube activity history as the user piece of the matrix and YouTube videos as the items. The generator filters down the corpus to hundreds of items. 
+\textbf{Implicit} feedback - whether a video was viewed or not - is used as the response variable. The response variable is then a user plus time and whether the video was viewed or not. Each class response, of which there are approximately a million, is given a probability as output.  The model has several hundreds of features, both tabular and embeddings-based. For the embeddings-based features, we include elements like: 
 
-Initially, this first network used pure matrix factorization with only the user's watches as behavior. However, the updated model included user watch history to learn user embeddings. There are several steps: for each video, researchers engineers learned embeddings given a fixed vocabulary and projected those embeddings into a feed-forward network. A given user's watch history was also an input feature, represented by a sparsee vector, projected into the embedding space via embedding averaging. Other model parameters, including video age, search history also projected into the embedding space, geographic region, and device, are also fed into the model. We notice here that we have both embeddings learned via a model and typical tabular features, all as inputs into another neural network.  
+\begin{itemize}
+  \item User watch history - represented by a vector of sparse video ID elements mapped into a dense vector representation
+  \item User's search history - Maps search term to video clicked from the search term, also in a sparse vector mapped into the same space as the user watch history 
+  \item User's geography, age, and gender - mapped as tabular features
+  \item The number of previous impressions a video had, normalized per user over time
+\end{itemize}
 
-The neural network has five layers, which eventually result in a learned representation of the user. The final ouput layer results in an item vector with an output probability determined via softmax of how long the user will spend watching the video. These items are then fed into a secondary model, a ranker, that assigns a score to each particular video impression with the likelihood the user will click on it. The list of videos is sorted based on this score and served to the user. 
+The size of the vector embedding vocabulary is 1 million classes. The model, made of up of several hidden \textbf{ReLu} layers, is trained until convergence. Convergence in this case means using the data of videos that were clicked on and comparing them with the hypothetical videos that would be clicked on as the output of this model. 
 
-Then, a secondary neural network, a ranker, ranks those items based on predicted time spent watching. 
+Similar work, although with a different architecture, was done in the App Store in Google Play in a popular paper, "Wide and Deep Learning for Recommender Systems"\citep{cheng2016wide}." This one crosses the search and recommendation space because it relies on returning correct ranked and personalized app recommendations as the result of a search query.  The input is clickstream  data collected when a user visits the app store. 
 
-Finally, at inference time, or the time the model is served, videos and users are matched in a nearest neighbor lookup. 
+The recommendations problem is formulated here as two jointly-trained models (aka the weights are shared and cross-propogated between the two models between epochs:
+
+\begin{itemize}
+  \item User watch history - represented by a vector of sparse video ID elements mapped into a dense vector representation
+  \item User's search history - Maps search term to video clicked from the search term, also in a sparse vector mapped into the same space as the user watch history 
+  \item User's geography, age, and gender - mapped as tabular features
+  \item The number of previous impressions a video had, normalized per user over time
+\end{itemize}
 
 
+In it, they discuss the need for scale and flexibility given the large size of YouTube's user base and need to filter and personalize recommendations. They explain their recommender system, which contains two neural networks, one for candidate generation and one for ranking. 
+
+
+
+\subsubsection{Pinterest}
+
+Pinterest is a perfect example of another app that Researchers and engineers there developed PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. Pinnersage is based on PinSage, the system for embedding those pins. 
+
+
+\subsubsection{Twitter}
 \textbf{Twitter}, our model for Flutter, embeddings were a critical part of tweet recommendation. Twitter generated their own content-based embedding model, Twice (Twitter Content Embeddings)\citep{liu2022twice} for serving as signals in downstream predictive tasks, such as whether users were likely to click on tweets, which were then used as input signals into how to rank Tweets in the Home Timeline, Notifications, and Topics Models. Twice learns embeddings at the sentence level, capturing a dense representation of sentences and caputring similarity. When we read the paper, we notice mentions of Word2Vec, particularly the Skipgram model, which Twice Builds on. 
 
 \begin{figure}[H]
@@ -2152,53 +2185,66 @@ Twitter also developed TWHIN\citep{el2022twhin}, Twitter Heterogeneous Informati
 
 Joint embedding is performed to by using data from user-tweet engagement, advertising, and following data, to create multi-model embeddings. TWHin is used for candidate generation. The candidate generator starts by finding users to follow or tweets to engage with with an HNSW or Faiss to retrieve candidate items. TWHin embeddings are then used to query candidate items and increase diversity in the candidate pool. 
 
-In fact, there are so many uses for embeddings at twitter that the ML platform engineeering team created a centralized repository and store for them
-
-Finally, at Pinterest, researchers and engineers developed PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. 
-
-There are multiple examples of deep learning embeddings being used in recommendation tasks: a wide and deep model for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real},  
+In fact, there are so many uses for embeddings at twitter that the ML platform engineering team created a centralized repository and store for them
 
 
+\subsubsection{Flutter}
 Embeddings at Flutter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can do it any number of ways. We can train our own model, we can use deep learning in collaborative filtering in either the inputs or the outputs, we can combine modalities......
 
 Embeddings are endlessly flexible and endlessly useful, and empower all of our machine learning workflows. 
 
 \subsection{Embeddings as an Engineering Problem}
 
-Now that we have a single model that generates embeddings  but now we have a problem: we have to operationalize them. Embeddings are great representations of our know 
 
-The explosion of embeddings-based models and the ease with which embeddings can be used as flexible inputs at many steps of the modeling and inference process has resulted in the need to operationalize them.
+As is event in the real world examples, recommender systems generating and retrieving embeddings provide a great deal of accuracy in characterizing large, heterogenous datasets. As we can see from several system diagrams, including this one from PinnerSage and the Wide and Deep Model, these systems have many moving components:
 
-Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic. 
+\begin{figure}[H]
+\begin{minipage}[c]{0.5\linewidth}
+\centering{\includegraphics[width=\textwidth]{figures/pinnersage.png}}
+\caption{PinnerSage model architecture\citep{pal2020pinnersage}}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.5\linewidth}
+\centering{\includegraphics[width=\textwidth]{figures/wideanddeep.png}}
+\caption{Wide and Deep model architecture\citep{cheng2016wide}}
+\end{minipage}%
+\end{figure}
 
-In ML systems, we need several key pieces to operationalize any given system. There are many more, but these will become important to understand for embeddings. 
+
+
+But this comes at an enormous cost of adding engineering complexity into our existing application. In addition to our running business logic code, we are now keeping track of: 
 
 \begin{formal}
 \begin{itemize}
-  \item Data storage
-  \item Model updating
-  \item Artifact versioning
+  \item Processing log stream and other input data
+  \item - generating embeddings - We spent a large part of this document understanding different ways to generate and train embeddings models. For any donstream tasks, we need to have our embeddings ready to go. To generate good embeddings for a ny given project, we can start with Word2Vec or BERT as a baseline, but we also want the ability to fine-tune our own. Data is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. We need a lot of data to generate good embeddings for our dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but ywe still need access to heavy computational machinery for all of this.  There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  You can also query OpenAI embeddings, although doing so comes at a fairly steep cost. 
+  \item Building model artifacts, either from scratch or as part of fine-tuning existing deep learning models
+  \item Engineering additional features either for tabular or other embeddings
+  \item Artifact retrieval
 \end{itemize}
 \end{formal}
 
-KNowled
+Now, let's say we have a model that learns embeddings and generates them as output into other, downstream models, which eventually act as our recommendation system . We've only started the process. Based on our machine learning lifecycle diagram, we now need to productionalize this model and the embeddings. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic so we can systematically create them, serve them as part of an application, update them, and keep track of them. Within Ml operations, these steps are often known as:  
 
-When considering how to use embed
+\begin{formal}
+\begin{itemize}
+  \item Artifact storage
+  \item Model updating
+  \item Artifact versioning
+  \item Artifact retrieval
+\end{itemize}
+\end{formal}
+
+
 
 Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
 
-And more importantly, where do they make sense to use in an industrial search/recommendation environment? Let’s again focus outward from the model and engineering considerations to the organization and let's take a look at where embeddings fit into the larger machine learning ecosystem at Flutter. 
+
 
 
 \subsubsection{Embeddings Generation}
 
-We spent a large part of this document understanding different ways to generate and train embeddings models. For any donstream tasks, we need to have our embeddings ready to go. To generate good embeddings for a ny given project, we can start with Word2Vec or BERT as a baseline, but we also want the ability to fine-tune our own.
 
-Data is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. We need a lot of data to generate good embeddings for our dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but ywe still need access to heavy computational machinery for all of this. 
-
-There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own. 
-
-Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  You can also query OpenAI embeddings, although doing so comes at a fairly steep cost. 
 
 \textbf{Data Quality, Reporducibility, Data Drift, Interpretability}
 
@@ -2229,19 +2275,19 @@ sion scheme via product quantization
 
 Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space? 
 
-
+Embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
 
 %------------------------------------------------
 
 \section{Conclusion}
 
-We have now walked through an end-to-end example of what it means to generate and need embeddings, from the early approaches, to modern-day approaches using Transformers and BERT. 
+We have now walked through an end-to-end example of what it means to generate and need embeddings, from the early approaches, to modern-day approaches using Transformers and BERT. We've understood the business context of why we might include machine learning models in our application, how they work, how to incorporate them, and where embeddings ---dense representations of deep learning model input and output data -- can be best leveraged.  
 
-Embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
+Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more. 
 
-However, given how quickly over the past decade, embeddings have become a foundational data structure in the vocabulary of machine learning architectures. Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio. 
-
-Good luck navigating embeddings.  See you in the latent space. 
+We now hopefully have a solid grasp of the fundamentals of embedding and can either leverage them -- or explain why not to --in our next project. 
+ 
+Good luck navigating embeddings, and hope to see you in the latent space. 
 
 
 \newpage
