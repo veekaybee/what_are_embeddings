@@ -801,7 +801,7 @@ The first approaches to generating textual features were count-based, relying on
 
 In all these cases, what we are doing is creating a new feature that maps to the text feature column but is a numerical representation of the variable so that we can project it into that space for modelling purposes. We'll motivate these examples with simple code snippets from sklearn, the most common library for demonstrating basic ML concepts. We'll start with \textbf{count-based} approaches.
 
-\subsection{encoding}
+\subsection{Encoding}
 \textbf{Ordinal encoding}
 Let's again come back to our dataset of flits. We encode our data using sequential numbers. For example, "1" is "finch", "2" is "bluejay" and so on. We can use this method only if the variables have a natural ordered relationship to each other. For example, in this case "bluejay" is not "more" than "finch" and so would be incorrectly represented in our model. The case is the same, if, in our flit data, we encode "US" as 1 and "UK" as 2.
 
@@ -847,7 +847,7 @@ print(result)
 \caption{Ordinal Encoding in Scikit-Learn \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_22_ordinal.ipynb}{source}}
 \end{figure}
 
-\textbf{Dummy and one-hot encoding}
+\subsubsection{Dummy and one-hot encoding}
 
 Dummy encoding is, given $n$ categories (i.e. "US", "UK", and "NZ") encodes the variables into $n-1$ categories, creating a new feature for each category. So, if we have three variables, dummy encoding encodes into two dummy variables.  Why would we do this? If the categories are mutually exclusive, as they usually are in point-in-time geolocation estimates, if someone is in the US, we know for sure they're not in the UK and not in NZ, so it reduces computational overhead.
 
@@ -901,7 +901,7 @@ Now that we've encoded our textual features as numbers, we can feed them into th
 
 What we've built is a standard \textbf{logistic regression model}. Generally these days the machine learning community has converged on using gradient-boosted decision tree methods for dealing with tabular data, but we'll see that neural networks build on simple linear and logistic regression models to generate their output, so it's a good starting point. 
 
-\subsubsection{Embeddings as feature inputs}
+\textbf{Embeddings as feature inputs}
 
 Once we have encoded our feature data, we can use this input for any type of model that accepts tabular features.  In our machine learning task, we were looking for output that indicated whether a bird was likely to leave the platform based on their location and some usage data. Now, we'd like to focus specifically on surfacing flits that are similar to other flits the user has already interacted with so we'll need feature representations of either/or our users or our content. 
 
@@ -1782,11 +1782,6 @@ We've already encountered our first neural network, Word2Vec, which seeks to und
 \end{figure}
 
 
-
-
-
-\subsubsection{Neural nets and GPUs}
-
 Neural networks are complex to build and manage because of the amount of passes we need do over the model object using batches of our training data to get it to converge. The number of feature matrices that we need to run calculations over\footnote{There is no good single resource for calculating the computational complexity of a neural network given that there are many wide-ranging architectures but   \href{https://lunalux.io/computational-complexity-of-neural-networks/}{this post} does a good job laying out the case that it's essentially $O(n^5)$}, and, consequently, the amount of data we have to keep in-memory through the lifecycle of the model. Additionally, in order to get most value out of a neural network, we need a fairly large amount of clean data that it can learn from. 
 
 Both of these features made developing and running neural networks prohibitively expensive, until the last 15 years or so. First,  the explosion of log data gave companies such as Google a lot of training data to work with. Second,  the exponential increase in storage space provided by the growing size of commodity hardware both on-prem and in the cloud meant that we could now store that data for computation.  And third and perhaps most important, the rise of the GPU as a tool that takes advantage of the neural network's ability to perform \textbf{embarrassingly parallel} computation --- a characteristic of computation when it's not hard to separate steps out into ones that can be performed in parallel, such as word count for example . In a neural network, we can generally parallelize computation in any given number of ways, including at the level of a single neuron.  
@@ -1798,7 +1793,7 @@ This meant that neural networks could now be trained and experimented with at sc
 However, with a neural network, we can either distribute the model training across different GPUs in a process known as \textbf{model parallelism}, or compute \textbf{batches} --- the size of the training data fed into the model and used in a training loop before its hyperparameters are updated in parallel and update at the end of each \textbf{minibatch}, which is known as \textbf{data parallelism.}\citep{shallue2018measuring}
 
 
-\subsection{On to Transformers}
+\subsection{Transformers}
 
 Word2Vec is a feed-forward network because the information only flows from the encoding state, to the hidden embedding layer, to the output probability layer. There is no feedback between the second and third layers, which means that each given layer doesn't know anything about the state of the layers that follow it. This works really well for  machine learning problems where we look to only solve a single problem, that of classification or regression. 
 
@@ -1866,7 +1861,7 @@ A very popular variation of an RNN that worked around this problem was the \text
 However research in the field moved forward as people looked for more efficient ways to learn the entire context around text. While LSTMs worked fairly well, they had their own limitations. Because they were architecturally complicated, they took much longer to train, and at a higher computational cost, because they couldn't be trained in parallel. 
 
 
-\subsection{Encoder/Decoder and Attention}
+\subsubsection{Encoders/Decoders and Attention}
 As a next step, two concepts allowed researchers to overcome computationally expensive issues with remembering long vectors for a larger \textbf{context window} than what was available in RNNs and Word2Vec before it: the \textbf{encoder/decoder architecture}\footnote{For an excellent overview of both encoders/decoders and attention, see  \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{this blog post}}, and the \textbf{attention mechanism}. 
 
 The encoder/decoder architecture is a neural network  architecture with two neural networks, an encoder that takes the input vectors from our data and creates an embedding of a fixed length, and a decoder, also a neural network, which takes the embeddings encoded as input and generates a static set of outputs such as translated text or a text summary. In beetween is the attention mechanism, the hash table that keeps track of the words in the text and how they map to different representations. 
@@ -2134,7 +2129,7 @@ With respect to the machine learning task, we'd like to ultimately predict, give
 \caption{YouTube's multi-step neural network model for video recommendations using input embeddings\citep{covington2016deep}}
 \end{figure}
 
-\textbf{Implicit} feedback - whether a video was viewed or not - is used as the response variable. The response variable is then a user plus time and whether the video was viewed or not. Each class response, of which there are approximately a million, is given a probability as output.  The model has several hundreds of features, both tabular and embeddings-based. For the embeddings-based features, we include elements like: 
+\textbf{Implicit} feedback - whether a video was viewed or not - is used as part of the response variable. The response variable is then a user plus time and whether the video was viewed or not. Each class response, of which there are approximately a million, is given a probability as output.  The model has several hundreds of features, both tabular and embeddings-based. For the embeddings-based features, we include elements like: 
 
 \begin{itemize}
   \item User watch history - represented by a vector of sparse video ID elements mapped into a dense vector representation
@@ -2147,23 +2142,32 @@ The size of the vector embedding vocabulary is 1 million classes. The model, mad
 
 Similar work, although with a different architecture, was done in the App Store in Google Play in a popular paper, "Wide and Deep Learning for Recommender Systems"\citep{cheng2016wide}." This one crosses the search and recommendation space because it relies on returning correct ranked and personalized app recommendations as the result of a search query.  The input is clickstream  data collected when a user visits the app store. 
 
-The recommendations problem is formulated here as two jointly-trained models (aka the weights are shared and cross-propogated between the two models between epochs:
+
+\begin{figure}[H]
+\centering{\includegraphics[width=\textwidth]{figures/wideanddeep_ml_arch.png}}
+\caption{Wide and deep\citep{cheng2016wide}}
+\end{figure}
+
+The recommendations problem is formulated here as two jointly-trained models. The weights are shared and cross-propogated between the two models between epochs. 
+
+There are two problems when we try to build models that recommend items: \textbf{memorization} - the model needs to learn how items occur together given the historical data, and \textbf{generalization}, meaning that the model needs to be able to learn and give new recommendations the user has not seen before, improving recommendation diversity. Generally, one model alone cannot encompass both of these tradeoffs, and so side and deep is made up of two models that try to compensate for each other's weaknesses: 
 
 \begin{itemize}
-  \item User watch history - represented by a vector of sparse video ID elements mapped into a dense vector representation
-  \item User's search history - Maps search term to video clicked from the search term, also in a sparse vector mapped into the same space as the user watch history 
-  \item User's geography, age, and gender - mapped as tabular features
-  \item The number of previous impressions a video had, normalized per user over time
+  \item A \textbf{wide} model which uses traditional tabular features to improve the model's \textbf{memorization}. This is a general linear model trained on sparse, one-hot encoded features like $user_installed_app=netflix$ across thousands of apps. Memorization works here by creating binary features that are combinations of features, such as $AND(user_installed_app=netflix, impression_app_pandora$, allowing us to see different combinations of co-ocurrence in relationship to the target, i.e. likelihood to install app $Y$. However, this model cannot generalize if it gets a new value outside of the training data. 
+  \item A \textbf{deep} model that supports \textbf{generalization} across items that the model has not seen before, using a feed-foward neural network made up of categorical features that are translated to embeddings, such as user language, device class, and whether a given app has an impression. Each of these embeddings range from 0-100 in dimensionality. They are combined jointly into a concatenated embedding space with dense vectors in 1200 dimensions.  and initialized randomly. The embedding values are trained to minimize loss of the final function, which is a logistic loss function common to the deep and wide model.  
+\begin{figure}[H]
+\centering{\includegraphics[width=\textwidth]{figures/deepmodel.png}}
+\caption{The deep part of the wide and deep model\citep{cheng2016wide}}
+\end{figure}
 \end{itemize}
 
-
-In it, they discuss the need for scale and flexibility given the large size of YouTube's user base and need to filter and personalize recommendations. They explain their recommender system, which contains two neural networks, one for candidate generation and one for ranking. 
-
-
+The model is trained on 500 billion examples, and evaluated offline using AUC and online using app acquisition rate, the rate at which people download the app. Based on the paper, using this approach improved the app acquisition rate on the main landing page of the app store by $3.9 percent$ relative to the control group.
 
 \subsubsection{Pinterest}
 
-Pinterest is a perfect example of another app that Researchers and engineers there developed PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. Pinnersage is based on PinSage, the system for embedding those pins. 
+Pinterest is a perfect example of another app that has a large variety of content that, from a business perspective, needs to be personalized and recommended for users. The scale of content creatd at Pinterest - 350 million monthlu users and 2 billion items (pins) necessitates a considered filtering and ranking policy. 
+
+The system they developed to deal with part of this problem is called PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. The foundation of PinnerSage is PinSage\citep{ying2018graph}. PinSage is a graph convolutional network algorithm used to generate embeddings that carry latent features explaining graph-level relationships and are contruscted via a random walk over the graph. The embeddings are in 256 dimensions and retrieved at inference time from an Approximate Nearest Neighbors Index using HNSW. 
 
 
 \subsubsection{Twitter}
@@ -2189,14 +2193,15 @@ In fact, there are so many uses for embeddings at twitter that the ML platform e
 
 
 \subsubsection{Flutter}
-Embeddings at Flutter - Now that we've gotten tot he context of using BERT, how would we incorporate it in our recommendations. Given that we have a set of pre-trained embeddings, how might we go about recommending flits?  We can do it any number of ways. We can train our own model, we can use deep learning in collaborative filtering in either the inputs or the outputs, we can combine modalities......
 
-Embeddings are endlessly flexible and endlessly useful, and empower all of our machine learning workflows. 
+Given our new knowledge about how embeddings and recommender systems work, we can now incorporate embeddings into the recommendations we serve for flits at Flutter.  If we want to recommend relevant content, we might do it in a number of different ways, depending on our business requirements. 
+
+We could learn our own embeddings model in training Word2Vec or tf-idf as a baseline model. If that performs well enough in evaluation, we're done. We could learn embeddings and use them in a downstream model that's specific to our use-case - maybe using them in the home timeline.  We can use embeddings as inputs into a neural collaborative filtering model\citep{he2017neural}.
+Embeddings are endlessly flexible and endlessly useful, and can empower and improve the performance of our multimodal machine learning workflows. 
 
 \subsection{Embeddings as an Engineering Problem}
 
-
-As is event in the real world examples, recommender systems generating and retrieving embeddings provide a great deal of accuracy in characterizing large, heterogenous datasets. As we can see from several system diagrams, including this one from PinnerSage and the Wide and Deep Model, these systems have many moving components:
+As is event in the real world examples, recommender systems generating and retrieving embeddings provide a great deal of accuracy in characterizing large, heterogenous datasets. But this comes at an enormous cost of adding engineering complexity into our existing application.  As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, these systems have many moving components. 
 
 \begin{figure}[H]
 \begin{minipage}[c]{0.5\linewidth}
@@ -2205,75 +2210,61 @@ As is event in the real world examples, recommender systems generating and retri
 \end{minipage}
 \hfill
 \begin{minipage}[c]{0.5\linewidth}
-\centering{\includegraphics[width=\textwidth]{figures/wideanddeep.png}}
+\centering{\includegraphics[width=\textwidth]{figures/wideanddeep_arch.png}}
 \caption{Wide and Deep model architecture\citep{cheng2016wide}}
 \end{minipage}%
 \end{figure}
 
-
-
-But this comes at an enormous cost of adding engineering complexity into our existing application. In addition to our running business logic code, we are now keeping track of: 
+In addition to our running business logic code, we are now keeping track of
 
 \begin{formal}
 \begin{itemize}
-  \item Processing log stream and other input data
-  \item - generating embeddings - We spent a large part of this document understanding different ways to generate and train embeddings models. For any donstream tasks, we need to have our embeddings ready to go. To generate good embeddings for a ny given project, we can start with Word2Vec or BERT as a baseline, but we also want the ability to fine-tune our own. Data is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. We need a lot of data to generate good embeddings for our dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but ywe still need access to heavy computational machinery for all of this.  There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  You can also query OpenAI embeddings, although doing so comes at a fairly steep cost. 
-  \item Building model artifacts, either from scratch or as part of fine-tuning existing deep learning models
-  \item Engineering additional features either for tabular or other embeddings
+  \item Generating embeddings 
+  \item Storing embeddings
+  \item Embedding feature engineering and iteration
   \item Artifact retrieval
+  \item updating embeddings 
+  \item versioning embeddings and data drift
+  \item Inference and latency
+  \item Interpreting embeddings and accuracy
 \end{itemize}
 \end{formal}
 
-Now, let's say we have a model that learns embeddings and generates them as output into other, downstream models, which eventually act as our recommendation system . We've only started the process. Based on our machine learning lifecycle diagram, we now need to productionalize this model and the embeddings. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic so we can systematically create them, serve them as part of an application, update them, and keep track of them. Within Ml operations, these steps are often known as:  
+\subsubsection*{Embeddings Generation}
 
-\begin{formal}
-\begin{itemize}
-  \item Artifact storage
-  \item Model updating
-  \item Artifact versioning
-  \item Artifact retrieval
-\end{itemize}
-\end{formal}
+. To generate good embeddings for a ny given project, we can start with Word2Vec or BERT as a baseline, but we also want the ability to fine-tune our own. Data is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. We need a lot of data to generate good embeddings for our dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but ywe still need access to heavy computational machinery for all of this.  There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  You can also query OpenAI embeddings, although doing so comes at a fairly steep cost.
+
+\subsubsection*{Storage and Retrieval }
+ We spent a large part of this document understanding different ways to generate and train embeddings models. For any donstream tasks, we need to have our embeddings ready to go
+
+ Picking an ebmedding datastore 
 
 
 
-Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
-
-
-
-
-\subsubsection{Embeddings Generation}
-
-
-
-\textbf{Data Quality, Reporducibility, Data Drift, Interpretability}
-
-\subsubsection{Storage and Retrieval }
 
 Once we've trained embeddings, we need a special place to store them so we can use them in downstream modeling tasks and for immediate infrence in tasks like semantic search wehre, for example, the user enters a query. That query is translated into embedings and that model does a nearest neighbors similarity search in the embedding space ot find the word or item most similar to others. 
 
-In order to perform computations on embeddings, we will need a system that is amenable to performing lookups on vectors, and to store vectors and their related components. 
-
-In early iterations, model objects themselves acted as storage layers for embeddings, and in GenSim, you can still get the embeddings from the object. 
-
-
-
-\subsubsection{Versioning}
+\subsubsection*{Versioning Embeddings}
 
 Embeddings, like any machine learning pipeline, need to be refreshed. How do you compare your model if you have two representations of your data? 
 
 
-
-
-\subsubsection{embeddings Caveats}
-
-There are s
-
+\subsubsection*{Inference and Latency }
+Now, let's say we have a model that learns embeddings and generates them as output into other, downstream models, which eventually act as our recommendation system . We've only started the process. Based on our machine learning lifecycle diagram, we now need to productionalize this model and the embeddings. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic so we can systematically create them, serve them as part of an application, update them, and keep track of them. Within Ml operations, these steps are often known as: 
 
 Low latency - many embeddings are used in production settings. For retrieval, many of them need to be low-latency applications. TWHin addresses this by using quantization and pinn ffective lossy data-based compres-
 sion scheme via product quantization
 
+Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
+
+
+\subsubsection*{Interpretability and Drfit Detection}
 Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space? 
+
+https://www.evidentlyai.com/blog/embedding-drift-detection
+In order to perform computations on embeddings, we will need a system that is amenable to performing lookups on vectors, and to store vectors and their related components. 
+
+In early iterations, model objects themselves acted as storage layers for embeddings, and in GenSim, you can still get the embeddings from the object. 
 
 Embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
 
