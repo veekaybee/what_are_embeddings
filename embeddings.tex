@@ -24,6 +24,7 @@
 \usepackage{anyfontsize}
 \usepackage{tikz}
 \usetikzlibrary{calc}
+\usepackage[hyphens]{url}
 
 \usepackage[
     type={CC},
@@ -2079,7 +2080,7 @@ BERT is now an industry-standard tool. Around the same time that BERT was being 
 
 The original GPT model was trained as a 12-layer, 12-headed transfomer with only a decoder piece, on data from Book Corpus. Subsequent versions modified it, and the largest breakthrough was in GPT-4, which was trained with Reinforcement Learning from Human Feedback, a property which allows it to make inference that feels much closer to what a human would write. 
 
-We've now reached the forefront of what's possible with embeddings in this paper. With the rise of generative methods and methods based on Reinforcement Learning with Human Feedback like OpenAI's ChatGPT and Microsoft's Sydney, as well as the nascent open-source Llama, Alpaca, and other models,  anything written in this paper would already be impossibly out of date by the time it was published. 
+We've now reached the forefront of what's possible with embeddings in this paper. With the rise of generative methods and methods based on Reinforcement Learning with Human Feedback like OpenAI's ChatGPT and Microsoft's Sydney, as well as the nascent open-source Llama, Alpaca, and other models,  anything written in this paper would already be impossibly out of date by the time it was published\footnote{There are already some studies about possible uses of LLMs for recommendations, including conversational recommender systems, but it's still very early days. For more information check out \href{https://blog.reachsumit.com/posts/2023/05/tuning-llm-for-recsys/}{this post}}. 
 
 \section{Embeddings in Production}
 
@@ -2087,7 +2088,7 @@ With the advent of Transformer models, and more importantly, BERT, generating re
 
 We've gone through the process of training embeddings end to end here, but ther eare several modalities for working with embeddings. We can: 
 
-\begin{formal}
+
 \begin{itemize}
 \item \textbf{Train our own embeddings model} - We can train BERT or some variation of BERT from scratch. BERT uses an enormous amount of training data, so this is not really advantageous to us, unless we want to better understand the internals and have access to a lot of GPUS
 \item \textbf{Use pretrained embeddings and fine-tune } - There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. There are numerous more compact models for BERT, such as Distilbert and RoBERTA and for many of the larger models in places like the HuggingFace model Hub.\footnote{For a great writeup on the development of open-source machine learning deep learning, see  \href{https://colinraffel.com/blog/a-call-to-build-models-like-we-build-open-source-software.html}{"A Call to Build Models Like We Build Open-Source Software"}}.  There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. 
@@ -2095,7 +2096,7 @@ We've gone through the process of training embeddings end to end here, but ther 
 Now, we have the ability to treat the output of the layers of BERT as input into a next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and then we update the final weights. 
 
 \end{itemize}
-\end{formal}
+
 
 \subsection{Three Real Use-Cases}
 
@@ -2108,10 +2109,15 @@ Now that we understand what embeddings are, what can we do with them from a mach
 \end{itemize}
 \end{formal}
 
-Many companies are working with embeddings in all of these contexts today, across areas that span search, recommendation, and everything in between. There are multiple examples of deep learning embeddings being used in recommendation tasks: a wide and deep model for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real}, using embeddings for content understanding at Netflix\citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock\citep{gomez2022learning}, and many more cases.  Let's take a look at some specific ones. 
+Many companies are working with embeddings in all of these contexts today, across areas that span search, recommendation, and everything in between. There are multiple examples of deep learning embeddings being used in recommendation tasks: a wide and deep model for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real}, using embeddings for content understanding at Netflix\citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock\citep{gomez2022learning}, and many other examples. 
+
+In one popular case Pinterest is a perfect example of another app that has a large variety of content that, from a business perspective, needs to be personalized and recommended for users. The scale of content creatd at Pinterest - 350 million monthlu users and 2 billion items (pins) necessitates a considered filtering and ranking policy. 
+
+The system they developed to deal with part of this problem is called PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. The foundation of PinnerSage is PinSage\citep{ying2018graph}. PinSage is a graph convolutional network algorithm used to generate embeddings that carry latent features explaining graph-level relationships and are contruscted via a random walk over the graph. The embeddings are in 256 dimensions and retrieved at inference time from an Approximate Nearest Neighbors Index using HNSW. 
+
+Let's take a look at some more specific ones. 
 
 \subsubsection{YouTube}
-
 
 \textbf{YouTube }was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. YouTube has over 800 million pieces of content (videos) and 2.6 billion active users as of 2023 that they'd like to recommend those videos to. The application needs to be able to recommend content to users, quickly, while also generalizing the recommender model to new content, and to blend new content with already-established videos. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency. 
 
@@ -2163,12 +2169,6 @@ There are two problems when we try to build models that recommend items: \textbf
 
 The model is trained on 500 billion examples, and evaluated offline using AUC and online using app acquisition rate, the rate at which people download the app. Based on the paper, using this approach improved the app acquisition rate on the main landing page of the app store by $3.9 percent$ relative to the control group.
 
-\subsubsection{Pinterest}
-
-Pinterest is a perfect example of another app that has a large variety of content that, from a business perspective, needs to be personalized and recommended for users. The scale of content creatd at Pinterest - 350 million monthlu users and 2 billion items (pins) necessitates a considered filtering and ranking policy. 
-
-The system they developed to deal with part of this problem is called PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. The foundation of PinnerSage is PinSage\citep{ying2018graph}. PinSage is a graph convolutional network algorithm used to generate embeddings that carry latent features explaining graph-level relationships and are contruscted via a random walk over the graph. The embeddings are in 256 dimensions and retrieved at inference time from an Approximate Nearest Neighbors Index using HNSW. 
-
 
 \subsubsection{Twitter}
 \textbf{Twitter}, our model for Flutter, embeddings were a critical part of tweet recommendation. Twitter generated their own content-based embedding model, Twice (Twitter Content Embeddings)\citep{liu2022twice} for serving as signals in downstream predictive tasks, such as whether users were likely to click on tweets, which were then used as input signals into how to rank Tweets in the Home Timeline, Notifications, and Topics Models. Twice learns embeddings at the sentence level, capturing a dense representation of sentences and caputring similarity. When we read the paper, we notice mentions of Word2Vec, particularly the Skipgram model, which Twice Builds on. 
@@ -2201,7 +2201,7 @@ Embeddings are endlessly flexible and endlessly useful, and can empower and impr
 
 \subsection{Embeddings as an Engineering Problem}
 
-As is event in the real world examples, recommender systems generating and retrieving embeddings provide a great deal of accuracy in characterizing large, heterogenous datasets. But this comes at an enormous cost of adding engineering complexity into our existing application.  As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, these systems have many moving components. 
+Recommender systems generating and retrieving embeddings provide a great deal of utility in working with large, heterogenous datasets. But this comes at an enormous cost of adding engineering complexity into our existing application.  As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, these systems have many moving components. 
 
 \begin{figure}[H]
 \begin{minipage}[c]{0.5\linewidth}
@@ -2232,21 +2232,56 @@ In addition to our running business logic code, we are now keeping track of
 
 \subsubsection*{Embeddings Generation}
 
-. To generate good embeddings for a ny given project, we can start with Word2Vec or BERT as a baseline, but we also want the ability to fine-tune our own. Data is the most critical part of the model, and Transformers removed the necessity to train our own, resulting in a wide variety of available. We need a lot of data to generate good embeddings for our dataset regardless of the method you choose. You can generate pre-trained embeddings with deep learning models and fine-tune the models, but ywe still need access to heavy computational machinery for all of this.  There are pre-trained embeddings available from models, embeddings available from spaces like HuggingFace, and embeddings that you can generate your own.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  You can also query OpenAI embeddings, although doing so comes at a fairly steep cost.
+We've already seen that embeddings are usually generated the byproduct of training neural network models, most often the penultimate layer that's used before a layer to classify or regress is added as the final output. We generate them as either the result of training our own models, or by using other, pre-trained models that we can transfer learn from. Considerations here include how many resources we have, both in terms of time and money, to generate our own embeddings, and how accurate pre-trained models are. Something else to consider is whether you want to use pre-trained models or train our own from scratch. Each of these has their own upsides and downsides. 
 
-\subsubsection*{Storage and Retrieval }
- We spent a large part of this document understanding different ways to generate and train embeddings models. For any donstream tasks, we need to have our embeddings ready to go
+There are pre-trained embeddings available.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  We can also query OpenAI embeddings, although doing so comes at a fairly steep cost.
 
- Picking an ebmedding datastore 
+\subsubsection*{Storage and Retrieval}
+
+Generally when embeddings are generated as part of a Tensorflow (or PyTorch or Gensim) artifcat, they initially live in-memory and are then propogated to a model object, which is serialized onto memory and then loaded at re-training or inference time. But if we want to access the embeddings specifically and search through them, as well as potentially do search against other embeddings, we need something that acts as an embeddings store.
 
 
 
+There are many requirements to consider when choosing an embeddings store, some high-level ones include: 
 
-Once we've trained embeddings, we need a special place to store them so we can use them in downstream modeling tasks and for immediate infrence in tasks like semantic search wehre, for example, the user enters a query. That query is translated into embedings and that model does a nearest neighbors similarity search in the embedding space ot find the word or item most similar to others. 
+\begin{formal}
+\begin{itemize}
+  \item Do we access embeddings in batch or are we doing real-time lookup (inference)
+  \item What kind of indexing 
+  \item Embedding feature engineering and iteration
+  \item Artifact retrieval
+  \item updating embeddings 
+  \item versioning embeddings and data drift
+  \item Inference and latency
+  \item Interpreting embeddings and accuracy
+\end{itemize}
+\end{formal}
 
-\subsubsection*{Versioning Embeddings}
+A general-form embeddings store contains the embeddings themselves, an index to map them back from the latent space into words, pictures, or text, and a way to do similarity comparisons between different types of embeddings using algorithms. We talked before about \textbf{cosine similarity} being a staple of comparing latent space representations via the normalized dot product of two matrices. This can become computationally expensive over millions of sets of vectors, because we'd need to do a pairwise comparison over every pair. To solve this, \textbf{approximate nearest neighbors (ANN)} algorithms were developed to, as in recommender systems, create neighborhoods out of elements of vectors and find a vector's k-nearest neighbors. The most frequently-used algorithms and libraries tend to be HNSWlib and Faiss, both of which are standalone libraries and also implemented as part of 
 
-Embeddings, like any machine learning pipeline, need to be refreshed. How do you compare your model if you have two representations of your data? 
+The tradeoff between this is that it's less precise, but it's much faster\footnote{As  \href{https://bergum.medium.com/four-mistakes-when-introducing-embeddings-and-vector-search-d39478a568c5}{this post points out}, when we switch between precision and recall, you need to be aware of the tradeoffs and think about what our requirements are with respect to how accurate your embeddings are and their latency}. 
+
+The simplest form of embedding store can be a numpy array\footnote{From a tweet by Andrej Karpathy in response to how he stores vector embeddings for a small movie recommendations side project in 2023,"np.array people keep reaching for much fancier things way too fast these days. \href{https://twitter.com/karpathy/status/1647374645316968449}{tweet}}. The most complex and customizable is a vector database, and somewhere in-between are plugins for existing relational databases like Postgres, caches like Redis, and SQLite. 
+
+Here's an example of the system that Twitter built for exactly this use case, long before vector databases came into the picture. \citep{shiebler2010making}. Given that Twitter uses embeddings in multiple sources as described in the previous section, Twitter made embeddings "first class citizens" by creating a centralized platform that reprocesses data and generates embeddings downstream into the feature registry. 
+
+
+\begin{figure}[H]
+\centering{\includegraphics[width=.6\textwidth]{figures/embedding_pipeline.png}}
+\caption{Twitter's embeddings pipeline\citep{shiebler2010making}}
+\end{figure}
+
+
+
+\subsubsection*{Drift Detection, Versioning, and Interpretability}
+
+Once we've trained embeddings, we might think we're done, but embeddings, like any machine learning pipeline, need to be refreshed because we might run into a concept known as \textbf{concept drift}. Data drift occurs when the data underlying your model changes. For example, let's say that your model includes, as a binary feature, people who have landlines or not. In 2023, this would no longer be as relevant of a feature in most of the world as most people have switched to cell phones as their primary telephones, so the model would lose accuracy. This phen
+
+How do you compare your model if you have two representations of your data? 
+
+Finally, a concern we have is how we will explain our embedding model to stakeholders. Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space?  
+
+Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
 
 
 \subsubsection*{Inference and Latency }
@@ -2255,18 +2290,8 @@ Now, let's say we have a model that learns embeddings and generates them as outp
 Low latency - many embeddings are used in production settings. For retrieval, many of them need to be low-latency applications. TWHin addresses this by using quantization and pinn ffective lossy data-based compres-
 sion scheme via product quantization
 
-Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
 
-
-\subsubsection*{Interpretability and Drfit Detection}
-Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space? 
-
-https://www.evidentlyai.com/blog/embedding-drift-detection
-In order to perform computations on embeddings, we will need a system that is amenable to performing lookups on vectors, and to store vectors and their related components. 
-
-In early iterations, model objects themselves acted as storage layers for embeddings, and in GenSim, you can still get the embeddings from the object. 
-
-Embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
+In summary, embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
 
 %------------------------------------------------
 
