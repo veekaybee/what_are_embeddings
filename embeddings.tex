@@ -2066,7 +2066,7 @@ BERT works as a \textbf{masked language model}. Masking is simply what we did wh
 
   \def\d{.9}
   \coordinate (u) at (\d,0);
-  \draw [myArrows] (right-out) -- ++(u) node [anchor=west] {Embeddings};
+  \draw [myArrows] ($(right-out)-(u)$) node [anchor=east] {Embeddings};
   \draw [myArrows] ($(left-out)-(u)$) node [anchor=east] {Input\\text} -- ++(u) ;
 
 \end{tikzpicture}
@@ -2124,7 +2124,7 @@ Let's take a look at some more specific ones.
 In this paper, we create a two-stage recommender (in Tensorflow) consisting of a \textbf{candidate generator} that reduces the candidate set to hundreds of items and a second model, similar in size and shape, that's a \textbf{ranker} that ranks these videos by probability that the user will click on them.
 
 \begin{figure}[H]
-\centering{\includegraphics[width=\textwidth]{figures/youtube_recsys.png}}
+\centering{\includegraphics[width=.5\textwidth]{figures/youtube_recsys.png}}
 \caption{YouTube's recommender system, including a candidate generator and ranker\citep{covington2016deep}}
 \end{figure}
 
@@ -2174,7 +2174,7 @@ The model is trained on 500 billion examples, and evaluated offline using AUC an
 \textbf{Twitter}, our model for Flutter, embeddings were a critical part of tweet recommendation. Twitter generated their own content-based embedding model, Twice (Twitter Content Embeddings)\citep{liu2022twice} for serving as signals in downstream predictive tasks, such as whether users were likely to click on tweets, which were then used as input signals into how to rank Tweets in the Home Timeline, Notifications, and Topics Models. Twice learns embeddings at the sentence level, capturing a dense representation of sentences and caputring similarity. When we read the paper, we notice mentions of Word2Vec, particularly the Skipgram model, which Twice Builds on. 
 
 \begin{figure}[H]
-\centering{\includegraphics[width=\textwidth]{figures/twice.png}}
+\centering{\includegraphics[width=.5\textwidth]{figures/twice.png}}
 \caption{Twitter's TWICe Embeddings, a trained BERT model\citep{liu2022twice}}
 \end{figure}
 
@@ -2183,7 +2183,7 @@ Twice is a BERT-based model that's trained on a multi-task loss function, includ
 Twitter also developed TWHIN\citep{el2022twhin}, Twitter Heterogeneous Information Network, a set of graph-based embeddings\citep{el2022twhin}, developed for tasks like personalized ads rankings, account follow-recommendation, offensive content detection, and search ranking, based on nodes (such as users and advertisers) and edges that represent entity interactions. 
 
 \begin{figure}[H]
-\centering{\includegraphics[width=\textwidth]{figures/twhin.png}}
+\centering{\includegraphics[width=.7\textwidth]{figures/twhin.png}}
 \caption{Twitter's TWICe Embeddings, a trained BERT model\citep{el2022twhin}}
 \end{figure}
 
@@ -2230,13 +2230,13 @@ In addition to our running business logic code, we are now keeping track of
 \end{itemize}
 \end{formal}
 
-\subsubsection*{Embeddings Generation}
+\subsubsection{Embeddings Generation}
 
 We've already seen that embeddings are usually generated the byproduct of training neural network models, most often the penultimate layer that's used before a layer to classify or regress is added as the final output. We generate them as either the result of training our own models, or by using other, pre-trained models that we can transfer learn from. Considerations here include how many resources we have, both in terms of time and money, to generate our own embeddings, and how accurate pre-trained models are. Something else to consider is whether you want to use pre-trained models or train our own from scratch. Each of these has their own upsides and downsides. 
 
 There are pre-trained embeddings available.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pretrained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  We can also query OpenAI embeddings, although doing so comes at a fairly steep cost.
 
-\subsubsection*{Storage and Retrieval}
+\subsubsection{Storage and Retrieval}
 
 Generally when embeddings are generated as part of a Tensorflow (or PyTorch or Gensim) artifcat, they initially live in-memory and are then propogated to a model object, which is serialized onto memory and then loaded at re-training or inference time. But if we want to access the embeddings specifically and search through them, as well as potentially do search against other embeddings, we need something that acts as an embeddings store.
 
@@ -2271,20 +2271,23 @@ Here's an example of the system that Twitter built for exactly this use case, lo
 \caption{Twitter's embeddings pipeline\citep{shiebler2010making}}
 \end{figure}
 
+\subsubsection{Drift Detection, Versioning, and Interpretability}
+
+Once we've trained embeddings, we might think we're done. But embeddings, like any machine learning pipeline, need to be refreshed because we might run into a concept known as \textbf{concept drift}. Concept drift occurs when the data underlying your model changes. For example, let's say that your model includes, as a binary feature, people who have landlines or not. In 2023, this would no longer be as relevant of a feature in most of the world as most people have switched to cell phones as their primary telephones, so the model would lose accuracy. This phenomenon is even more prevalent with embeddings that are used for classification. For example, let's say you use embedings for trending topic detection. The model has to generalize, as in the wide and deep model, to detect new classes, but if your classes change quickly, it may not be able to, so  you need to retrain your embeddings frequenlty. Or, for example, if you model embeddings in a graph, as Pinterest does, and the relationships between nodes in the graph change, you may have to update them\citep{wewer2021updating}. You could also have an influx of spam or corrupted content which changes the relationship in your embeddings, in which case you'll have to retrain. 
+
+Once you retrain, you now have a secondary issue: how do you compare the first set of embeddings to the second; that is, how do you evaluate whether they are good representations of your data, given the case that embeddings are often unsupervised; i.e. --- how do we know whether "king" should be close to "queen"? On their own, embeddings can be hard to interpret, because in a multidiminesional space it's hard to understand which dimension of a vector corresponds to a decision to place items next to each other\citep{simhi2022interpreting}.how we will explain our embedding model to stakeholders. Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space?  
+
+We have two ways we can think about this, \textbf{intrinstic} and \textbf{extrinsic} evaluation. For the embeddings themselves (extrinsic evaluation), we can visualize them through either \textbf{UMAP}---Uniform Manifold Approximation and Projection for Dimension Reduction or \textbf{t-sne} --- t-distributed stochastic neighbor embedding, algorithms that allow us to visualize highly-dimensional data in two or three dimensions, much like PCA. Or we can fit embeddings into our downstream task (for example, summarization, or classification), and analyze the same way we would with offline metrics. There are many different approaches
+\citep{wang2019evaluating} but the summary is that embeddings can be objectively hard to evaluate and we'll need to factor the time to perform this evaluation into our modeling time. 
+
+Finally, now let's say that we have two sets of embeddings, you need to version them and keep both sets so that, in case your new model doesn't work as well, you can fall back to the old one. This goes hand in hand with the problem of model versioning in ML operations, except in this case we need to both version the model and the output data. There are numerous different approaches to model and data versioning that involve building a system that tracks both the metadata and the location of the assets that are kept in a secondary data store. Another thing to keep in mind is that embeddings layers, particularly for large vocabularies, can balloon in size, so now we have to consider storage costs, as well. 
 
 
-\subsubsection*{Drift Detection, Versioning, and Interpretability}
+\subsubsection{Inference and Latency}
 
-Once we've trained embeddings, we might think we're done, but embeddings, like any machine learning pipeline, need to be refreshed because we might run into a concept known as \textbf{concept drift}. Data drift occurs when the data underlying your model changes. For example, let's say that your model includes, as a binary feature, people who have landlines or not. In 2023, this would no longer be as relevant of a feature in most of the world as most people have switched to cell phones as their primary telephones, so the model would lose accuracy. This phen
+The most critical part of any machine learning system that works in production is inference time --- how quickly does it take to query the model asset and return a result to an end-user. For use-cases like search and loading a feed of content, the experience needs to be instantaenous or the user experience will degrade. 
 
-How do you compare your model if you have two representations of your data? 
-
-Finally, a concern we have is how we will explain our embedding model to stakeholders. Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space?  
-
-Given how complex embeddings can be to generate, store, and use efficiently, how should we use them? 
-
-
-\subsubsection*{Inference and Latency }
+We can't foreget that we're operating not only in a theoretical, but practical engineering environment. 
 Now, let's say we have a model that learns embeddings and generates them as output into other, downstream models, which eventually act as our recommendation system . We've only started the process. Based on our machine learning lifecycle diagram, we now need to productionalize this model and the embeddings. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic so we can systematically create them, serve them as part of an application, update them, and keep track of them. Within Ml operations, these steps are often known as: 
 
 Low latency - many embeddings are used in production settings. For retrieval, many of them need to be low-latency applications. TWHin addresses this by using quantization and pinn ffective lossy data-based compres-
