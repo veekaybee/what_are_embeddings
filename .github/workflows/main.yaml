@@ -31,5 +31,5 @@ jobs:
           git config --local user.name "Vicki Boykis"
           git add embeddings.pdf
           git commit -m "Generated PDF"
-          git push
+          git push --force:wq
         if: github.event_name != 'pull_request'
