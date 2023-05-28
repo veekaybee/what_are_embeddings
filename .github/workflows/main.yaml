@@ -30,6 +30,6 @@ jobs:
           git config --local user.email "vicki.boykis@gmail.com"
           git config --local user.name "Vicki Boykis"
           git add embeddings.pdf
-          git commit -m "Generated PDF"
-          git push --force:wq
+          git commit -m "Generated PDF" 
+          git push --force # overwrite old PDF
         if: github.event_name != 'pull_request'
