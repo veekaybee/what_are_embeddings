@@ -740,7 +740,7 @@ These show up over and over again, in every deep learning architecture and every
 \end{itemize}
 \end{formal}
 
-As we go through the historical context of embeddings, we'll build our intuition from encoding to BERT and beyond\footnote{Original diagram from  \href{http://mccormickml.com/2019/11/11/bert-research-ep-1-key-concepts-and-sources/}{this excellent guide on BERT}}. 
+As we go through the historical context of embeddings, we'll build our intuition from encoding to BERT and beyond\footnote{Original diagram from  \href{http://mccormickml.com/2019/11/11/bert-research-ep-1-key-concepts-and-sources/}{this excellent guide on BERT}}. What we'll find as we go further into the document is that the explanations for each concept get succssessively shorter, because we've already done the hard work of understanding the building blocks at the beginning. 
 
 \begin{figure}[H]
 \centering
@@ -753,7 +753,7 @@ As we go through the historical context of embeddings, we'll build our intuition
 
 Compressing content into lower dimensions for compact numerical representations and calculations is not a new idea in machine learning. For as long as humans have been overwhelmed by information, we've been trying to synthesize it so that we can make decisions based on it. In the context of information retrieval and machine learning, early traditional approaches have included one-hot encoding, TF-IDF, bag-of-words, LSA, and LDA. 
 
-The earlier approaches were \textbf{count-based} methods, meaning simply that they focused on counting how many times a word appeared relative to other words and generating encodings based on that. LDA and LSA can be considered statistical approaches, but they are still concerned with inferring the properties of a dataset through heuristics rather than modeling. \textbf{Prediction-based} approaches came later and instead learned the properties of a given text through models  such as support vector machines, Word2Vec, BERT, and the GPT series of models, all of which use learned embeddings instead. 
+The earlier approaches were \textbf{count-based} methods. They focused on counting how many times a word appeared relative to other words and generating encodings based on that. LDA and LSA can be considered statistical approaches, but they are still concerned with inferring the properties of a dataset through heuristics rather than modeling. \textbf{Prediction-based} approaches came later and instead learned the properties of a given text through models  such as support vector machines, Word2Vec, BERT, and the GPT series of models, all of which use learned embeddings instead. 
 
 \begin{figure}[H]
     \centering
@@ -1787,24 +1787,24 @@ Neural networks are complex to build and manage because of the amount of passes 
 
 Both of these features made developing and running neural networks prohibitively expensive, until the last 15 years or so. First,  the explosion of log data gave companies such as Google a lot of training data to work with. Second,  the exponential increase in storage space provided by the growing size of commodity hardware both on-prem and in the cloud meant that we could now store that data for computation.  And third and perhaps most important, the rise of the GPU as a tool that takes advantage of the neural network's ability to perform \textbf{embarrassingly parallel} computation --- a characteristic of computation when it's not hard to separate steps out into ones that can be performed in parallel, such as word count for example . In a neural network, we can generally parallelize computation in any given number of ways, including at the level of a single neuron.  
 
-While GPUs were generally used for working with computer graphics, in the early 2000s\citep{oancea2014gpgpu}, researchers discovered the potential to use them for general computation, and Nvidia made an enormous bet on this kind of computing by introducing CUDA, an API layer on top of GPUs, specifically for interfacing with frameworks like PyTorch and Tensorflow.
+While GPUs were initially used for working with computer graphics, in the early 2000s\citep{oancea2014gpgpu}, researchers discovered the potential to use them for general computation, and Nvidia made an enormous bet on this kind of computing by introducing CUDA, an API layer on top of GPUs, specifically for interfacing with PyTorch and Tensorflow and other deep learning frameworks.
 
-This meant that neural networks could now be trained and experimented with at scale. To come back to a comparison to our previous approaches, when we calculate TF-IDF, we need to loop over each individual word and perform our computations over the entire dataset in sequence to arrive at a score in proportion to all other words, which means that our computational complexity will be $O(N D)$\citep{cong2016novel}.  
+Neural networks could now be trained and experimented with at scale. To come back to a comparison to our previous approaches, when we calculate TF-IDF, we need to loop over each individual word and perform our computations over the entire dataset in sequence to arrive at a score in proportion to all other words, which means that our computational complexity will be $O(N D)$\citep{cong2016novel}.  
 
-However, with a neural network, we can either distribute the model training across different GPUs in a process known as \textbf{model parallelism}, or compute \textbf{batches} --- the size of the training data fed into the model and used in a training loop before its hyperparameters are updated in parallel and update at the end of each \textbf{minibatch}, which is known as \textbf{data parallelism.}\citep{shallue2018measuring}
+However, with a neural network, we can either distribute the model training across different GPUs in a process known as \textbf{model parallelism}, or compute \textbf{batches} --- the size of the training data fed into the model and used in a training loop before its hyperparameters are updated in parallel and update at the end of each \textbf{minibatch}, which is known as \textbf{data parallelism.}\citep{shallue2018measuring}.
 
 
 \subsection{Transformers}
 
-Word2Vec is a feed-forward network because the information only flows from the encoding state, to the hidden embedding layer, to the output probability layer. There is no feedback between the second and third layers, which means that each given layer doesn't know anything about the state of the layers that follow it. This works really well for  machine learning problems where we look to only solve a single problem, that of classification or regression. 
+Word2Vec is a feed-forward network because the information only flows from the encoding state, to the hidden embedding layer, to the output probability layer. There is no feedback between the second and third layers, which means that each given layer doesn't know anything about the state of the layers that follow it, and it can't make inference suggestions longer than the context window. This works really well for  machine learning problems where we're fine with a single, static vocabulary
 
 However, it doesn't work well on long ranges text which requires understanding words in context of each other. When, in conversation, we say "I read that quote by Langston Hughes. I liked it, but didn't really read his later work," we understand that "it" refers to the quote, context from the previous sentence, and "his" refers to "Langston Huges", mentioned two sentences ago. 
 
-One of the other limitations was that Woprd2Vec couldn't handle \textbf{out-of-vocabulary} words --- words that the model has not been trained on and needs to generalize to. This means that if our users search for a new trending term or want to b recommended a flit that was written after our model was trained, they won't be able to see any results from our model.\citep{di2021considerations}, unless the model is retrained incredibly frequently. 
+One of the other limitations was that Word2Vec couldn't handle \textbf{out-of-vocabulary} words --- words that the model has not been trained on and needs to generalize to. This means that if our users search for a new trending term or we want to recommended a flit that was written after our model was trained, they won't see any relevant results from our model.\citep{di2021considerations}, unless the model is retrained incredibly frequently. 
 
 Another is that Word2Vec encounters context collapse around \textbf{polysemy},or the coexistence of many possible meanings for the same phrase: for example, if you have "jail cell" and "cell phone" in the same sentence, it won't understand that the context of both words is different. Much of the work of NLP based in deep learning has been in understanding and retaining that context to propagate through the model and pull out semantic meaning.   
 
-Different approaches were proposed to solve this problem. Around the time that Word2Vec became popular, researchers were experiencing success with \textbf{recurrent neural networks}, RNNs. An RNN builds on traditional feed-forward networks, with the difference being that layers of the model give feedback to previous layers, meaning that the model keeps memory of the context around words in a sentence.
+Different approaches were proposed to solve this problem. When Word2Vec became popular, researchers were also experiencing success with \textbf{recurrent neural networks}, RNNs. An RNN builds on traditional feed-forward networks, with the difference being that layers of the model give feedback to previous layers, meaning that the model keeps memory of the context around words in a sentence.
 
 \begin{figure}[H]
 \centering
@@ -1857,10 +1857,7 @@ Different approaches were proposed to solve this problem. Around the time that W
 
 A problem with traditional RNNs was, that because during backpropogation the weights had to be carried through to the previous layers of neurons, they experienced the problem of \textbf{vanishing gradients}. This occurs when we continuously take the derivative such that the partial derivative used in the chain rule during backpropogation approaches zero. Once we approach zero, the neural network assumes it has reached a local optimum and stops training, before convergence. 
 
-A very popular variation of an RNN that worked around this problem was the \textbf{long-short term memory network (LSTM)}, developed initially by Schmidhuber\footnote{If you read Schmidhuber, you will come the understanding that everything in deep learning was developed initially by \href{https://people.idsia.ch/~juergen/deep-learning-miraculous-year-1990-1991.html}{Schmidhuber}} and brought to popularity for use in text applications speech recognition and image captioning\citep{karpathy_2015}.  Whereas our previous model takes only a vector at a time as input, RNNs operate on sequences of vectors using a mechanism known as \textbf{gated recurrent units}, which allows the network to control how much information is passed in for analysis. 
-
-However research in the field moved forward as people looked for more efficient ways to learn the entire context around text. While LSTMs worked fairly well, they had their own limitations. Because they were architecturally complicated, they took much longer to train, and at a higher computational cost, because they couldn't be trained in parallel. 
-
+A very popular variation of an RNN that worked around this problem was the \textbf{long-short term memory network (LSTM)}, developed initially by Schmidhuber\footnote{If you read Schmidhuber, you will come the understanding that everything in deep learning was developed initially by \href{https://people.idsia.ch/~juergen/deep-learning-miraculous-year-1990-1991.html}{Schmidhuber}} and brought to popularity for use in text applications speech recognition and image captioning\citep{karpathy_2015}.  Whereas our previous model takes only a vector at a time as input, RNNs operate on sequences of vectors using a mechanism known as \textbf{gated recurrent units}, which allows the network to control how much information is passed in for analysis. While LSTMs worked fairly well, they had their own limitations. Because they were architecturally complicated, they took much longer to train, and at a higher computational cost, because they couldn't be trained in parallel. 
 
 \subsubsection{Encoders/Decoders and Attention}
 As a next step, two concepts allowed researchers to overcome computationally expensive issues with remembering long vectors for a larger \textbf{context window} than what was available in RNNs and Word2Vec before it: the \textbf{encoder/decoder architecture}\footnote{For an excellent overview of both encoders/decoders and attention, see  \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{this blog post}}, and the \textbf{attention mechanism}. 
@@ -1928,7 +1925,7 @@ The attention mechanism is a way to hold the state of the entire input by contin
 \begin{figure}[H]
 \centering
 \includegraphics[width=.9\textwidth]{figures/transformer.png}
-\caption{Transformer architeture from the Attention is All You Need Paper, combined  \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{in this blog post }}
+\caption{Transformer architecture from the Attention is All You Need Paper, combined  \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{in this blog post }}
 \end{figure}
 
 The ultimate goal of a transformer is to take a piece of text and decode it, by running the input dataset through multiple levels of transformation. Most of these levels of transformation are just variations of what we've done before: embed words into a space based on where they are in relationship to one another. 
@@ -1957,9 +1954,7 @@ Within the decoder, we then finally embed and add positional encodings to fix th
 
 The final two layers of the Transformer model are a liner layer, which projects the float vector of embeddings plus positional encodings into a word by turning the score at each vector position into words with the help of a softmax layer, which turns the score into probabilities. The highest score is the output of what the word should be, plus its index in the embedding matrix. 
 
-Initially,  we have our input data, the matrix operations of the encoder that embeds the text in the space of continuous numerical representations, and the decoder takes those numerical representations, one element at a time and generates an output sequence.
-
-At each step of the process, the decoder looks at the previous steps and generates based on those steps so we form a complete sentence\citep{rush2018annotated}. 
+Initially,  we have our input data, the matrix operations of the encoder that embeds the text in the space of continuous numerical representations, and the decoder takes those numerical representations, one element at a time and generates an output sequence. At each step of the process, the decoder looks at the previous steps and generates based on those steps so we form a complete sentence\citep{rush2018annotated}. 
 
 
 \begin{figure}[H]
@@ -2008,19 +2003,16 @@ class Generator(nn.Module):
 \end{figure}
 
 
-We then get the predicted word, just like in Word2Vec.
-
-Other than learning context well, Transfomers are also able to parallelize their training by passing multiple tokens to the encoder at the same time, computing states for all positions in the input text. 
+We then get the predicted word, just like in Word2Vec. Other than learning context well, Transfomers are also able to parallelize their training by passing multiple tokens to the encoder at the same time, computing states for all positions in the input text. 
 
 \subsection{BERT}
 
 After the success of "Attention is All you Need", a variety of transformer architectures arose. \textbf{BERT} 
 stands for Bi-Directional Encoder and was released 2018\citep{devlin2018bert}, based of a paper written by Google as a way to solve common natural language tasks like sentiment analysis, question-answering, and text summarization. BERT is a transformer model, also developed at Google, based on the attention mechanism, but its architecture is such that it only includes the encoder piece. Its most prominent usage is in Google Search, where it's the algorithm powering surfacing relevant search results. In the blog post they released on including BERT in search ranking in 2019, Google specifically discussed adding context to queries as a replacement for keyword-based methods as a reason they did this.\footnote{\href{https://blog.google/products/search/search-language-understanding-bert/}{BERT search announcement}}
 
-BERT works as a \textbf{masked language model}. Masking is simply what we did when we implemented Word2Vec by removing words and building our context window. When we created our representations with Word2Vec, we only looked at sliding windows moving forward. The B in Bert is for bi-directional, which means it pays attention to words in both ways through scaled dot-product attention. 
- BERT has 12 transfomer layers. It starts by using WordPiece, an algorithm that semgents words into subwords, into tokens. To train BERT, the goal is to predict a token given its context. 
+BERT works as a \textbf{masked language model}. Masking is simply what we did when we implemented Word2Vec by removing words and building our context window. When we created our representations with Word2Vec, we only looked at sliding windows moving forward. The B in Bert is for bi-directional, which means it pays attention to words in both ways through scaled dot-product attention. BERT has 12 transfomer layers. It starts by using \textbf{WordPiece}, an algorithm that segments words into subwords, into tokens. To train BERT, the goal is to predict a token given its context. 
 
- The output of BERT is latent representations of words and their context --- a set of embeddings. BERT is, essentially, an enormous parallelized Word2Vec. 
+ The output of BERT is latent representations of words and their context --- a set of embeddings. BERT is, essentially, an enormous parallelized Word2Vec that remembers llonger context windows.  
 
 \begin{figure}
 \centering
@@ -2028,7 +2020,7 @@ BERT works as a \textbf{masked language model}. Masking is simply what we did wh
 {
   myTrapezium/.pic =
   {
-    \draw [fill=w_lightblue] (0,0) -- (0,\b) -- (\a,\c) -- (\a,-\c) -- (0,-\b) -- cycle ;
+    \draw [fill=blue!20] (0,0) -- (0,\b) -- (\a,\c) -- (\a,-\c) -- (0,-\b) -- cycle ;
     \coordinate (-center) at (\a/2,0);
     \coordinate (-out) at (\a,0);
   },
@@ -2051,11 +2043,10 @@ BERT works as a \textbf{masked language model}. Masking is simply what we did wh
   every node/.style={align=center},
 ]
 
-
   \node (middleThing) 
   [
     draw,
-    fill=w_lightblue,
+    fill=blue!20,
     %minimum width=1cm,
     minimum height=2*\b cm,
     font=\tiny,
@@ -2066,8 +2057,8 @@ BERT works as a \textbf{masked language model}. Masking is simply what we did wh
 
   \def\d{.9}
   \coordinate (u) at (\d,0);
-  \draw [myArrows] ($(right-out)-(u)$) node [anchor=east] {Embeddings};
-  \draw [myArrows] ($(left-out)-(u)$) node [anchor=east] {Input\\text} -- ++(u) ;
+  \draw [myArrows] (right-out) -- ++(u) node [anchor=west] {Embeddings};
+  \draw [myArrows] ($(left-out)-(u)$) node [anchor=east] {Input\\text} -- ++(u);
 
 \end{tikzpicture}
 \caption{BERT architecture}
@@ -2076,9 +2067,9 @@ BERT works as a \textbf{masked language model}. Masking is simply what we did wh
 Given how flexible BERT is, it can be used for a number of tasks, from translation, to summarization, to autocomplete. Because it doesn't have a decoder component, it can't generate text, which paved the way for GPT models to pick up where BERT left off. 
 
 \subsection{GPT}
-BERT is now an industry-standard tool. Around the same time that BERT was being developed, another transfomer architecture, the GPT series, was being developed at OpenAI. GPT differs from BERT in that it encodes as well as decodes text from ebmeddings and therefore can be used for probabilistic inference. 
+BERT is now an industry-standard modeling approach. Around the same time that BERT was being developed, another transfomer architecture, the GPT series, was being developed at OpenAI. GPT differs from BERT in that it encodes as well as decodes text from embeddings and therefore can be used for probabilistic inference. 
 
-The original GPT model was trained as a 12-layer, 12-headed transfomer with only a decoder piece, on data from Book Corpus. Subsequent versions modified it, and the largest breakthrough was in GPT-4, which was trained with Reinforcement Learning from Human Feedback, a property which allows it to make inference that feels much closer to what a human would write. 
+The original, first GPT model was trained as a 12-layer, 12-headed transformer with only a decoder piece, on data from Book Corpus. Subsequent versions built on this foundation to try and improve context understanding. The largest breakthrough was in GPT-4, which was trained with reinforcement learning from Human Feedback, a property which allows it to make inferences from text that feels much closer to what a human would write. 
 
 We've now reached the forefront of what's possible with embeddings in this paper. With the rise of generative methods and methods based on Reinforcement Learning with Human Feedback like OpenAI's ChatGPT and Microsoft's Sydney, as well as the nascent open-source Llama, Alpaca, and other models,  anything written in this paper would already be impossibly out of date by the time it was published\footnote{There are already some studies about possible uses of LLMs for recommendations, including conversational recommender systems, but it's still very early days. For more information check out \href{https://blog.reachsumit.com/posts/2023/05/tuning-llm-for-recsys/}{this post}}. 
 
@@ -2086,17 +2077,16 @@ We've now reached the forefront of what's possible with embeddings in this paper
 
 With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel. 
 
-We've gone through the process of training embeddings end to end here, but ther eare several modalities for working with embeddings. We can: 
+We've gone through the process of training embeddings end to end here, but there are several modalities for working with embeddings. We can: 
 
 
 \begin{itemize}
 \item \textbf{Train our own embeddings model} - We can train BERT or some variation of BERT from scratch. BERT uses an enormous amount of training data, so this is not really advantageous to us, unless we want to better understand the internals and have access to a lot of GPUS
 \item \textbf{Use pretrained embeddings and fine-tune } - There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. There are numerous more compact models for BERT, such as Distilbert and RoBERTA and for many of the larger models in places like the HuggingFace model Hub.\footnote{For a great writeup on the development of open-source machine learning deep learning, see  \href{https://colinraffel.com/blog/a-call-to-build-models-like-we-build-open-source-software.html}{"A Call to Build Models Like We Build Open-Source Software"}}.  There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. 
-
-Now, we have the ability to treat the output of the layers of BERT as input into a next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and then we update the final weights. 
-
 \end{itemize}
 
+
+Now, we have the ability to treat the output of the layers of BERT as input into a next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and then we update the final weights. 
 
 \subsection{Three Real Use-Cases}
 
@@ -2162,7 +2152,7 @@ There are two problems when we try to build models that recommend items: \textbf
   \item A \textbf{wide} model which uses traditional tabular features to improve the model's \textbf{memorization}. This is a general linear model trained on sparse, one-hot encoded features like $user_installed_app=netflix$ across thousands of apps. Memorization works here by creating binary features that are combinations of features, such as $AND(user_installed_app=netflix, impression_app_pandora$, allowing us to see different combinations of co-ocurrence in relationship to the target, i.e. likelihood to install app $Y$. However, this model cannot generalize if it gets a new value outside of the training data. 
   \item A \textbf{deep} model that supports \textbf{generalization} across items that the model has not seen before, using a feed-foward neural network made up of categorical features that are translated to embeddings, such as user language, device class, and whether a given app has an impression. Each of these embeddings range from 0-100 in dimensionality. They are combined jointly into a concatenated embedding space with dense vectors in 1200 dimensions.  and initialized randomly. The embedding values are trained to minimize loss of the final function, which is a logistic loss function common to the deep and wide model.  
 \begin{figure}[H]
-\centering{\includegraphics[width=\textwidth]{figures/deepmodel.png}}
+\centering{\includegraphics[width=1.1\textwidth]{figures/deepmodel.png}}
 \caption{The deep part of the wide and deep model\citep{cheng2016wide}}
 \end{figure}
 \end{itemize}
@@ -2277,7 +2267,7 @@ Once we've trained embeddings, we might think we're done. But embeddings, like a
 
 Once you retrain, you now have a secondary issue: how do you compare the first set of embeddings to the second; that is, how do you evaluate whether they are good representations of your data, given the case that embeddings are often unsupervised; i.e. --- how do we know whether "king" should be close to "queen"? On their own, embeddings can be hard to interpret, because in a multidiminesional space it's hard to understand which dimension of a vector corresponds to a decision to place items next to each other\citep{simhi2022interpreting}.how we will explain our embedding model to stakeholders. Understanding embeddings. Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for king to be close to queen but far away from knight? What does it mean for two flits to be close toe ach other in a projected embedding space?  
 
-We have two ways we can think about this, \textbf{intrinstic} and \textbf{extrinsic} evaluation. For the embeddings themselves (extrinsic evaluation), we can visualize them through either \textbf{UMAP}---Uniform Manifold Approximation and Projection for Dimension Reduction or \textbf{t-sne} --- t-distributed stochastic neighbor embedding, algorithms that allow us to visualize highly-dimensional data in two or three dimensions, much like PCA. Or we can fit embeddings into our downstream task (for example, summarization, or classification), and analyze the same way we would with offline metrics. There are many different approaches
+We have two ways we can think about this, \textbf{intrinsic} and \textbf{extrinsic} evaluation. For the embeddings themselves (extrinsic evaluation), we can visualize them through either \textbf{UMAP}---Uniform Manifold Approximation and Projection for Dimension Reduction or \textbf{t-sne} --- t-distributed stochastic neighbor embedding, algorithms that allow us to visualize highly-dimensional data in two or three dimensions, much like PCA. Or we can fit embeddings into our downstream task (for example, summarization, or classification), and analyze the same way we would with offline metrics. There are many different approaches
 \citep{wang2019evaluating} but the summary is that embeddings can be objectively hard to evaluate and we'll need to factor the time to perform this evaluation into our modeling time. 
 
 Finally, now let's say that we have two sets of embeddings, you need to version them and keep both sets so that, in case your new model doesn't work as well, you can fall back to the old one. This goes hand in hand with the problem of model versioning in ML operations, except in this case we need to both version the model and the output data. There are numerous different approaches to model and data versioning that involve building a system that tracks both the metadata and the location of the assets that are kept in a secondary data store. Another thing to keep in mind is that embeddings layers, particularly for large vocabularies, can balloon in size, so now we have to consider storage costs, as well. 
@@ -2285,22 +2275,32 @@ Finally, now let's say that we have two sets of embeddings, you need to version 
 
 \subsubsection{Inference and Latency}
 
-The most critical part of any machine learning system that works in production is inference time --- how quickly does it take to query the model asset and return a result to an end-user. For use-cases like search and loading a feed of content, the experience needs to be instantaenous or the user experience will degrade. 
+When working with embeddings, we are operating not only in a theoretical, but practical engineering environment. The most critical part of any machine learning system that works in production is inference time --- how quickly does it take to query the model asset and return a result to an end-user. 
 
-We can't foreget that we're operating not only in a theoretical, but practical engineering environment. 
-Now, let's say we have a model that learns embeddings and generates them as output into other, downstream models, which eventually act as our recommendation system . We've only started the process. Based on our machine learning lifecycle diagram, we now need to productionalize this model and the embeddings. Generally, when we talk about operationalizing machine learning, we mean that we need to make our data inputs and outputs systematic so we can systematically create them, serve them as part of an application, update them, and keep track of them. Within Ml operations, these steps are often known as: 
+For this, we care about latency, which we can roughly define is any time spent waiting and is a critical performance mtric in any production system\citep{gregg2014systems}. Generally speaking, it's the time of any operation to complete -- application request, database query, and so on. Latency at the level of the web service is generally measured in milliseconds, and every effort is made to reduce this as close to zero as realistically possible. For use-cases like search and loading a feed of content, the experience needs to be instantaneous or the user experience will degrade and we could even lose revenue. In a study from a while back, Amazon found that every 100ms increase in latency cuts profits by 1%\citep{flach2013reducing}.
 
-Low latency - many embeddings are used in production settings. For retrieval, many of them need to be low-latency applications. TWHin addresses this by using quantization and pinn ffective lossy data-based compres-
-sion scheme via product quantization
+Given this, we need to think about how to reduce the footprint of our model and all the layers in serving it so that the response to the user is instantaneous. We do this by creating observability throughout our machine learning system, starting with the hardware the system is running on, to CPU and GPU utilization, the performance of our model architecture, and how that model interacts with other components. For example, when we are performing nearest neighbor lookup, the way we perform that lookup and the algorithm we use, the programming language we use to write that algorithm, all compound latency concerns.  
 
+As an example, in the wide and deep paper, the recommender ranking model scores over 10 million apps per second. The application was initially single-threaded, with all candidates taking 31 millisconds. By implementing multithreading, they were able to reduce client-side latency to 14 milliseconds\citep{cheng2016wide}.
 
-In summary, embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data continuously, and constantly think about the performance time of our embeddings. 
+Operations of machine learning systems is an entirely other art and craft of study and one that's best left for another paper\citep{kreuzberger2022machine}. 
+
+\subsubsection{What makes embeddings projects successful}
+Finally, once we have all our algorithmic and engineering concerns lined up, there is the final matter to consider of what will make our project successful from a business perspective. We should acknowledge that we might not always need embeddings for our machine learning problem, or that we might not need machine learning at all, initially, if our project is based entirely on a handful of heuristic rules that can be determined and analyzed by humans\citep{zinkevich2017rules}. 
+
+If we conclude that we are operating in a data-rich space where automatically inferring semantic relationships between entities is correct, we need to ask ourselves if we're willing to put in a great deal of effort into producing clean datasets, the baseline of any good machine learning model, even in cases of large language models. In fact, clean, domain data is so important that many of the companies discussed here ended up training their own embddings models, and, recently companies like Bloomberg\citep{wu2023bloomberggpt} and Replit\citep{Shabani_2023} are even training their own large language models to improve accuracy for their specific business domain. 
+
+Critically, to get to a stage where we have a machine learning system dealing with embeddings, we need a team that has multilevel alignment around the work that needs to be done. In larger companies, the size of this team will be larger, but most specifically work with embeddings requires someone who can speak to the use case specifically, someone who advocates for the use case and gets it prioritize, and a technical person who can do the work\citep{meil2023ai}.
+
+If all of these components come together, we now have an embeddings-based recommender system in production. 
 
 %------------------------------------------------
 
 \section{Conclusion}
 
 We have now walked through an end-to-end example of what it means to generate and need embeddings, from the early approaches, to modern-day approaches using Transformers and BERT. We've understood the business context of why we might include machine learning models in our application, how they work, how to incorporate them, and where embeddings ---dense representations of deep learning model input and output data -- can be best leveraged.  
+
+In summary, embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data, and constantly think about the performance time of our embeddings
 
 Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more. 
 
