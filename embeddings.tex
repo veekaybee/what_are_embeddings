@@ -521,8 +521,6 @@ Within machine learning, there are many approaches we can use to fit different t
 	\resizebox{.8\textwidth}{!}{%
 \begin{forest}
   for tree={
-   fill=w_lightblue,
-	draw,
 	align=center,
 	parent anchor=south,
 	child anchor=north,
@@ -760,8 +758,6 @@ The earlier approaches were \textbf{count-based} methods. They focused on counti
 	\resizebox{1\textwidth}{!}{%
 \begin{forest}
   for tree={
-	fill=w_lightblue,
-	draw,
 	align=center,
 	parent anchor=south,
 	child anchor=north,
@@ -1184,7 +1180,9 @@ A key problem that makes up the fundamental problem in collaborative filtering a
 
 Mathematically, we can do this by looking at the distance metric between any two given sets of items, and there are a number of different approaches, including  Euclidean distance, edit distance (more specifically, Levenshtein distance and Hamming distance), cosine distance, and more advanced compression approaches like \textbf{minhashing}.
 
-The most commonly used approach in most models where we're trying to ascertain the semantic closeness of two items is \textbf{cosine similarity}, which is the cosine of the angle between two objects represented as vectors, bounded between -1 and 1. -1 means the two items are completely "opposite" of each other and 1 means they are completely the same item. Zero means that you should probably use a distance measure other than cosine similarity because the vectors are entirely unrelated.
+The most commonly used approach in most models where we're trying to ascertain the semantic closeness of two items is \textbf{cosine similarity}, which is the cosine of the angle between two objects represented as vectors, bounded between -1 and 1. -1 means the two items are completely "opposite" of each other and 1 means they are completely the same item. Zero means that you should probably use a distance measure other than cosine similarity because the vectors are entirely unrelated. One point of clarification here is that cosine distance is the actual distance measure and is calculated as $1 - cosine similarity$.
+
+
 
 
 \begin{equation}
@@ -1271,6 +1269,16 @@ pairwise.cosine_similarity([v1],[v2])
 \caption{Implementation of cosine similarity in scikit\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_29_cos_sim_from_scratch.ipynb}{source}}
 \end{figure}
 
+Other commonly-used distance measures in semantic similarity and recommendations include:
+
+\begin{formal}
+\begin{itemize}
+  \item Euclidean distance - calculates the straight-line distance between two points 
+  \item Manhattan Distance - Measures the distance between two points by summing the absolute differences of their coordinates
+  \item Jaccard Distance - Computes the dissimilarity between two sets by dividing the size of their intersection by the size of their union. Jaccard distance is caulcuated 
+  \item Hamming Distance  - Measures the dissimilarity between two sets by dividing the size of their intersection by the size of their union 
+\end{itemize}
+\end{formal}
 
 \subsubsection{SVD and PCA}
 
@@ -1761,11 +1769,9 @@ RNNs and CNNs are used mainly in feature extraction - they generally do not repr
 
 \begin{figure}[H]
 \centering
-\resizebox{.5\linewidth}{!}{%
+\resizebox{.8\linewidth}{!}{%
 \begin{forest}
   for tree={
-  fill=w_lightblue,
-	draw,
 	rectangle,
 	align=center,
 	rounded corners=3pt,
@@ -1870,9 +1876,9 @@ A problem with traditional RNNs was that because during backpropagation the weig
 A very popular variation of an RNN that worked around this problem was the \textbf{long-short term memory network (LSTM)}, developed initially by Schmidhuber\footnote{If you read Schmidhuber, you will come the understanding that everything in deep learning was developed initially by \href{https://people.idsia.ch/~juergen/deep-learning-miraculous-year-1990-1991.html}{Schmidhuber}} and brought to popularity for use in text applications speech recognition and image captioning\citep{karpathy_2015}.  Whereas our previous model takes only a vector at a time as input, RNNs operate on sequences of vectors using a mechanism known as \textbf{gated recurrent units}, which allows the network to control how much information is passed in for analysis. While LSTMs worked fairly well, they had their own limitations. Because they were architecturally complicated, they took much longer to train, and at a higher computational cost, because they couldn't be trained in parallel.
 
 \subsubsection{Encoders/Decoders and Attention}
-As a next step, two concepts allowed researchers to overcome computationally expensive issues with remembering long vectors for a larger \textbf{context window} than what was available in RNNs and Word2Vec before it: the \textbf{encoder/decoder architecture}, and the \textbf{attention mechanism}.
+Two concepts allowed researchers to overcome computationally expensive issues with remembering long vectors for a larger \textbf{context window} than what was available in RNNs and Word2Vec before it: the \textbf{encoder/decoder architecture}, and the \textbf{attention mechanism}.
 
-The encoder/decoder architecture is a neural network  architecture with two neural networks, an encoder that takes the input vectors from our data and creates an embedding of a fixed length, and a decoder, also a neural network, which takes the embeddings encoded as input and generates a static set of outputs such as translated text or a text summary. In between is the attention mechanism, the hash table that keeps track of the words in the text and how they map to different representations.
+The encoder/decoder architecture is a neural network  architecture comprised of two neural networks, an encoder that takes the input vectors from our data and creates an embedding of a fixed length, and a decoder, also a neural network, which takes the embeddings encoded as input and generates a static set of outputs such as translated text or a text summary. In between the two types of layers is the \textbf{attention mechanism}, a way to hold the state of the entire input by continuously performing weighted matrix multiplications that highlight the relevance of specific terms in relation to each other in the vocabulary. We can think of attention as a very large, complex hash table that keeps track of the words in the text and how they map to different representations both in the input and the output.
 
 \begin{figure}[H]
 \centering
@@ -1928,9 +1934,43 @@ The encoder/decoder architecture is a neural network  architecture with two neur
 \caption{The encoder/decoder architecture}
 \end{figure}
 
-The attention mechanism is a way to hold the state of the entire input by continuously performing weighted matrix multiplications that highlight the relevance of specific terms in relation to each other in the vocabulary.
 
-"Attention is All You Need", a paper that initially came out of the topic of machine translation and extended on existing work in this area, the same concept behind Google Translate\citep{vaswani2017attention}, combined both of these into a single architecture that immediately became successfully adapted and replicated. Transformers are now the de-facto models used for natural language tasks, and a great variation of them has bloomed for a number of different tasks, and different sizes.
+
+"Attention is All You Need"\citep{vaswani2017attention}, released in 2017,  combined both of these concepts into a single architecture. The paper immediately saw a great deal of success, and today Transformers are one of the de-facto models used for natural language tasks. 
+
+Based on the success of the original model, a great deal of variations on Transformer architectures have been released, followed by GPT and BERT in 2018, Distilbert, a smaller and more compact version of BERT in 2019, and GPT-3 in 2020\footnote{For a complete visual transformer timeline, check out \href{https://ai.v-gar.de/ml/transformer/timeline/}{this link}}.
+
+\begin{figure}[H] 
+\begin{forest}
+  for tree={
+    parent anchor=south,
+    child anchor=north,
+    align=center,
+    edge path={
+      \noexpand\path[\forestoption{edge}]
+        (!u.parent anchor) -- +(0,-5pt) -| (.child anchor)\forestoption{edge label};
+    },
+    font=\sffamily\small,
+    edge={->}
+  }
+  [Transformer
+    [GPT
+      [GPT-2]
+      [GPT-3
+        [DALL-E]
+      ]
+      [GPT-4]
+    ]
+    [BERT
+      [DistilBERT]
+      [RoBERTa]
+    ]
+    [PaLM
+    ]
+  ]
+\end{forest}
+\caption{Timeline of Transformer Models}
+\end{figure}
 
 \begin{figure}[H]
 \centering
@@ -1938,15 +1978,10 @@ The attention mechanism is a way to hold the state of the entire input by contin
 \caption{Transformer architecture from the Attention is All You Need Paper, combined  \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{in this blog post }}
 \end{figure}
 
-The ultimate goal of a transformer is to take a piece of text and decode it, by running the input dataset through multiple levels of transformation. Most of these levels of transformation are just variations of what we've done before: embed words into a space based on where they are in relationship to one another.
+Transformer architectures themselves are not new, but they contain all the concepts we've discussed so far: vectors, encodings, and hash maps. The ultimate goal of a transformer model is to take a piece of multimodal content, and learn the latent relationships by creating multiple videos of groups of words in the input corpus (multiple context windows). The self-attention mechanism, implemented as scaled dot-product attention in the Transformer paper, creates different context windows of the data a number of times through the six encoder and six decoder layers. The output is the result of the specific machine learning task --- a translated sentence, a summarized paragraph -- and the next-to-last layer is the model's embeddings, which we can use for downstream work. 
 
-A transformer's input data is the multimodal corpus we want to find latent representations for.
 
-However, in Word2Vec, we only did this once. The transformer architecture, and more specifically, the self-attention mechanism implemented as scaled dot product plus attention in the Transformer paper, creates different views of all this data a number of times in different ways so that we get not only the relationship of words to each other, but also their context in the sentence or phrase.
-
-Within the transformer, we have six layers that perform encoding and six that perform decoding.  Transformer models themselves are new, but they contain no concepts that we have not so far studied: vectors, hash maps, and encodings.  The ultimate goal of a transformer, like LSTM and Seq2Seq models before it, is to take a piece of content, generate embeddings for it, perform \textbf{positional encoding} on those embeddings to add context to where the embedding is in the text, and then run these through a \textbf{self-attention mechanism}, which highlights the key pieces of text and their relationship to one another. We replicate this process through multiple layers in order to create different, aggregated views of our words so that we learn not only the relationship of words next to each other, but the context of the entire vocabulary.
-
-As input into the model, we read in our corpus of flits. Each of the encoder's input layers consists of two sub-layers: a self-attention layer and a feed-forward neural network. In the encoder, we start by doing the same thing we've done in our previous data: we first convert our text to token embeddings. This is the same process as in Word2Vec: we simply assign each word to a position in a matrix and are able to retrieve it by index. These alone, though, will not help us with the context. So what we end up generating is a set of \textbf{positional embeddings}, which is an encoding process that incorporates the index of a given word in the sentence in addition to the token itself. The positional encoding is generated by sine and cosine functions of different frequencies. We are essentially capturing both the token itself and its position in relation to other tokens in the text. The vector values are initially set at random and iterated on through backpropagation.
+Within the Transformer paper, we have six layers that perform encoding and six that perform decoding.  As input into the model, we read in our corpus of flits. Each of the encoder's input layers consists of two sub-layers: a self-attention layer and a feed-forward neural network. In the encoder, we start by doing the same thing we've done in our previous data: we first convert our text to token embeddings. This is the same process as in Word2Vec: we simply assign each word to a position in a matrix and are able to retrieve it by index. These alone, though, will not help us with the context. So what we end up generating is a set of \textbf{positional embeddings}, which is an encoding process that incorporates the index of a given word in the sentence in addition to the token itself. The positional encoding is generated by sine and cosine functions of different frequencies. We are essentially capturing both the token itself and its position in relation to other tokens in the text. The vector values are initially set at random and iterated on through backpropagation.
 
 Then, those embeddings are propagated to two layers: the self-attention model, and the feed-forward network. We pass the tokens through multi-headed self-attention using scaled dot product attention, which is specific to the transformer architecture.
 
