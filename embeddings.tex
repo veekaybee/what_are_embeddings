@@ -2057,62 +2057,16 @@ stands for Bi-Directional Encoder and was released 2018\citep{devlin2018bert}, b
 
 BERT works as a \textbf{masked language model}. Masking is simply what we did when we implemented Word2Vec by removing words and building our context window. When we created our representations with Word2Vec, we only looked at sliding windows moving forward. The B in Bert is for bi-directional, which means it pays attention to words in both ways through scaled dot-product attention. BERT has 12 transformer layers. It starts by using \textbf{WordPiece}, an algorithm that segments words into subwords, into tokens. To train BERT, the goal is to predict a token given its context.
 
- The output of BERT is latent representations of words and their context --- a set of embeddings. BERT is, essentially, an enormous parallelized Word2Vec that remembers longer context windows.  
+ The output of BERT is latent representations of words and their context --- a set of embeddings. BERT is, essentially, an enormous parallelized Word2Vec that remembers longer context windows.  Given how flexible BERT is, it can be used for a number of tasks, from translation, to summarization, to autocomplete. Because it doesn't have a decoder component, it can't generate text, which paved the way for GPT models to pick up where BERT left off.
 
-\begin{figure}
-\centering
-\tikzset
-{
-  myTrapezium/.pic =
-  {
-	\draw [fill=blue!20] (0,0) -- (0,\b) -- (\a,\c) -- (\a,-\c) -- (0,-\b) -- cycle ;
-	\coordinate (-center) at (\a/2,0);
-	\coordinate (-out) at (\a,0);
-  },
-  myArrows/.style=
-  {
-	line width=2mm,
-	blue,
-	-{Triangle[length=1.5mm,width=5mm]},
-	shorten >=2pt,
-	shorten <=2pt,
-  }
-}
-\def\a{3}  % width of trapezium
-\def\b{.9} % small height of trapezium
-\def\c{2}  % tall height of trapezium
-
-\begin{tikzpicture}
-[
-  node distance=5mm, % updated node distance value
-  every node/.style={align=center},
-]
-
-  \node (middleThing)
-  [
-	draw,
-	fill=blue!20,
-	%minimum width=1cm,
-	minimum height=2*\b cm,
-	font=\tiny,
-  ]
-  {\begin{tabular}{r}-0.2 \\ -0.1 \\ 0.1 \\ 0.4 \\ -0.3 \\ 1.1\end{tabular}};
-  \pic (left)[left=of middleThing.west, rotate=180] {myTrapezium} ;
-  \node at (left-center) {Encoder};
-
-  \def\d{.9}
-  \coordinate (u) at (\d,0);
-  \draw [myArrows] (right-out) -- ++(u) node [anchor=west] {Embeddings};
-  \draw [myArrows] ($(left-out)-(u)$) node [anchor=east] {Input\\text} -- ++(u);
-
-\end{tikzpicture}
-\caption{BERT architecture}
+\begin{figure}[H]
+\centering{\includegraphics[width=.8\textwidth]{figures/encoder_only.png}}
+\caption{BERT encoder-only architecture}
 \end{figure}
 
-Given how flexible BERT is, it can be used for a number of tasks, from translation, to summarization, to autocomplete. Because it doesn't have a decoder component, it can't generate text, which paved the way for GPT models to pick up where BERT left off.
 
 \subsection{GPT}
-BERT is now an industry-standard modeling approach. Around the same time that BERT was being developed, another transformer architecture, the GPT series, was being developed at OpenAI. GPT differs from BERT in that it encodes as well as decodes text from embeddings and therefore can be used for probabilistic inference.
+Around the same time that BERT was being developed, another transformer architecture, the GPT series, was being developed at OpenAI. GPT differs from BERT in that it encodes as well as decodes text from embeddings and therefore can be used for probabilistic inference.
 
 The original, first GPT model was trained as a 12-layer, 12-headed transformer with only a decoder piece, based on data from Book Corpus. Subsequent versions built on this foundation to try and improve context understanding. The largest breakthrough was in GPT-4, which was trained with reinforcement learning from Human Feedback, a property which allows it to make inferences from text that feels much closer to what a human would write.
 
@@ -2120,22 +2074,22 @@ We've now reached the forefront of what's possible with embeddings in this paper
 
 \section{Embeddings in Production}
 
-With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel.
+With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel. Now that we understand what embeddings are, what should we do with them? After all, we're not doing this just as a math exercise. If there is one thing to take away from this entire text, it is this: 
 
-We've gone through the process of training embeddings end to end here, but there are several modalities for working with embeddings. We can:
+\begin{formal}
+The final goal of all industrial machine learning (ML) projects is to develop ML products and rapidly bring them into production.\citep{kreuzberger2022machine}
+\end{formal}
 
+The model that is deployed is always better and more accurate than the model that is only ever a prototype. We've gone through the process of training embeddings end to end here, but there are several modalities for working with embeddings. We can:
 
 \begin{itemize}
 \item \textbf{Train our own embeddings model} - We can train BERT or some variation of BERT from scratch. BERT uses an enormous amount of training data, so this is not really advantageous to us, unless we want to better understand the internals and have access to a lot of GPUS
 \item \textbf{Use pretrained embeddings and fine-tune } - There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset. There are numerous more compact models for BERT, such as Distilbert and RoBERTA and for many of the larger models in places like the HuggingFace model Hub.\footnote{For a great writeup on the development of open-source machine learning deep learning, see  \href{https://colinraffel.com/blog/a-call-to-build-models-like-we-build-open-source-software.html}{"A Call to Build Models Like We Build Open-Source Software"}}.  There are many variations on BERT models and they all Variations of BERT have been used to generate embeddings to use as downstream input into many recommender and information retrieval systems.  One of the largest gifts that the transformer architecture gives us is the ability to perform transfer learning. Before, when we learned embeddings, our representation of whatever dataset we had at hand was fixed - we couldn't change the weights of the words in TF-IDF without regenerating an entire dataset.
 \end{itemize}
 
-
 Now, we have the ability to treat the output of the layers of BERT as input into the next layer of our own data that we have fine-tuned. We take our initial data, again tokenize it using the same tokenizer that our BERT model already has, and package the tokenized input into a layer that we add to the model. We remove the final layer of BERT, which is a classifier, and freeze all the weights for all the layers except our last one and then we update the final weights.
 
-\subsection{Three Real Use-Cases}
-
-Now that we understand what embeddings are, what can we do with them from a machine learning perspective? Given the flexibility of embeddings as data structures that can be used anywhere, several key uses came from them:
+Armed with this knowledge, we can think of several use cases of embeddings, given their flexibility as a data structure. 
 
 \begin{formal}
 \begin{itemize}
@@ -2143,6 +2097,8 @@ Now that we understand what embeddings are, what can we do with them from a mach
 \item\textbf{Using them directly} - We can use item embeddings directly for content filtering - finding items that are closest to other items, a task recommendation shares with search. There are a host of algorithms used to perform vector similarity lookups by projecting items into our embedding space and performing similarity search using algorithms like Faiss and HNSWLib.   
 \end{itemize}
 \end{formal}
+
+\subsection{Three Real Use-Cases}
 
 Many companies are working with embeddings in all of these contexts today, across areas that span search, recommendation, and everything in between. There are multiple examples of deep learning embeddings being used in recommendation tasks: a wide and deep model for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real}, using embeddings for content understanding at Netflix\citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock\citep{gomez2022learning}, and many other examples.
 
