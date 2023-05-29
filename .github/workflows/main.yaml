@@ -1,7 +1,7 @@
 name: Build LaTeX document
 run-name: Deploy to main by @${{ github.actor }}
 on:
-  pull_request:
+  push:
     branches:
       - main
 
