@@ -358,7 +358,7 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 text = """Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly.""""
 
-# BERT token generation code truncated to show the final output, an embedding
+# BERT code truncated to show the final output, an embedding
 
 [tensor([-3.0241e-01, -1.5066e+00, -9.6222e-01,  1.7986e-01, -2.7384e+00,
      	-1.6749e-01,  7.4106e-01,  1.9655e+00,  4.9202e-01, -2.0871e+00,
@@ -720,11 +720,11 @@ at (0,\ay,0){(0, \ay, 0)};
 at (0,0,\az){(0, 0, \az)};
 \end{tikzpicture}
 \end{adjustbox}
-\caption{Projecting a vector into the 3d space, scaled to 1}
+\caption{Projecting a vector into the 3d space}
 \label{fig:my_figure}
 \end{figure}
 
-But how do we represent "US" or "UK" in this space? Because modern models converge by performing operations on matrices \citep{lakshmanan2020machine}, we need to encode geography as some sort of numerical value so that the model can calculate them as inputs\footnote{There are some models, specifically decision trees, where you don't need to do text encoding because the tree learns the categorical variables out of the box, however implementations differ, for example the two most popular implementations, scikit-learn and XGBoost\citep{altay_2020}, can't.}. So, once we have a combination of vectors, we can compare it to other points. So in our case, each row of data tells us where to position each bird in relation to any other given bird based on the combination of features.  And that's really what our numerical features allow us to do.
+But how do we repres ent "US" or "UK" in this space? Because modern models converge by performing operations on matrices \citep{lakshmanan2020machine}, we need to encode geography as some sort of numerical value so that the model can calculate them as inputs\footnote{There are some models, specifically decision trees, where you don't need to do text encoding because the tree learns the categorical variables out of the box, however implementations differ, for example the two most popular implementations, scikit-learn and XGBoost\citep{altay_2020}, can't.}. So, once we have a combination of vectors, we can compare it to other points. So in our case, each row of data tells us where to position each bird in relation to any other given bird based on the combination of features.  And that's really what our numerical features allow us to do.
 
 
 \subsection{From Words to Vectors in Three Easy Pieces}
@@ -751,7 +751,7 @@ As we go through the historical context of embeddings, we'll build our intuition
 \section{Historical Encoding Approaches}
 \subsection{History of Embeddings}
 
-Compressing content into lower dimensions for compact numerical representations and calculations is not a new idea in machine learning. For as long as humans have been overwhelmed by information, we've been trying to synthesize it so that we can make decisions based on it. In the context of information retrieval and machine learning, early traditional approaches have included one-hot encoding, TF-IDF, bag-of-words, LSA, and LDA.
+Compressing content into lower dimensions for compact numerical representations and calculations is not a new idea. For as long as humans have been overwhelmed by information, we've been trying to synthesize it so that we can make decisions based on it. Early approaches have included one-hot encoding, TF-IDF, bag-of-words, LSA, and LDA.
 
 The earlier approaches were \textbf{count-based} methods. They focused on counting how many times a word appeared relative to other words and generating encodings based on that. LDA and LSA can be considered statistical approaches, but they are still concerned with inferring the properties of a dataset through heuristics rather than modeling. \textbf{Prediction-based} approaches came later and instead learned the properties of a given text through models  such as support vector machines, Word2Vec, BERT, and the GPT series of models, all of which use learned embeddings instead.
 
@@ -798,7 +798,7 @@ The first approaches to generating textual features were count-based, relying on
   \item One-Hot encoding
 \end{itemize}
 
-In all these cases, what we are doing is creating a new feature that maps to the text feature column but is a numerical representation of the variable so that we can project it into that space for modeling purposes. We'll motivate these examples with simple code snippets from sklearn, the most common library for demonstrating basic ML concepts. We'll start with \textbf{count-based} approaches.
+In all these cases, what we are doing is creating a new feature that maps to the text feature column but is a numerical representation of the variable so that we can project it into that space for modeling purposes. We'll motivate these examples with simple code snippets from scikit-learn, the most common library for demonstrating basic ML concepts. We'll start with \textbf{count-based} approaches.
 
 \subsection{Encoding}
 \textbf{Ordinal encoding}
@@ -896,7 +896,7 @@ bird\_id & US & UK & NZ \\
 \end{table}
 
 
-Now that we've encoded our textual features as numbers, we can feed them into the model we're developing to predict churn. The function we've been learning will minimize the loss of the model, or the distance between the model's prediction and the actual value, by predicting correct parameters for each of these features. The learned model will then return a value from 1 to 0 that is a probability that the event, either churn or no-churn, has taken place, given the input features of our particular bird.  Since this is a supervised model, we then evaluate this model for accuracy by feeding our test data into the model and comparing the model's prediction against the actual data, which tells us whether the bird has churned or not.
+Now that we've encoded our textual features as vectors, we can feed them into the model we're developing to predict churn. The function we've been learning will minimize the loss of the model, or the distance between the model's prediction and the actual value, by predicting correct parameters for each of these features. The learned model will then return a value from 1 to 0 that is a probability that the event, either churn or no-churn, has taken place, given the input features of our particular bird.  Since this is a supervised model, we then evaluate this model for accuracy by feeding our test data into the model and comparing the model's prediction against the actual data, which tells us whether the bird has churned or not.
 
 What we've built is a standard \textbf{logistic regression model}. Generally these days the machine learning community has converged on using gradient-boosted decision tree methods for dealing with tabular data, but we'll see that neural networks build on simple linear and logistic regression models to generate their output, so it's a good starting point.
 
@@ -1664,7 +1664,7 @@ class CBOW(torch.nn.Module):
 \end{figure}
 
 
-Once we have our lookup values, we can process all our words in their relationship to each other. For CBOW, we take a single word and we pick a sliding window, in our case, two words before, and two words after, and try to infer what the actual word is. This is called the \textbf{context vector}, and in other cases, we'll see that it's called attention. For example, if we have the phrase "No bird [blank] too high", we're trying to predict that the answer is "soars" with a given softmax probability, aka ranked against other words. Once we have the context vector, we look at the loss --- the difference between the true word and the predicted word as ranked by probability --- and then we continue.
+Once we have our lookup values, we can process all our words. For CBOW, we take a single word and we pick a sliding window, in our case, two words before, and two words after, and try to infer what the actual word is. This is called the \textbf{context vector}, and in other cases, we'll see that it's called attention. For example, if we have the phrase "No bird [blank] too high", we're trying to predict that the answer is "soars" with a given softmax probability, aka ranked against other words. Once we have the context vector, we look at the loss --- the difference between the true word and the predicted word as ranked by probability --- and then we continue.
 
 The way we train this model is through context windows. For each given word in the model, we create a sliding window that includes that word and 2 words before it, and 2 words after it.
 
@@ -2100,19 +2100,28 @@ Armed with this knowledge, we can think of several use cases of embeddings, give
 \end{itemize}
 \end{formal}
 
-\subsection{Three Real Use-Cases}
+\subsection{Embeddings in Practice}
 
-Many companies are working with embeddings in all of these contexts today, across areas that span search, recommendation, and everything in between. There are multiple examples of deep learning embeddings being used in recommendation tasks: a wide and deep model for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real}, using embeddings for content understanding at Netflix\citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock\citep{gomez2022learning}, and many other examples.
+Many companies are working with embeddings in all of these contexts today, across areas that span all aspects of information retrieval. Embeddings generated with deep learning models are being generated for use in wide and deep models for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real}, using embeddings for content understanding at Netflix\citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock\citep{gomez2022learning}, and many other examples.
 
-In one popular case, Pinterest is a perfect example of another app that has a large variety of content that, from a business perspective, needs to be personalized and recommended for users. The scale of content created at Pinterest - 350 million monthlu users and 2 billion items (pins) necessitates a considered filtering and ranking policy.
+\subsubsection{Pinterest}
 
-The system they developed to deal with part of this problem is called PinnerSage, a two-stage embedding system that finds semantically similar Pins\citep{pal2020pinnersage}. The foundation of PinnerSage is PinSage\citep{ying2018graph}. PinSage is a graph convolutional network algorithm used to generate embeddings that carry latent features explaining graph-level relationships and are constructed via a random walk over the graph. The embeddings are in 256 dimensions and retrieved at inference time from an Approximate Nearest Neighbors Index using HNSW.
+One notable example is Pinterest. Pinterest as an application has a wide variety of content that needs to be personalized and classified for recommendation to users across multiple surfaces, particularly the Homefeed and shopping tab. The scale of generated content - 350 million monthly users and 2 billion items - Pins --- or cards with an image described by text --- necessitates a strong filtering and ranking policy. 
 
-Let's take a look at some more specific ones.
+To represent a user's interest and surface interesting content, Pinterest developed PinnerSage\citep{pal2020pinnersage}, which represents user interests through multiple 256-dimension mebeddings that are clustered based on similarity and represented by \textbf{medioids} --- an item that is a representative of a center of a given interest cluster. 
+
+The foundation of this system is a set of embeddings developed through an algorithm called PinSage\citep{ying2018graph}. Pinsage generates embeddings using a Graph Convolutional neural network, which is a neural net that takes into account the graph structure of relationships between nodes in the network. The algorithm looks at the nearest neighbors of a pin and samples from nearby pins based on related neighborhood visits. The input is embeddings of a Pin: the image embeddings, and the text embeddings, and finds the nearest neighbors. 
+
+Pinsage embeddings are then passed to Pinnersage, which takes the pins the user has acted on for the past 90 days and clusters them. It computes the medioid and takes the top 3 medioids based on importance, and, given a user query that is a medioid, performs an approximate nearest neighbors search using HNSW to find the pins closest to the query in the embedding space. 
+
+\begin{figure}[H]
+\centering{\includegraphics[width=.9\textwidth]{figures/pinnersage_model.png}}
+\caption{Pinnersage and Pinsage embeddings-based similarity retrieval}
+\end{figure}
 
 \subsubsection{YouTube}
 
-\textbf{YouTube }was one of the first companies to release a paper on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. YouTube has over 800 million pieces of content (videos) and 2.6 billion active users as of 2023 that they'd like to recommend those videos to. The application needs to be able to recommend content to users, quickly, while also generalizing the recommender model to new content, and to blend new content with already-established videos. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency.
+\textbf{YouTube }was one of the first large companies to publicly talk about embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. YouTube has over 800 million pieces of content (videos) and 2.6 billion active users as of 2023 that they'd like to recommend those videos to. The application needs to recommend content to users, with low latency while also generalizing to new content, and to blend new content with already-established videos. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency.
 
 In this paper, we create a two-stage recommender (in Tensorflow) consisting of a \textbf{candidate generator} that reduces the candidate set to hundreds of items and a second model, similar in size and shape, that's a \textbf{ranker} that ranks these videos by probability that the user will click on them.
 
