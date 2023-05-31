@@ -749,7 +749,6 @@ As we go through the historical context of embeddings, we'll build our intuition
 \end{figure}
 
 \section{Historical Encoding Approaches}
-\subsection{History of Embeddings}
 
 Compressing content into lower dimensions for compact numerical representations and calculations is not a new idea. For as long as humans have been overwhelmed by information, we've been trying to synthesize it so that we can make decisions based on it. Early approaches have included one-hot encoding, TF-IDF, bag-of-words, LSA, and LDA.
 
@@ -2119,25 +2118,29 @@ Pinsage embeddings are then passed to Pinnersage, which takes the pins the user 
 \caption{Pinnersage and Pinsage embeddings-based similarity retrieval}
 \end{figure}
 
-\subsubsection{YouTube}
+\subsubsection{Alphabet: YouTube and Google Play Store}
 
-\textbf{YouTube }was one of the first large companies to publicly talk about embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations."\citep{covington2016deep}. YouTube has over 800 million pieces of content (videos) and 2.6 billion active users as of 2023 that they'd like to recommend those videos to. The application needs to recommend content to users, with low latency while also generalizing to new content, and to blend new content with already-established videos. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency.
+\subsubsection*{YouTube}
+\textbf{YouTube }was one of the first large companies to publicly share their work on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations.". YouTube has over 800 million pieces of content (videos) and ~2.6 billion active users that they'd like to recommend those videos to. The application needs to recommend existing content to users, while also generalizing to new content. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency.
 
-In this paper, we create a two-stage recommender (in Tensorflow) consisting of a \textbf{candidate generator} that reduces the candidate set to hundreds of items and a second model, similar in size and shape, that's a \textbf{ranker} that ranks these videos by probability that the user will click on them.
+In this paper\citep{covington2016deep}, YouTube shares how they created a two-stage recommender system consisting of a \textbf{candidate generator} that reduces the candidate video set to hundreds of items and a second model, similar in size and shape, called a \textbf{ranker} that ranks these hundreds videos by probability that the user will click on them and watch.
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.5\textwidth]{figures/youtube_recsys.png}}
 \caption{YouTube's recommender system, including a candidate generator and ranker\citep{covington2016deep}}
 \end{figure}
 
-With respect to the machine learning task, we'd like to ultimately predict, given a user, $U$ and \textbf{context} $C$\footnote{In recommender systems, we often think of \href{https://md.ekstrandom.net/blog/2015/10/search-and-recsys}{four relevant items} to formulate our recommender problem - user, item, context, and query. The context is usually the environment, for example the time of day or the geography of the user at inference time } the probability that the user is likely to click on a video at a specific time, based on two sets of embeddings: the user and the context, and a set of video items.
+The machine learning task is to ultimately predict ultimately predict, given a user, $U$ and \textbf{context} $C$\footnote{In recommender systems, we often think of \href{https://md.ekstrandom.net/blog/2015/10/search-and-recsys}{four relevant items} to formulate our recommender problem - user, item, context, and query. The context is usually the environment, for example the time of day or the geography of the user at inference time } the probability that the user is likely to click on a video at a specific time. We'd like to offer the user items that they're most likely to click on. 
+
+
+To build the model, we use two sets of embeddings as input data: one that's the user plus context as features, and a set of video items.
 
 \begin{figure}[H]
 \centering{\includegraphics[width=\textwidth]{figures/youtube_model.png}}
 \caption{YouTube's multi-step neural network model for video recommendations using input embeddings\citep{covington2016deep}}
 \end{figure}
 
-\textbf{Implicit} feedback - whether a video was viewed or not - is used as part of the response variable. The response variable is then a user plus time and whether the video was viewed or not. Each class response, of which there are approximately a million, is given a probability as output.  The model has several hundreds of features, both tabular and embeddings-based. For the embeddings-based features, we include elements like:
+The response variable is then a user plus time and whether the video was viewed or not. We consider this an example of \textbf{Implicit} feedback - feedback the user did not explicitly give, such as a rating, but that we can capture in our log data.  Each class response, of which there are approximately a million, is given a probability as output.  The model has several hundreds of features, both tabular and embeddings-based. For the embeddings-based features, we include elements like:
 
 \begin{itemize}
   \item User watch history - represented by a vector of sparse video ID elements mapped into a dense vector representation
@@ -2194,7 +2197,7 @@ Joint embedding is performed by using data from user-tweet engagement, advertisi
 In fact, there are so many uses for embeddings at twitter that the ML platform engineering team created a centralized repository and store for them
 
 
-\subsubsection{Flutter}
+\subsubsection*{Flutter}
 
 Given our new knowledge about how embeddings and recommender systems work, we can now incorporate embeddings into the recommendations we serve for flits at Flutter.  If we want to recommend relevant content, we might do it in a number of different ways, depending on our business requirements.
 
@@ -2228,7 +2231,7 @@ In addition to our running business logic code, we are now keeping track of
   \item updating embeddings
   \item versioning embeddings and data drift
   \item Inference and latency
-  \item Interpreting embeddings and accuracy
+  \item Online and offline model evaluation
 \end{itemize}
 \end{formal}
 
@@ -2242,8 +2245,6 @@ There are pre-trained embeddings available.  Pretrained embeddings are based on 
 
 Generally when embeddings are generated as part of a Tensorflow (or PyTorch or Gensim) artifact, they initially live in-memory and are then propagated to a model object, which is serialized onto memory and then loaded at re-training or inference time. But if we want to access the embeddings specifically and search through them, as well as potentially do search against other embeddings, we need something that acts as an embeddings store.
 
-
-
 There are many requirements to consider when choosing an embeddings store, some high-level ones include:
 
 \begin{formal}
@@ -2254,8 +2255,7 @@ There are many requirements to consider when choosing an embeddings store, some 
   \item Artifact retrieval
   \item updating embeddings
   \item versioning embeddings and data drift
-  \item Inference and latency
-  \item Interpreting embeddings and accuracy
+  \item Interpreting embedding relationships
 \end{itemize}
 \end{formal}
 
@@ -2298,6 +2298,9 @@ Given this, we need to think about how to reduce the footprint of our model and 
 As an example, in the wide and deep paper, the recommender ranking model scores over 10 million apps per second. The application was initially single-threaded, with all candidates taking 31 milliseconds. By implementing multithreading, they were able to reduce client-side latency to 14 milliseconds\citep{cheng2016wide}.
 
 Operations of machine learning systems is an entirely other art and craft of study and one that's best left for another paper\citep{kreuzberger2022machine}.
+
+\subsubsection{Online and Offline Model Evaluation}
+We've barely scratched the surface of one of the most critical parts of a model: how it performs in offline and online testing. When we talk about offline tests, we mean
 
 \subsubsection{What makes embeddings projects successful}
 Finally, once we have all our algorithmic and engineering concerns lined up, there is the final matter to consider of what will make our project successful from a business perspective. We should acknowledge that we might not always need embeddings for our machine learning problem, or that we might not need machine learning at all, initially, if our project is based entirely on a handful of heuristic rules that can be determined and analyzed by humans\citep{zinkevich2017rules}.
