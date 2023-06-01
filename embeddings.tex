@@ -2118,29 +2118,29 @@ Pinsage embeddings are then passed to Pinnersage, which takes the pins the user 
 \caption{Pinnersage and Pinsage embeddings-based similarity retrieval}
 \end{figure}
 
-\subsubsection{Alphabet: YouTube and Google Play Store}
+\subsubsection{YouTube and Google Play Store}
 
 \subsubsection*{YouTube}
-\textbf{YouTube }was one of the first large companies to publicly share their work on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations.". YouTube has over 800 million pieces of content (videos) and ~2.6 billion active users that they'd like to recommend those videos to. The application needs to recommend existing content to users, while also generalizing to new content. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency.
+\textbf{YouTube }was one of the first large companies to publicly share their work on embeddings used in the context of a production recommender system with "Deep Neural Networks for YouTube Recommendations." 
 
-In this paper\citep{covington2016deep}, YouTube shares how they created a two-stage recommender system consisting of a \textbf{candidate generator} that reduces the candidate video set to hundreds of items and a second model, similar in size and shape, called a \textbf{ranker} that ranks these hundreds videos by probability that the user will click on them and watch.
+YouTube has over 800 million pieces of content (videos) and ~2.6 billion active users that they'd like to recommend those videos to. The application needs to recommend existing content to users, while also generalizing to new content, which is uploaded frequently. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency.
+
+In this paper\citep{covington2016deep}, YouTube shares how they created a two-stage recommender system for videos based on two deep learning models. The machine learning task is to predict the correct next video to show the user at a given time in YouTube recommendations so that they click.  The final output is formulated as a classification problem: given a user's input features and the input features of a video, can we predict a class for the user that includes the predicted watch time for the user for a specific video with a specific probability. 
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.5\textwidth]{figures/youtube_recsys.png}}
-\caption{YouTube's recommender system, including a candidate generator and ranker\citep{covington2016deep}}
+\caption{YouTube's end-to-end video recommender system, including a candidate generator and ranker\citep{covington2016deep}}
 \end{figure}
 
-The machine learning task is to ultimately predict ultimately predict, given a user, $U$ and \textbf{context} $C$\footnote{In recommender systems, we often think of \href{https://md.ekstrandom.net/blog/2015/10/search-and-recsys}{four relevant items} to formulate our recommender problem - user, item, context, and query. The context is usually the environment, for example the time of day or the geography of the user at inference time } the probability that the user is likely to click on a video at a specific time. We'd like to offer the user items that they're most likely to click on. 
+We set this task given a user, $U$ and \textbf{context} $C$\footnote{In recommender systems, we often think of \href{https://md.ekstrandom.net/blog/2015/10/search-and-recsys}{four relevant items} to formulate our recommender problem - user, item, context, and query. The context is usually the environment, for example the time of day or the geography of the user at inference time }
+
+Given the size of the input corpus, we need to formulate the problem as a two-stage recommender: the first is the \textbf{candidate generator} that reduces the candidate video set to hundreds of items and a second model, similar in size and shape, called a \textbf{ranker} that ranks these hundreds videos by probability that the user will click on them and watch.
+
+The candidate generator is a \textbf{softmax} deep learning model with several layers, all activated with \textbf{ReLU} activation functions --  rectified linear unit activation that outputs the input directly if positive; otherwise, it's zero.  The uses both embedded and tabular learning features, all of which are combined and 
 
 
-To build the model, we use two sets of embeddings as input data: one that's the user plus context as features, and a set of video items.
 
-\begin{figure}[H]
-\centering{\includegraphics[width=\textwidth]{figures/youtube_model.png}}
-\caption{YouTube's multi-step neural network model for video recommendations using input embeddings\citep{covington2016deep}}
-\end{figure}
-
-The response variable is then a user plus time and whether the video was viewed or not. We consider this an example of \textbf{Implicit} feedback - feedback the user did not explicitly give, such as a rating, but that we can capture in our log data.  Each class response, of which there are approximately a million, is given a probability as output.  The model has several hundreds of features, both tabular and embeddings-based. For the embeddings-based features, we include elements like:
+To build the model, we use two sets of embeddings as input data: one that's the user plus context as features, and a set of video items. The model has several hundreds of features, both tabular and embeddings-based. For the embeddings-based features, we include elements like:
 
 \begin{itemize}
   \item User watch history - represented by a vector of sparse video ID elements mapped into a dense vector representation
@@ -2149,9 +2149,21 @@ The response variable is then a user plus time and whether the video was viewed 
   \item The number of previous impressions a video had, normalized per user over time
 \end{itemize}
 
-The size of the vector embedding vocabulary is 1 million classes. The model, made of up of several hidden \textbf{ReLu} layers, is trained until convergence. Convergence in this case means using the data of videos that were clicked on and comparing them with the hypothetical videos that would be clicked on as the output of this model.
 
-Similar work, although with a different architecture, was done in the App Store in Google Play in a popular paper, "Wide and Deep Learning for Recommender Systems"\citep{cheng2016wide}." This one crosses the search and recommendation space because it relies on returning correct ranked and personalized app recommendations as the result of a search query.  The input is clickstream  data collected when a user visits the app store.
+These are all combined into a single item embedding, and in the case of the user, a single embedding that's a blended map of all the user embedding features, and fed into the models' softmax layers, which compare the distance between the output of the softmax layer, i.e. the probability that the user will click on an item, and a set of ground truth items, i.e. a set of items that the user has already interacted with. The log probability of an item is the dot product of two n-dimensional vectors, i.e. the query and item embeddings. 
+
+We consider this an example of \textbf{Implicit} feedback - feedback the user did not explicitly give, such as a rating, but that we can capture in our log data.  Each class response, of which there are approximately a million, is given a probability as output.  
+
+The DNN is a generalization of the matrix factorization model we discussed earlier. 
+
+
+\begin{figure}[H]
+\centering{\includegraphics[width=\textwidth]{figures/youtube_model.png}}
+\caption{YouTube's multi-step neural network model for video recommendations using input embeddings\citep{covington2016deep}}
+\end{figure}
+
+\subsubsection*{Google Play App Store}
+Similar work, although with a different architecture, was done in the App Store in Google Play in "Wide and Deep Learning for Recommender Systems"\citep{cheng2016wide}." This one crosses the search and recommendation space because it returns correct ranked and personalized app recommendations as the result of a search query.  The input is clickstream  data collected when a user visits the app store.
 
 
 \begin{figure}[H]
@@ -2161,10 +2173,12 @@ Similar work, although with a different architecture, was done in the App Store 
 
 The recommendations problem is formulated here as two jointly-trained models. The weights are shared and cross-propagated between the two models between epochs.
 
-There are two problems when we try to build models that recommend items: \textbf{memorization} - the model needs to learn how items occur together given the historical data, and \textbf{generalization}, meaning that the model needs to be able to learn and give new recommendations the user has not seen before, improving recommendation diversity. Generally, one model alone cannot encompass both of these tradeoffs, and so side and deep is made up of two models that try to compensate for each other's weaknesses:
+There are two problems when we try to build models that recommend items: \textbf{memorization} - the model needs to learn patterns by learning how items occur together given the historical data, and \textbf{generalization} - the model needs to be able to give new recommendations the user has not seen before that are still relevant to the user, improving recommendation diversity. Generally, one model alone cannot encompass both of these tradeoffs.  
+
+Wide and deep is made up of two models that look to complement each other:
 
 \begin{itemize}
-  \item A \textbf{wide} model which uses traditional tabular features to improve the model's \textbf{memorization}. This is a general linear model trained on sparse, one-hot encoded features like $user_installed_app=netflix$ across thousands of apps. Memorization works here by creating binary features that are combinations of features, such as $AND(user_installed_app=netflix, impression_app_pandora$, allowing us to see different combinations of co-occurrence in relationship to the target, i.e. likelihood to install app $Y$. However, this model cannot generalize if it gets a new value outside of the training data.
+  \item A \textbf{wide} model which uses traditional tabular features to improve the model's \textbf{memorization}. This is a general linear model trained on sparse, one-hot encoded features like \mintinline{python}{user_installed_app=netflix} across thousands of apps. Memorization works here by creating binary features that are combinations of features, such as \mintinline{python}{AND(user_installed_app=netflix, impression_app_pandora}, allowing us to see different combinations of co-occurrence in relationship to the target, i.e. likelihood to install app $Y$. However, this model cannot generalize if it gets a new value outside of the training data.
   \item A \textbf{deep} model that supports \textbf{generalization} across items that the model has not seen before, using a feed-forward neural network made up of categorical features that are translated to embeddings, such as user language, device class, and whether a given app has an impression. Each of these embeddings range from 0-100 in dimensionality. They are combined jointly into a concatenated embedding space with dense vectors in 1200 dimensions.  and initialized randomly. The embedding values are trained to minimize loss of the final function, which is a logistic loss function common to the deep and wide model.  
 \begin{figure}[H]
 \centering{\includegraphics[width=1.1\textwidth]{figures/deepmodel.png}}
@@ -2172,7 +2186,7 @@ There are two problems when we try to build models that recommend items: \textbf
 \end{figure}
 \end{itemize}
 
-The model is trained on 500 billion examples, and evaluated offline using AUC and online using app acquisition rate, the rate at which people download the app. Based on the paper, using this approach improved the app acquisition rate on the main landing page of the app store by $3.9 percent$ relative to the control group.
+The model is trained on 500 billion examples, and evaluated offline using AUC and online using app acquisition rate, the rate at which people download the app. Based on the paper, using this approach improved the app acquisition rate on the main landing page of the app store by 3.9 \% relative to the control group.
 
 
 \subsubsection{Twitter}
