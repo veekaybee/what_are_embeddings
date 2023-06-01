@@ -4,7 +4,10 @@ run-name: Deploy ${{ github.event.head_commit.message }}
 on:
   push:
     branches:
-    - master
+    - main
+  pull_request:
+    branches:
+    - main
 
 
 jobs:
