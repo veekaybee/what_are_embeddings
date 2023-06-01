@@ -2231,19 +2231,28 @@ Embeddings are endlessly flexible and endlessly useful, and can empower and impr
 
 \subsection{Embeddings as an Engineering Problem}
 
+In general, machine learning workflwos add an enormous amount of complexity and overhead to our engineering systems, for a number of reasons\citep{sculley2014machine}. First, they blend data that then needs to be monitored for drift downstream. Second, they are non-deterministic in their outputs, which means they need to be tracked extremely carefully as artifacts, since we generally don't version-control data. Third, they result in processing pipeline jungles. 
 
-Recommender systems generating and retrieving embeddings provide a great deal of utility in working with large, heterogeneous datasets. But this comes at an enormous cost of adding engineering complexity into our existing application.  As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, these systems have many moving components.
+
+\leftskip=0.5in\bigskip\noindent
+As a special case of glue code, pipeline jungles often appear in data preparation. These can evolve organically, as new signals are identified and new information sources added. Without care, the resulting system for preparing data in an ML-friendly format may become a jungle of scrapes, joins, and sampling steps, often with intermediate files output.
+\leftskip=0pt\bigskip
+
+
+As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, recommender systems have many moving components.
+
 
 \begin{figure}[H]
-\begin{minipage}[c]{0.5\linewidth}
-\centering{\includegraphics[width=\textwidth]{figures/pinnersage.png}}
-\caption{PinnerSage model architecture\citep{pal2020pinnersage}}
-\end{minipage}
-\hfill
-\begin{minipage}[c]{0.5\linewidth}
-\centering{\includegraphics[width=\textwidth]{figures/wideanddeep_arch.png}}
-\caption{Wide and Deep model architecture\citep{cheng2016wide}}
-\end{minipage}%
+  \centering
+  \begin{minipage}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{figures/pinnersage.png}
+    \caption{PinnerSage model architecture\citep{pal2020pinnersage}}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.4\textwidth}
+    \includegraphics[width=\textwidth]{figures/wideanddeep_arch.png}
+    \caption{Wide and Deep model architecture\citep{cheng2016wide}}
+  \end{minipage}
 \end{figure}
 
 In addition to our running business logic code, we are now keeping track of
