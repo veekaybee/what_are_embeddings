@@ -1,3 +1,9 @@
+
+<p align="center">
+  <img src="https://github.com/veekaybee/what_are_embeddings/blob/main/docs/assets/embeddings.png" />
+</p>
+
+
 # What are embeddings? 
 This repository contains the generated LaTex document, website, and complementary notebook code for 
 ["What are Embeddings".](https://vickiboykis.com/what_are_embeddings/)
