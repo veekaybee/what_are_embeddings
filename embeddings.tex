@@ -2190,35 +2190,47 @@ The model is trained on 500 billion examples, and evaluated offline using AUC an
 
 
 \subsubsection{Twitter}
-\textbf{Twitter}, our model for Flutter, embeddings were a critical part of tweet recommendation. Twitter generated their own content-based embedding model, Twice (Twitter Content Embeddings)\citep{liu2022twice} for serving as signals in downstream predictive tasks, such as whether users were likely to click on tweets, which were then used as input signals into how to rank Tweets in the Home Timeline, Notifications, and Topics Models. Twice learns embeddings at the sentence level, capturing a dense representation of sentences and capturing similarity. When we read the paper, we notice mentions of Word2Vec, particularly the Skipgram model, which Twice Builds on.
+At \textbf{Twitter},  precomputed embeddings were a \href{https://blog.twitter.com/engineering/en_us/topics/insights/2018/embeddingsattwitter}{critical part} recommendations for many app surface areas including user onboarding topic interest prediction, recommended tweets, home timeline construction, users to follow, and recommended ads. 
+
+Twitter had a number of embeddings-based models but we'll cover two projects here: Twice\citep{liu2022twice}, content embeddings for Tweets, which looks to find rich representations of Tweets that include both text and visual data for use in surfacing tweets in the home timeline, Notifications and Topics. Twitter also developed TwHIN\citep{el2022twhin}, Twitter Heterogeneous Information Network, a set of graph-based embeddings\citep{el2022twhin}, developed for tasks like personalized ads rankings, account follow-recommendation, offensive content detection, and search ranking, based on nodes (such as users and advertisers) and edges that represent entity interactions.
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.5\textwidth]{figures/twice.png}}
 \caption{Twitter's TWICe Embeddings, a trained BERT model\citep{liu2022twice}}
 \end{figure}
 
-Twice is a BERT-based model that's trained on a multi-task loss function, including topic prediction (aka the topic associated with a tweet), engagement prediction (the likelihood a user is to engage with a tweet), and language prediction because we'd like for tweets of the same language to be clustered closer together. The model is trained on 200 million tweets sampled over 90 days, for five epochs.
 
-Twitter also developed TWHIN\citep{el2022twhin}, Twitter Heterogeneous Information Network, a set of graph-based embeddings\citep{el2022twhin}, developed for tasks like personalized ads rankings, account follow-recommendation, offensive content detection, and search ranking, based on nodes (such as users and advertisers) and edges that represent entity interactions.
+Twice is a BERT model trained from scratch on an input corpus of 200 million tweets that users engaged with sampled over 90 days and also includes associations to the users themselves. The objective of the model is to optimize on several tasks: topic prediction (aka the topic associated with a tweet, of which there could be multiple), engagement prediction (the likelihood a user is to engage with a tweet), and language prediction to cluster tweets of the same language to be clustered closer together. 
+
+
+TwHIN, rather than just focusing on tweet content, considers all entities in Twitter's environment (tweets, users, advertiser entites) as belong together in a joint embedding space graph. 
+
+Joint embedding is performed by using data from user-tweet engagement, advertising, and following data, to create multi-model embeddings. TWHin is used for candidate generation. The candidate generator finds users to follow or tweets to engage with with an HNSW or Faiss to retrieve candidate items. TWHin embeddings are then used to query candidate items and increase diversity in the candidate pool.
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.7\textwidth]{figures/twhin.png}}
-\caption{Twitter's TWICe Embeddings, a trained BERT model\citep{el2022twhin}}
+\caption{Twitter's model of the app's heterogenous information network\citep{el2022twhin}}
 \end{figure}
 
-Joint embedding is performed by using data from user-tweet engagement, advertising, and following data, to create multi-model embeddings. TWHin is used for candidate generation. The candidate generator starts by finding users to follow or tweets to engage with with an HNSW or Faiss to retrieve candidate items. TWHin embeddings are then used to query candidate items and increase diversity in the candidate pool.
 
-In fact, there are so many uses for embeddings at twitter that the ML platform engineering team created a centralized repository and store for them
+\subsubsection*{Embeddings at Flutter?}
 
+Once we synthesize enough of these architectures, we see some patterns start to emerge that we can think about adapting for developing our relevant recommendation system at Flutter. 
 
-\subsubsection*{Flutter}
+First, we need a great deal of input data to make accurate predictions from, and that data should have information about either explicit, or, more likely, implicit data like user clicks and purchases so that we can construct our model of user preferences. The reason we need a lot of data is two-fold. First, neural networks are data-hungry and require a large amount of training data to correctly infer relationships in comparison to traditional models. Second, large data requires a large pipeline.  
 
-Given our new knowledge about how embeddings and recommender systems work, we can now incorporate embeddings into the recommendations we serve for flits at Flutter.  If we want to recommend relevant content, we might do it in a number of different ways, depending on our business requirements.
+If we don't have a lot of data, a simpler model will work well-enough, so we need to make sure we are actually at the scale where embeddings and neural networks help our business problem. It's likely the case that we can start much simpler. And in fact, a recent paper by one of the original researchers who developed factorization machines, an important approach in recommendations, argues that simple dot products found as the result of matrix factorization outperform neural networks\citep{rendle2020neural}.  Second, in order to get good embeddings, we will need to spend a great deal of time cleaning and processing data and creating features, as we did in the YouTube paper, so the outcome has to be worth the time spent. 
 
-We could learn our own embeddings model in training Word2Vec or tf-idf as a baseline model. If that performs well enough in evaluation, we're done. We could learn embeddings and use them in a downstream model that's specific to our use-case - maybe using them in the home timeline.  We can use embeddings as inputs into a neural collaborative filtering model\citep{he2017neural}.
-Embeddings are endlessly flexible and endlessly useful, and can empower and improve the performance of our multimodal machine learning workflows.
+Second, we need to be able to understand the latent relationship between users and items they've interacted with. In traditional recommenders, we could use TF-IDF to find the weighted word features as part of a particular flit and compare across documents, as long as our corpus doesn't grow too large. In more advanced recommendation systems, we could perform this same task by looking at either naive association rules, or framing recommendation as an interaction-based collaborative filtering problem not unlike Word2Vec to generate latent features, aka embeddings, of our users and items. In fact, this is exactly what Levy and Goldberg argued in "Neural Word Embedding as Implicit Matrix Factorization"\citep{levy2014neural}. They looked at the skipgram implementation of Word2Vec and find that implicitly it factors a word-context matrix.
+
+We could alternatively still use tabular features as input into our collaborative filtering problem but use a neural network\citep{he2017neural} instead of simple dot product to converge on the correct relationships and the downstream ranking for the model. 
+
+Given our new knowledge about how embeddings and recommender systems work, we can now incorporate embeddings into the recommendations we serve for flits at Flutter.  If we want to recommend relevant content, we might do it in a number of different ways, depending on our business requirements.  In our corpus, we have hundreds of millions of messages that we need to filter down to hundreds to show the user. So we can start with a baseline of Word2Vec or similar and move on to any of the BERT or other neural network approaches to developing model input features, vector similarity search, and ranking, through the power of embeddings. 
+
+Embeddings are endlessly flexible and endlessly useful, and can empower and improve the performance of our multimodal machine learning workflows. However, as we just saw, there are some things to keep in mind if we do decide to use them.
 
 \subsection{Embeddings as an Engineering Problem}
+
 
 Recommender systems generating and retrieving embeddings provide a great deal of utility in working with large, heterogeneous datasets. But this comes at an enormous cost of adding engineering complexity into our existing application.  As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, these systems have many moving components.
 
