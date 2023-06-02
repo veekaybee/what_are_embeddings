@@ -228,14 +228,14 @@ This paper is typeset with \LaTeX. The cover art is Kandinsky's "Circles in a Ci
 The latest version of the paper and code examples \href{https://github.com/veekaybee/what_are_embeddings}{are available here.} The   \href{http://vickiboykis.com/what_are_embeddings/}{website for this project is here.}
 
 \section*{About the Author}
-Vicki Boykis is a machine learning engineer. Her website is \href{https://www.vickiboykis.com}{vickiboykis.com} and her semantic search side project is \href{https://www.viberary.pizza}{viberary.pizza}. Her email is \href{mailto:vickiboykis@gmail.com}{vickiboykis@gmail.com}.
+Vicki Boykis is a machine learning engineer. Her website is \href{https://www.vickiboykis.com}{vickiboykis.com} and her semantic search side project is \href{https://www.viberary.pizza}{viberary.pizza}. 
 
 %----------------------------------------------------------------------------------------
 %    CREATIVE COMMONS LICENSE
 %----------------------------------------------------------------------------------------
 
 \section*{Acknowledgements}
-I'm grateful to everyone who has graciously offered their technical feedback but especially to Nicola Barbieri, Peter Baumgartner, James Kirk, and Ravi Mody. All remaining errors, typos, and bad jokes are mine. Thank you to Dan for your patience, encouragement, for parenting while I was in the latent space, and for once casually asking, "How do you generate these 'embeddings', anyway?"
+I'm grateful to everyone who has graciously offered their technical feedback but especially to Nicola Barbieri, Peter Baumgartner, Luca Belli, James Kirk, and Ravi Mody. All remaining errors, typos, and bad jokes are mine. Thank you to Dan for your patience, encouragement, for parenting while I was in the latent space, and for once casually asking, "How do you generate these 'embeddings', anyway?"
 
 \section*{License}
 \doclicenseThis
@@ -2290,63 +2290,75 @@ Given all of our concern space, the diagram of any given production system would
 
 We've already seen that embeddings are usually generated as a byproduct of training neural network models, most often the penultimate layer that's used before a layer to classify or regress is added as the final output. We have two ways to build them. We can train our own models, as YouTube, Pinterest, and Twitter have done. In the LLM space, there is also \href{https://blog.replit.com/llm-training}{growing interest} in being able to train large language models in-house. 
 
-However, one of the large benefits of deep learning models is that we can also use pre-trained model. A pretrained model 
+However, one of the large benefits of deep learning models is that we can also use pre-trained model. A pretrained model is any model that's like the one we're considering for our task that has already been trained on an enormous coprus of training data, and can be used for downstream tasks. \href{https://huggingface.co/docs/transformers/model_doc/bert}{BERT is an example} of a model that has already been pre-trained and can be used for any number of machine learning tasks through the process of \textbf{fine-tuning}. In fine-tuning, we take a model that's already been pre-trained on a generic dataset. For example, BERT was trained on \href{https://resources.wolframcloud.com/NeuralNetRepository/resources/BERT-Trained-on-BookCorpus-and-English-Wikipedia-Data}{BookCorpus, a set of 11k books with 800 million words and English Wikipedia, 2.5 billion words}.
 
-We generate them as either the result of training our own models, or by using other, pre-trained models that we can transfer learn from. Considerations here include how many resources we have, both in terms of time and money, to generate our own embeddings, and how accurate pre-trained models are. Something else to consider is whether you want to use pre-trained models or train our own from scratch. Each of these has their own upsides and downsides.
 
-There are pre-trained embeddings available.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pre-trained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  We can also query OpenAI embeddings, although doing so comes at a fairly steep cost.
+\begin{formal}
+\subsubsection*{An aside on training data}
+Training data is the most important part of any given model. Where does it come from for pre-trained large language models? Usually scraping large parts of the internet. In the interest of competitive advantage, how these training datasets are put together is usually not revealed, and there is a fair amount of reverse-engineering and speculation. For example, \href{https://s10251.pcdn.co/pdf/2022-Alan-D-Thompson-Whats-in-my-AI-Rev-0.pdf}{"What's in my AI"} goes into the training data behind the GPT series of models and finds that GPT-3 was trained on Books1 and Books2. Books1 is \href{https://github.com/soskek/bookcorpus/issues/27#issuecomment-716104208}{likely bookcorpus} and books2 is likely \href{https://en.wikipedia.org/wiki/Library_Genesis}{libgen}. GPT also includes the Common Crawl, an large open-source dataset of indexed websites, WebText2, and Wikipedia. This information is important because when we pick  a model we need to at least understand at a high level what it was trained on to be a general-purpose model so we can explain what changes when we fine-tune it. 
+\end{formal}
+
+In \textbf{fine-tuning} a model, we perform all the same steps as we do for training from scratch. We have training data, we have a model, and we minimize a loss function. However, there are several differences. When we create our new model, we copy the existing, pre-trained model with the exception of the final output layer, which we initialize from scratch based on our new task. When we train the model, we initialize these parameters at random and only continue to adjust the parameters of the previous layers so that they focus on this task rather than starting to train from scratch. In this way, if we have a model like BERT that's trained to generalize across the whole internet, but our corpus for Flutter is very sensitive to trending topics and needs to be updated on a daily basis, we can refocus the model without having to train a new one with as few as 10k samples instead of our original hundreds of millions\citep{zhang2020revisiting}. 
+
+There are, likewise, BERT embeddings available that we can fine-tune. There are other generalized corpuses available, such as GloVE, Word2Vec, and \href{https://fasttext.cc/docs/en/crawl-vectors.html}{FastText} (also trained with CBOW). We need to make a decision whether to use these, train a model from scratch, or a third option, to query \href{https://platform.openai.com/docs/guides/embeddings/limitations-risks}{embeddings available from an API} as is the case for OpenAI embeddings, although doing so can potentially come at a \href{https://github.com/ray-project/llm-numbers#101----cost-ratio-of-openai-embedding-to-self-hosted-embedding}{higher}, relative to training or fine-tuning our own. Of course, all of this is subject to our particular use-case and is important to evaluate when we start a project. 
 
 \subsubsection{Storage and Retrieval}
 
-Once we've trained our model, 
+Once we've trained our model, we'll need to extract the embeddings from the trained object. Generally, when a model is trained, the resulting output is a data structure that contains all the parameters of the model, including the model's weights, biases, layers and learning rate. The embeddings are part of this model object as a layer, and they initially live in-memory. When we write the model to disk, we propagate them as a model object, which is serialized onto memory and loaded at re-training or inference time. 
 
-Generally when embeddings are generated as part of a Tensorflow (or PyTorch or Gensim) artifact, they initially live in-memory and are then propagated to a model object, which is serialized onto memory and then loaded at re-training or inference time. But if we want to access the embeddings specifically and search through them, as well as potentially do search against other embeddings, we need something that acts as an embeddings store.
+The simplest form of embedding store can be an in-memory numpy array\footnote{From a tweet by Andrej Karpathy in response to how he stores vector embeddings for a small movie recommendations side project in 2023,"np.array people keep reaching for much fancier things way too fast these days. \href{https://twitter.com/karpathy/status/1647374645316968449}{tweet}}. 
 
-There are many requirements to consider when choosing an embeddings store, some high-level ones include:
+ But if we are iterating on building a model with embeddings, we want to be able to do a number of things with them: 
 
 \begin{formal}
 \begin{itemize}
-  \item Do we access embeddings in batch or are we doing real-time lookup (inference)
-  \item What kind of indexing
-  \item Embedding feature engineering and iteration
-  \item Artifact retrieval
-  \item updating embeddings
-  \item versioning embeddings and data drift
-  \item Interpreting embedding relationships
+  \item Access them in batch and one-by-one at inference time
+  \item Perform offline analysis on the quality of the embeddings
+  \item Embedding feature engineering 
+  \item Update embeddings with new models
+  \item Version embeddings
+   \item Encode new embeddings for new documents
 \end{itemize}
 \end{formal}
 
-A general-form embeddings store contains the embeddings themselves, an index to map them back from the latent space into words, pictures, or text, and a way to do similarity comparisons between different types of embeddings using algorithms. We talked before about \textbf{cosine similarity} being a staple of comparing latent space representations via the normalized dot product of two matrices. This can become computationally expensive over millions of sets of vectors, because we'd need to do a pairwise comparison over every pair. To solve this, \textbf{approximate nearest neighbors (ANN)} algorithms were developed to, as in recommender systems, create neighborhoods out of elements of vectors and find a vector's k-nearest neighbors. The most frequently-used algorithms and libraries tend to be HNSWlib and Faiss, both of which are standalone libraries and also implemented as part of
+The most complex and customizable software that handles many of these use-cases is a vector database, and somewhere in-between vector databases and in-memory storage are vector searchplugins for existing stores like Postgres and SQLite, and caches like Redis.
 
-The tradeoff between this is that it's less precise, but it's much faster\footnote{As  \href{https://bergum.medium.com/four-mistakes-when-introducing-embeddings-and-vector-search-d39478a568c5}{this post points out}, when we switch between precision and recall, you need to be aware of the tradeoffs and think about what our requirements are with respect to how accurate your embeddings are and their latency}.
+The most important operation we'd like to perform with embeddings is vector search, which allows us to find embeddings that are similar to a given embedding so we can return item similarity. If we want to search embeddings, we need a mechanism that is optimized to search through our matrix data structures and perform nearest-neighbor comparisons in the same way that a traditional relational database is optimized to search row-based relations. Relational databases use a b-tree structure to optimize reads by sorting items in ascending order within a hierarchy of nodes, build on top of an indexed column in the database. We can't perform columnar lookups on our vectors efficiently, so we need to create different structures for them, including basing it on inverted indices. 
 
-The simplest form of embedding store can be a numpy array\footnote{From a tweet by Andrej Karpathy in response to how he stores vector embeddings for a small movie recommendations side project in 2023,"np.array people keep reaching for much fancier things way too fast these days. \href{https://twitter.com/karpathy/status/1647374645316968449}{tweet}}. The most complex and customizable is a vector database, and somewhere in-between are plugins for existing relational databases like Postgres, caches like Redis, and SQLite.
+A general-form embeddings store contains the embeddings themselves, an index to map them back from the latent space into words, pictures, or text, and a way to do similarity comparisons between different types of embeddings using various nearest neighbors algorithms. We talked before about \textbf{cosine similarity} as a staple of comparing latent space representations. This can become computationally expensive over millions of sets of vectors, because we'd need to do a pairwise comparison over every pair. To solve this, \textbf{approximate nearest neighbors (ANN)} algorithms were developed to, as in recommender systems, create neighborhoods out of elements of vectors and find a vector's k-nearest neighbors. The most frequently-used algorithms include \textbf{HNSW} (hierarchical navigable small worlds) and \textbf{Faiss}, both of which are standalone libraries and also implemented as part of many existing vector stores. 
 
-Here's an example of the system that Twitter built for exactly this use case, long before vector databases came into the picture. \citep{shiebler2010making}. Given that Twitter uses embeddings in multiple sources as described in the previous section, Twitter made embeddings "first class citizens" by creating a centralized platform that reprocesses data and generates embeddings downstream into the feature registry.
+The trade-off between full and nearest neighor search is that the latter is less precise, but it's much faster. When we switch between precision and recall in evaluation, we need to be aware of the tradeoffs and think about what our requirements are with respect to how accurate our embeddings are and their inference latency.
 
+Here's an example of the embeddings storage system that Twitter built for exactly this use case, long before vector databases came into the picture. \citep{shiebler2010making}. 
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.6\textwidth]{figures/embedding_pipeline.png}}
 \caption{Twitter's embeddings pipeline\citep{shiebler2010making}}
 \end{figure}
 
+Given that Twitter uses embeddings in multiple sources as described in the previous section, Twitter made embeddings "first class citizens" by creating a centralized platform that reprocesses data and generates embeddings downstream into the feature registry.
+
 \subsubsection{Drift Detection, Versioning, and Interpretability}
 
-Once we've trained embeddings, we might think we're done. But embeddings, like any machine learning pipeline, need to be refreshed because we might run into a concept known as \textbf{concept drift}. Concept drift occurs when the data underlying your model changes. For example, let's say that your model includes, as a binary feature, people who have landlines or not. In 2023, this would no longer be as relevant of a feature in most of the world as most people have switched to cell phones as their primary telephones, so the model would lose accuracy. This phenomenon is even more prevalent with embeddings that are used for classification. For example, let's say you use embeddings for trending topic detection. The model has to generalize, as in the wide and deep model, to detect new classes, but if your classes change quickly, it may not be able to, so  you need to retrain your embeddings frequently. Or, for example, if you model embeddings in a graph, as Pinterest does, and the relationships between nodes in the graph change, you may have to update them\citep{wewer2021updating}. You could also have an influx of spam or corrupted content which changes the relationship in your embeddings, in which case you'll have to retrain.
+Once we've trained embeddings, we might think we're done. But embeddings, like any machine learning pipeline, need to be refreshed because we might run into \textbf{concept drift}. Concept drift occurs when the data underlying our model changes. For example, let's say that our model includes, as a binary feature, people who have landlines or not. In 2023, this would no longer be as relevant of a feature in most of the world as most people have switched to cell phones as their primary telephones, so the model would lose accuracy. 
 
-Once you retrain, you now have a secondary issue: how do you compare the first set of embeddings to the second; that is, how do you evaluate whether they are good representations of your data, given the case that embeddings are often unsupervised; i.e. --- how do we know whether "king" should be close to "queen"? On their own, embeddings can be hard to interpret, because in a multidimensional space it's hard to understand which dimension of a vector corresponds to a decision to place items next to each other\citep{simhi2022interpreting}.  
+This phenomenon is even more prevalent with embeddings that are used for classification. For example, let's say we use embeddings for trending topic detection. The model has to generalize, as in the wide and deep model, to detect new classes, but if our classes change quickly, it may not be able to, so we need to retrain your embeddings frequently. Or, for example, if we model embeddings in a graph, as Pinterest does, and the relationships between nodes in the graph change, we may have to update them\citep{wewer2021updating}. We could also have an influx of spam or corrupted content which changes the relationship in your embeddings, in which case we'll need to retrain.
 
 Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for a king to be close to queen but far away from the knight? What does it mean for two flits to be close to each other in a projected embedding space?  
 
 We have two ways we can think about this, \textbf{intrinsic} and \textbf{extrinsic} evaluation. For the embeddings themselves (extrinsic evaluation), we can visualize them through either \textbf{UMAP}---Uniform Manifold Approximation and Projection for Dimension Reduction or \textbf{t-sne} --- t-distributed stochastic neighbor embedding, algorithms that allow us to visualize highly-dimensional data in two or three dimensions, much like PCA. Or we can fit embeddings into our downstream task (for example, summarization, or classification), and analyze the same way we would with offline metrics. There are many different approaches
 \citep{wang2019evaluating} but the summary is that embeddings can be objectively hard to evaluate and we'll need to factor the time to perform this evaluation into our modeling time.
 
-Finally, now let's say that we have two sets of embeddings, you need to version them and keep both sets so that, in case your new model doesn't work as well, you can fall back to the old one. This goes hand in hand with the problem of model versioning in ML operations, except in this case we need to both version the model and the output data. There are numerous different approaches to model and data versioning that involve building a system that tracks both the metadata and the location of the assets that are kept in a secondary data store. Another thing to keep in mind is that embeddings layers, particularly for large vocabularies, can balloon in size, so now we have to consider storage costs, as well.
+Once we retrain our initial baseline model, we now have a secondary issue: how do we compare the first set of embeddings to the second; that is, how do we evaluate whether they are good representations of our data, given the case that embeddings are often unsupervised; i.e. --- how do we know whether "king" should be close to "queen"? On their own, as a first-pass, embeddings can be hard to interpret, because in a multidimensional space it's hard to understand which dimension of a vector corresponds to a decision to place items next to each other\citep{simhi2022interpreting}.  When compared to other sets of embeddings, we might use the offline metrics of the final model task, precision and recall, or we could measure the distance of the distribution of the embeddings in the latent space by comparing the statistical distance between the two probability distributions using a metric known as \textbf{Kullback–Leibler divergence}.
+
+Finally, now let's say that we have two sets of embeddings, you need to version them and keep both sets so that, in case your new model doesn't work as well, you can fall back to the old one. This goes hand-in-hand with the problem of model versioning in ML operations, except in this case we need to both version the model and the output data. 
+
+There are numerous different approaches to model and data versioning that involve building a system that tracks both the metadata and the location of the assets that are kept in a secondary data store. Another thing to keep in mind is that embeddings layers, particularly for large vocabularies, can balloon in size, so now we have to consider storage costs, as well.
 
 
 \subsubsection{Inference and Latency}
 
-When working with embeddings, we are operating not only in a theoretical, but practical engineering environment. The most critical part of any machine learning system that works in production is inference time --- how quickly does it take to query the model asset and return a result to an end-user.
+When working with embeddings, we are operating not only in a theoretical, but practical engineering environment. The most critical engineering part of any machine learning system that works in production is inference time --- how quickly does it take to query the model asset and return a result to an end-user.
 
 For this, we care about latency, which we can roughly define as any time spent waiting and is a critical performance metric in any production system\citep{gregg2014systems}. Generally speaking, it's the time of any operation to complete -- application request, database query, and so on. Latency at the level of the web service is generally measured in milliseconds, and every effort is made to reduce this as close to zero as realistically possible. For use-cases like search and loading a feed of content, the experience needs to be instantaneous or the user experience will degrade and we could even lose revenue. In a study from a while back, Amazon found that every 100ms increase in latency cuts profits by 1\% \citep{flach2013reducing}.
 
@@ -2357,7 +2369,9 @@ As an example, in the wide and deep paper, the recommender ranking model scores 
 Operations of machine learning systems is an entirely other art and craft of study and one that's best left for another paper\citep{kreuzberger2022machine}.
 
 \subsubsection{Online and Offline Model Evaluation}
-We've barely scratched the surface of one of the most critical parts of a model: how it performs in offline and online testing. When we talk about offline tests, we mean
+We've barely scratched the surface of one of the most critical parts of a model: how it performs in offline and online testing. When we talk about offline tests, we mean analyzing the statistical properties of a model to learn whether the model is a valid model - i.e. does our loss function converge? Does the model overfit or underfit? What the precision and recall are? Do we experience any drift? If it's a recommendation ranker model, are we using metrics like \textbf{NDCG} ---normalized discounted cumulative gain--- to understand whether our new model ranks items better than the previous iteration? 
+
+Then, there is online evaluation, aka how successful the model actually is in the production context. Usually, this is evaluated through A/B testing where one set of users gets the old model or system and a holdout set of users gets the new system, and looking at the statistical significance of metrics like click-through rate, items served, and time spent on a given area of the site. 
 
 \subsubsection{What makes embeddings projects successful}
 Finally, once we have all our algorithmic and engineering concerns lined up, there is the final matter to consider of what will make our project successful from a business perspective. We should acknowledge that we might not always need embeddings for our machine learning problem, or that we might not need machine learning at all, initially, if our project is based entirely on a handful of heuristic rules that can be determined and analyzed by humans\citep{zinkevich2017rules}.
@@ -2373,7 +2387,7 @@ If all of these components come together, we now have an embeddings-based recomm
 \section{Conclusion}
 
 We have now walked through an end-to-end example of what embeddings are. We started 
-with a high-level overview of how embeddings fit into the context of a machine learning application. We then did a deep dive on early approaches to encoding, to building up inutition of embeddings in Word2Vec and then moving on to transformers and BERT. Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more. 
+with a high-level overview of how embeddings fit into the context of a machine learning application. We then did a deep dive on early approaches to encoding, to building up intuition of embeddings in Word2Vec and then moving on to transformers and BERT. Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more. 
 
 We've understood the engineering context of why we might include machine learning models in our application, how they work, how to incorporate them, and where embeddings ---dense representations of deep learning model input and output data -- can be best leveraged.  
 
