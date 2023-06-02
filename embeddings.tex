@@ -255,14 +255,14 @@ I'm grateful to everyone who has graciously offered their technical feedback but
 
 Implementing deep learning models has become an increasingly important machine learning strategy\footnote{Check out the machine learning industrial view Matt Turck \href{https://mattturck.com/mad2023/}{puts together every year, which has exploded in size.}} for companies looking to build data-driven products. In order to build and power deep learning models, companies collect and feed hundreds of millions of terabytes of multimodal\footnote{Multimodal means a variety of data usually including text, video, audio, and more recently as shown in \href{https://ai.facebook.com/blog/imagebind-six-modalities-binding-ai/}{Meta's ImageBind}, depth, thermal, and IMU.} data into deep learning models. As a result, \textbf{embeddings} --- deep learning models' internal representations of their input data --- are quickly becoming a critical component of building machine learning systems.
 
-For example, they make up a significant part of Spotify's item recommender systems \citep{hansen2020contextual}, YouTube video recommendations of what to watch \citep{covington2016deep}, and Pinterest's visual search \citep{jing2015visual}. Even if they are not explicitly presented to the user in the form of recommendations UIs, embeddings are also used internally at places like Netflix to make content decisions around which shows to develop based on user preference popularity.
+For example, they make up a significant part of Spotify's item recommender systems  \citep{hansen2020contextual}, YouTube video recommendations of what to watch  \citep{covington2016deep}, and Pinterest's visual search  \citep{jing2015visual}. Even if they are not explicitly presented to the user in the form of recommendations UIs, embeddings are also used internally at places like Netflix to make content decisions around which shows to develop based on user preference popularity.
 
 \begin{figure}[H]
 \centering{\includegraphics[width=\textwidth]{figures/embeddings.png}}
 \caption{Left to right: Products that use embeddings used to generate recommended items: Spotify Radio, YouTube Video recommendations, visual recommendations at Pinterest, BERT Embeddings in suggested Google search results}
 \end{figure}
 
-The usage of embeddings to generate compressed, context-specific representations of content exploded in popularity after the publication of Google’s Word2Vec paper \citep{mikolov2013efficient}.
+The usage of embeddings to generate compressed, context-specific representations of content exploded in popularity after the publication of Google’s Word2Vec paper  \citep{mikolov2013efficient}.
 
 \begin{figure}[H]
 \centering
@@ -270,15 +270,14 @@ The usage of embeddings to generate compressed, context-specific representations
 \caption{Embeddings papers in Arxiv by month. \href{https://github.com/veekaybee/embeddings_code/blob/main/fig_2_embeddings_papers.ipynb}{source}}
 \end{figure}
 
-Building and expanding on the concepts in Word2Vec, the Transformer \citep{vaswani2017attention} architecture, with its self-attention mechanism, a much more specialized case of calculating context around a given word, has become the de-facto way to learn representations of growing multimodal vocabularies, and its rise in popularity both in academia and in industry has caused embeddings to become a staple of deep learning workflows.
+Building and expanding on the concepts in Word2Vec, the Transformer  \citep{vaswani2017attention} architecture, with its self-attention mechanism, a much more specialized case of calculating context around a given word, has become the de-facto way to learn representations of growing multimodal vocabularies, and its rise in popularity both in academia and in industry has caused embeddings to become a staple of deep learning workflows.
 
 However, the concept of embeddings can be elusive because they're neither data flow inputs or output results - they are intermediate elements that live within machine learning services to refine models. So it's helpful to define them explicitly from the beginning.
 
-
-As a general definition, embeddings are data that has been transformed into matrices for use in deep learning computations. The process of embedding (as a verb):  
+As a general definition, embeddings are data that has been transformed into n-dimensional matrices for use in deep learning computations. The process of embedding (as a verb):  
 \begin{formal}
 \begin{itemize}
-   \item \emph{Transforms} multimodal input into representations that are easier to perform intensive computation on, in the form of \textbf{vectors}, tensors, or graphs\citep{rao2019natural}. For the purpose of machine learning, we can think of vectors as a list (or array) of numbers.
+   \item \emph{Transforms} multimodal input into representations that are easier to perform intensive computation on, in the form of \textbf{vectors}, tensors, or graphs \citep{rao2019natural}. For the purpose of machine learning, we can think of vectors as a list (or array) of numbers.
   \item \emph{Compresses} input information for use in a machine learning \textbf{task} --- the type of methods available to us in machine learning to solve specific problems --- such as summarizing a document or identifying tags or labels for social media posts or performing \textbf{semantic search} on a large text corpus. The process of compression changes variable feature dimensions into fixed inputs, allowing them to be passed efficiently into downstream components of machine learning systems.
   \item \emph{Creates an embedding space} that is specific to the data the embeddings were trained on but that, in the case of deep learning representations, can also generalize to other tasks and domains through \textbf{transfer learning} --- the ability to switch contexts --- which is one of the reasons embeddings have exploded in popularity across machine learning applications
 \end{itemize}
@@ -358,6 +357,15 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 text = """Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly.""""
 
+# Tokenize our sentence with the BERT tokenizer.
+tokenized_text = tokenizer.tokenize(text)
+
+# Print out the tokens.
+print (tokenized_text)
+print (len(tokenized_text))
+
+['[CLS]', 'hold', 'fast', 'to', 'dreams', ',', 'for', 'if', 'dreams', 'die', ',', 'life', 'is', 'a', 'broken', '-', 'winged', 'bird', 'that', 'cannot', 'fly', '.', '[SEP]']
+
 # BERT code truncated to show the final output, an embedding
 
 [tensor([-3.0241e-01, -1.5066e+00, -9.6222e-01,  1.7986e-01, -2.7384e+00,
@@ -405,11 +413,11 @@ When we create an embedding for a word, sentence, or image that represents the a
 \end{figure}
 
 
-Engineering systems based on embeddings can be computationally expensive to build and maintain\citep{sharir2020cost}. The need to create, store, and manage embeddings has also recently resulted in the explosion of an entire ecosystem of related products. For example, the recent rise in the development of vector databases to facilitate production-ready use of nearest neighbors semantic queries in machine learning systems\footnote{For a survey of the vector database space today, refer to  \href{https://dmitry-kan.medium.com/landscape-of-vector-databases-d241b279f486}{this article}}, and the rise of embeddings as a service\footnote{Embeddings now are a key differentiator in pricing between \href{https://openai.com/pricing}{on-demand ML services}}.
+Engineering systems based on embeddings can be computationally expensive to build and maintain \citep{sharir2020cost}. The need to create, store, and manage embeddings has also recently resulted in the explosion of an entire ecosystem of related products. For example, the recent rise in the development of vector databases to facilitate production-ready use of nearest neighbors semantic queries in machine learning systems\footnote{For a survey of the vector database space today, refer to  \href{https://dmitry-kan.medium.com/landscape-of-vector-databases-d241b279f486}{this article}}, and the rise of embeddings as a service\footnote{Embeddings now are a key differentiator in pricing between \href{https://openai.com/pricing}{on-demand ML services}}.
 
 As such, it's important to understand their context both as end-consumers, product management teams, and as developers who work with them. But in my deep-dive into the embeddings reference material, I found that there are two types of resources: very deeply technical academic papers, for people who are already NLP experts, and surface-level marketing spam blurbs for people looking to buy embeddings-based tech, and that neither of these overlap in what they cover.  
 
-In Systems Thinking, Donella Meadows writes, “You think that because you understand 'one' that you must therefore understand 'two' because one and one make two. But you forget that you must also understand 'and.'"\citep{meadows2008thinking} In order to understand the current state of embedding architectures and be able to decide how to build them, we must understand how they came to be. In building my own understanding, I wanted a resource that was technical enough to be useful enough to ML practitioners, but one that also put embeddings in their correct business and engineering contexts as they become more often used in ML architecture stacks. This is, hopefully, that text.
+In Systems Thinking, Donella Meadows writes, “You think that because you understand 'one' that you must therefore understand 'two' because one and one make two. But you forget that you must also understand 'and.'" \citep{meadows2008thinking} In order to understand the current state of embedding architectures and be able to decide how to build them, we must understand how they came to be. In building my own understanding, I wanted a resource that was technical enough to be useful enough to ML practitioners, but one that also put embeddings in their correct business and engineering contexts as they become more often used in ML architecture stacks. This is, hopefully, that text.
 
 In this text, we'll examine embeddings from three perspectives, working our way from the highest level view to the most technical. We'll start with the business context, followed by the engineering implementation, and finally look at the machine learning theory, focusing on the nuts and bolts of how they work. On a parallel axis, we'll also travel through time, surveying the earliest approaches and moving towards modern embedding approaches.  
 
@@ -429,18 +437,18 @@ Let's step back and look at the larger context with a concrete example before di
 
 How do we solve the problem of what to show in the timeline here so that our users find the content relevant and interesting, and balance the needs of our advertisers and business partners?
 
-In many cases, we can approach engineering solutions without involving machine learning. In fact, we should definitely start without it\citep{zinkevich2017rules} because machine learning adds a tremendous amount of complexity to our working application\citep{sculley2014machine}. In the case of the Flutter home feed, though, machine learning forms a business-critical function part of the product offering. From the business product perspective, the objective is to offer Flutter’s users content that is relevant\footnote{The specific definition of a relevant item in the recommendations space varies and is under intense academic and industry debate, but generally it means an item that is of interest to the user}, interesting, and novel so they continue to use the platform.  If we do not build discovery and personalization into our content-centric product, Flutter users will not be able to discover more content to consume and will disengage from the platform.
+In many cases, we can approach engineering solutions without involving machine learning. In fact, we should definitely start without it \citep{zinkevich2017rules} because machine learning adds a tremendous amount of complexity to our working application \citep{sculley2014machine}. In the case of the Flutter home feed, though, machine learning forms a business-critical function part of the product offering. From the business product perspective, the objective is to offer Flutter’s users content that is relevant\footnote{The specific definition of a relevant item in the recommendations space varies and is under intense academic and industry debate, but generally it means an item that is of interest to the user}, interesting, and novel so they continue to use the platform.  If we do not build discovery and personalization into our content-centric product, Flutter users will not be able to discover more content to consume and will disengage from the platform.
 
 This is the case for many content-based businesses, all of which have feed-like surface areas for recommendations, including Netflix, Pinterest, Spotify, and Reddit.  It also covers e-commerce platforms, which must surface relevant items to the user, and information retrieval platforms like search engines, which must provide relevant answers to users upon keyword queries. There is a new category of hybrid applications involving question-and-answering in semantic search contexts that is arising as a result of work around the GPT series of models, but for the sake of simplicity, and because that landscape changes every week, we'll stick to understanding the fundamental underlying concepts.
 
-In subscription-based platforms\footnote{In ad-based services, the line between retention and revenue is a bit murkier, and we have often what's known as a multi-stakeholder problem, where the actual optimized function is a balance between meeting the needs of the user and meeting the needs of the advertiser\citep{zheng2017multi}.  In real life, this can often result in a process of enshittifcation\citep{doctorow_2023} of the platform that leads to extremely suboptimal end-user experiences. So, when we create Flutter, we have to be very careful to balance these concerns, and we'll also assume for the sake of simplification that Flutter is a Good service that loves us as users and wants us to be happy.}, there is clear business objective that's tied directly to the bottom line, as outlined in this 2015 paper \citep{steck2021deep}  about Netflix's recsys:
+In subscription-based platforms\footnote{In ad-based services, the line between retention and revenue is a bit murkier, and we have often what's known as a multi-stakeholder problem, where the actual optimized function is a balance between meeting the needs of the user and meeting the needs of the advertiser \citep{zheng2017multi}.  In real life, this can often result in a process of enshittifcation \citep{doctorow_2023} of the platform that leads to extremely suboptimal end-user experiences. So, when we create Flutter, we have to be very careful to balance these concerns, and we'll also assume for the sake of simplification that Flutter is a Good service that loves us as users and wants us to be happy.}, there is clear business objective that's tied directly to the bottom line, as outlined in this 2015 paper  \citep{steck2021deep}  about Netflix's recsys:
 
 \begin{quote}
 
 The main task of our recommender system at Netflix is to help our members discover content that they will watch and enjoy to maximize their long-term satisfaction. This is a challenging problem for many reasons, including that every person is unique, has a multitude of interests that can vary in different contexts, and needs a recommender system most when they are not sure what they want to watch. Doing this well means that each member gets a unique experience that allows them to get the most out of Netflix. As a monthly subscription service, member satisfaction is tightly coupled to a person’s likelihood to retain with our service, which directly impacts our revenue.
 \end{quote}
 
-Knowing this business context, how and why might we use embeddings in machine learning workflows in Flutter to show users flits that are interesting to them personally, knowing that personalized content is more relevant and generally gets higher rates of engagement?\citep{jannach2010recommender}  than non-personalized forms of recommendation on online platforms \footnote{For more, see  \href{http://www.recommenderbook.net/media/Recommender_Systems_An_Introduction_Chapter08_Case_study.pdf}{this case study} on personalized recommendations as well as  the \href{https://www.arxiv-vanity.com/papers/1906.03109/}{the intro section of this paper} which covers many personalization use-cases}  We need to first understand how web apps work and where embeddings fit into them.
+Knowing this business context, how and why might we use embeddings in machine learning workflows in Flutter to show users flits that are interesting to them personally, knowing that personalized content is more relevant and generally gets higher rates of engagement? \citep{jannach2010recommender}  than non-personalized forms of recommendation on online platforms \footnote{For more, see  \href{http://www.recommenderbook.net/media/Recommender_Systems_An_Introduction_Chapter08_Case_study.pdf}{this case study} on personalized recommendations as well as  the \href{https://www.arxiv-vanity.com/papers/1906.03109/}{the intro section of this paper} which covers many personalization use-cases}  We need to first understand how web apps work and where embeddings fit into them.
 
 \subsection{Building a web app}
 
@@ -450,7 +458,7 @@ Knowing this business context, how and why might we use embeddings in machine le
  As an important note, \textbf{features} have many different definitions in machine learning and engineering. In this specific case, we mean collections of code that make up some front-end element, such as a button or a panel of recommendations. We'll refer to these as \textbf{product features}, in contrast with \textbf{machine learning features}, which are input data into machine learning models.
   \end{formal}
  
- This application architecture is commonly known as \textbf{model-view-controller} pattern \citep{fowler2012patterns}, or in common industry lingo, a \textbf{CRUD} app, named for the basic operations that its API allows to manage application state: create, read, update, and delete.
+ This application architecture is commonly known as \textbf{model-view-controller} pattern  \citep{fowler2012patterns}, or in common industry lingo, a \textbf{CRUD} app, named for the basic operations that its API allows to manage application state: create, read, update, and delete.
  
 \begin{figure}[H]
 \centering
@@ -468,10 +476,13 @@ At the feature level, though, we see that it not only includes the typical CRUD 
 \caption{CRUD App with Machine learning service}
 \end{figure}
 
-\subsection{Differences between rules and machine learning}
-Machine learning systems live within the backend of web applications. They are typically integrated into production workflows, but they process data much differently, and use the application's data to generate machine learning models that act upon and feed data back into the application, to the user. For more on the specifics of how to think about these data-centric engineering systems, see Kleppmann\cite{kleppmann2017designing}.
+\subsection{Rules-based systems versus machine learning}
 
-To understand where embeddings fit here, it first  makes sense to understand how machine learning works at Flutter, or any given company, as a whole. In a typical consumer company, the user-facing app is made up of product features written in code. To add a new web app feature, we add business logic, which acts on data in the app to develop our new feature and add that back into the application.  When we think of the typical data-centric software development lifecycle, it looks like this. We start with the business logic. For example, let's take the ability to post messages. We'd like users to be able to input text and emojis in their language of choice, have the messages sorted chronologically, and render correctly on web and mobile. These are the business requirements. We use the input data, in this case, user messages, and format them correctly and sort chronologically, at low latency, in the UI.
+Machine learning-based systems live within the backend of web applications. They are typically integrated into production workflows, but they process data much differently, and use the application's data to generate machine learning models that act upon and feed data back into the application, to the user. For more on the specifics of how to think about these data-centric engineering systems, see Kleppmann\cite{kleppmann2017designing}.
+
+To understand where embeddings fit here, it first  makes sense to understand how machine learning works at Flutter, or any given company, as a whole. In a typical consumer company, the user-facing app is made up of product features written in code. To add a new web app feature, we add business logic, which acts on data in the app to develop our new feature and add that back into the application.  
+
+In a  typical data-centric software development lifecycle, we start with the business logic. For example, let's take the ability to post messages. We'd like users to be able to input text and emojis in their language of choice, have the messages sorted chronologically, and render correctly on web and mobile. These are the business requirements. We use the input data, in this case, user messages, and format them correctly and sort chronologically, at low latency, in the UI.
 
 \begin{figure}[H]
 \centering
@@ -487,24 +498,24 @@ For applications powered by machine learning, though, we need to start not with 
 \caption{ML Development lifecycle}
 \end{figure}
 
-In short, the difference between programming and machine learning development is that we are not generating answers through actions, but rules through data. These rules are then re-incorporated into the application to generate more answers.
+In short, the difference between programming and machine learning development is that we are not generating answers through business rules, but business rules through data. These rules are then re-incorporated into the application.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=.75\textwidth]{figures/rules_ml.png}
-\caption{Generating answers via machine learning. The top chart shows a classical programming approach with rules and data as inputs, while the bottom chart shows a machine learning approach with data and answers as inputs. \citep{chollet2021deep}}
+\caption{Generating answers via machine learning. The top chart shows a classical programming approach with rules and data as inputs, while the bottom chart shows a machine learning approach with data and answers as inputs.  \citep{chollet2021deep}}
 \end{figure}
 
 \subsection{Building a web app with machine learning}
 
 All machine learning systems can be examined through how they accomplish these four steps. When we build models, our key questions should be, "what kind of input do we have and how is it formatted", and "what do we get as a result." We'll be asking this for each of the approaches we look at.  When we build a machine learning system, we start by processing data and finish by serving a learned model artifact.
 
-The four components of a machine learning system are\footnote{There are infinitely many layers of horror in ML systems\citep{kreuzberger2022machine}. These are still the foundational components.}:
+The four components of a machine learning system are\footnote{There are infinitely many layers of horror in ML systems \citep{kreuzberger2022machine}. These are still the foundational components.}:
 
 \begin{formal}
 \begin{itemize}
   \item \textbf{Input data} - processing data from a database or streaming from a production application for use in modeling
-  \item \textbf{Feature Engineering and Selection} - The process of examining the data and cleaning it to pick features\footnote{in this case, we mean features as attributes of any given element that we use as inputs into machine learning. Examples of features are: user name, geographic location, how many times they've clicked on a button for the past 5 days, revenue, and many more} for machine learning. This piece always takes the longest in any given machine learning system, and is also known as finding \textbf{representations}\citep{bengio2013representation} of the data that best fit the machine learning algorithm. This is where, in the new model architectures, we use embeddings as input.
+  \item \textbf{Feature Engineering and Selection} - The process of examining the data and cleaning it to pick features. In this case, we mean features as attributes of any given element that we use as inputs into machine learning. Examples of features are: user name, geographic location, how many times they've clicked on a button for the past 5 days, and revenue. This piece always takes the longest in any given machine learning system, and is also known as finding \textbf{representations} \citep{bengio2013representation} of the data that best fit the machine learning algorithm. This is where, in the new model architectures, we use embeddings as input.
   \item \textbf{Model Building} - We select the features that are important and train our model, iterating on different performance metrics over and over again until we have an acceptable model we can use. Embeddings are also the output of this step that we can use in other, downstream steps.
   \item \textbf{Model Serving} - Now that we have a model we like, we serve it to production, where it hits a web service, potentially cache, and our API where it then propagates to the front-end for the user to consume as part of our web app
 \end{itemize}
@@ -551,51 +562,97 @@ Within machine learning, there are many approaches we can use to fit different t
 
 \subsection{Formulating a machine learning problem}
 
-To use embeddings effectively, we need to understand where they fit in a machine learning task. As we saw in the last section, machine learning is a process that takes data as input to produce rules for how we should classify something or filter it or recommend it, depending on the task at hand. In any of these cases, for example, to generate a set of potential candidates, we need to construct a \textbf{model}. The model is a set of instructions for how to use the input data we feed it and generate a set of results. For Flutter, an example of a model we'd like to build is a \textbf{candidate generator} that picks flits similar to flits our birds have already liked.
+As we saw in the last section, machine learning is a process that takes data as input to produce rules for how we should classify something or filter it or recommend it, depending on the task at hand. In any of these cases, for example, to generate a set of potential candidates, we need to construct a \textbf{model}.
 
-The machine learning model, in our case, the candidate generator,  is a function, $f(X) -> y$ . We \textbf{train} --- or build --- our model by initializing it with some set of weights as learnable input parameters  that takes a set of inputs, $X$, and gives us an output $Y$. . When we say learnable, we mean that we can learn what the correct inputs into a model are through some kind of iterative process where we feed the model data and see if it improves.
+A machine learning model is a set of instructions for generating a given output from data. The instructions are learned from the features of the input data itself.   For Flutter, an example of a model we'd like to build is a \textbf{candidate generator} that picks flits similar to flits our birds have already liked, because we think users will like those, too. For the sake of building up the intuition for a machine learning workflow, let's pick a super-simple example that is not related to our business problem, linear regression, which gives us a continuous variable as output in response. 
+
+For example, let's say, given the number of posts a user has made and how many posts they've liked, we'd like to predict how many days they're likely to continue to stay on Flutter.  For traditional \textbf{supervised} modeling approaches using tabular data, we start with our input data, or a \textbf{corpus} as it's generally known in machine learning problems that deal with text in the field known as \textbf{NLP} (natural language processing). 
+
+We're not doing NLP yet, though, so our input data may look something like this, where we have a UID (userid) and some attributes of that user, such as the number of times they've posted and number of posts they've liked. These are our machine learning \textbf{features}. 
+
+\begin{table}[H]
+  \centering
+	\caption{Tabular Input Data for Flutter Users}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor[HTML]{D5E7F7}
+bird\_id & bird\_posts & bird\_likes \\ \hline
+012  	& 2       	   	& 5       	\\ \hline
+013  	& 0       	   	& 4       	\\ \hline
+056  	& 57      	   	& 70      	\\ \hline
+612  	& 0       	    	& 120     	\\ \hline
+\end{tabular}
+\end{table}
+
+We'll need part of this data to train our model, part of it to test the accuracy of the model we've trained, and part to tune meta-aspects of our model. These are known as \textbf{hyperparameters}.
+
+We take two parts of this data as holdout data that we don't feed into the model. The first part, the \textbf{test set}, we use to validate the final model on data it's never seen before. We use the second split, called the \textbf{validation set}, to check our hyperparameters  during the model training phase. In the case of linear regression, there are no true hyperparameters, but we'll need to keep  in mind that we will need to tune the model's metadata for more complicated models. 
+
+Let's assume we have 100 of these values.  A usual accepted split is to use 80\% of data for training and 20\% for testing. The reasoning is we want our model to have access to as much data as possible so it learns a more accurate representation. 
+
+In general, our goal is to feed our input into the model, through a function that we pick, and get some predicted output, $f(X) \rightarrow y$. 
 
 \begin{figure}[H]
   \includegraphics[width=.8\linewidth]{figures/function.png}
-  \caption{How inputs map to outputs in ML functions \citep{klein2013coding}}
+  \caption{How inputs map to outputs in ML functions  \citep{klein2013coding}}
 \end{figure}
 
-How do we know our model is any good? We initialize it with some set of values, weights, and we iterate on those weights, usually by minimizing a \textbf{cost function}. The cost function is a function that models the difference between our model's predicted value and the real value for that given model. The first output may not be the most optimal, so we iterate over the model space many times, optimizing for a specific metric that will make the model as representative of reality as possible and minimize the difference between the actual and predicted values.  
+For our simple dataset, we can use the linear regression equation: 
 
+\begin{equation}
+y = x_1\beta_1 + x_2\beta_2 + \varepsilon 
+\end{equation}
 
+This tells us that the output, $y$, can be predicted by two input variables, $x_1$ (bird posts) and $x_2$ (bird likes) with their given weights, $\beta_1$ and $\beta_2$, plus an error term $\varepsilon$, or the distance between each data point and the regression line generated by the equation. Our task is to find the smallest sum of squared differences between each point and the line, in other words to minimize the error, because it will mean that, at each point, our predicted y is as close to our actual y as we can get it, given the other points. 
 
-Within the model, in order to evaluate the results, we have to formulate our input process and modeling methods in a specific way.
+\begin{equation}
+y = x_1\beta_1 + x_2\beta_2 + \varepsilon 
+\end{equation}
+
+The heart of machine learning is this training phase, which is the process of finding a combination of model instructions and data that accurately represent our real data, which, in supervised learning, we can validate by checking the correct "answers" from the test set. 
 
 \begin{figure}[H]
   \includegraphics[width=\linewidth]{figures/model_cycle.png}
   \caption{The cycle of machine learning model development}
 \end{figure}
 
-For traditional \textbf{supervised} modeling approaches using tabular data, we start with our input data, or a \textbf{corpus} as it's generally known in machine learning problems that deal with text in the field known as \textbf{NLP} (natural language processing). We then shape this data to select the pieces of it we'd like to use for modeling. These are our \textbf{features}.  We take two parts of this data as holdout data that we don't feed into the model. The first part, the \textbf{test set}, we use to validate the final model on data it's never seen before. We use the second split, called the \textbf{validation set}, to check our \textbf{hyperparameters} during the model training phase.
+As the first round of training starts, we have our data. We \textbf{train} --- or build  --- our model by initializing it with a set of inputs, $X$. These are from the training data. $\beta_1$ and $\beta_2$ are either initialized by setting to zero or initialized randomly (depending on the model, different approaches work best), and we calculate $\hat{y}$, our predicted value for the model. $\epsilon$ is derived from the data and the estimated coefficients once we get an output. 
+
+\begin{equation}
+y = 2\beta_1 + 5\beta_2 + \varepsilon 
+\end{equation}
+
+How do we know our model good? We initialize it with some set of values, weights, and we iterate on those weights, usually by minimizing a \textbf{cost function}. The cost function is a function that models the difference between our model's predicted value and the actual output for the training data. The first output may not be the most optimal, so we iterate over the model space many times, optimizing for the specific metric that will make the model as representative of reality as possible and minimize the difference between the actual and predicted values. So in our case, we compare $y\string^$ to $y$. The average squared difference between an observation’s actual and predicted values is the cost, otherwise known as \textbf{MSE} - mean squared error. 
+
+\begin{equation}
+MSE =  \frac{1}{N} \sum_{i=1}^{n} (y_i - (m x_i + b))^2
+\end{equation}
+
+We'd like to minimize this cost, and we do so with \textbf{gradient descent}. When we say that the model \textbf{learns}, we mean that we can learn what the correct inputs into a model are through an of iterative process where we feed the model data, evaluate the output, and to see if the predictions it generates improve through the process of gradient descent. We'll know because our loss should incrementally decrease in every training iteration. 
+
+We have finally trained our model. Now, we test the model's predictions on the 20 values that we've used as a hold-out set; i.e. the model has not seen these before and we can confidently assume that they won't influence the training data. We compare how many of the hold-out set the model was able to predict correctly to see what the model's accuracy was. 
 
 \subsubsection{The Task of Recommendations}
 
-When our business question is, "What content should we show our users," we are facing the machine learning task for recommendation. Recommender systems are systems set up for \textbf{information retrieval}, a field closely related to NLP that's focused on finding relevant information in large collections of documents.   The goal of information retrieval is to synthesize large collections of unstructured text documents. Within information retrieval, there are two complementary industry solutions in how we can offer users the correct content in our app: search, and recommendations.
+We just saw a simple example of machine learning as it relates to predicting continuous response variables. When our business question is, "What would be good content to show our users," we are facing the machine learning task for recommendation. Recommender systems are systems set up for \textbf{information retrieval}, a field closely related to NLP that's focused on finding relevant information in large collections of documents.  The goal of information retrieval is to synthesize large collections of unstructured text documents. Within information retrieval, there are two complementary solutions in how we can offer users the correct content in our app: search, and recommendations.
 
 \begin{formal}
-\textbf{Search} is the problem of directed\citep{ekstrand2019recommender} information seeking, i.e. the user offers the system a specific query and would like a set of refined results. Search engines at this point are a well-established traditional solution in the space. \textbf{Recommendation} is a problem where "man is the query."\citep{seaver2022computing}  Here, we don't know what the person is looking for exactly, but we would like to infer what they like, and recommend items based on their learned tastes and preferences.
+\textbf{Search} is the problem of directed \citep{ekstrand2019recommender} information seeking, i.e. the user offers the system a specific query and would like a set of refined results. Search engines at this point are a well-established traditional solution in the space. \textbf{Recommendation} is a problem where "man is the query." \citep{seaver2022computing}  Here, we don't know what the person is looking for exactly, but we would like to infer what they like, and recommend items based on their learned tastes and preferences.
 \end{formal}
 
-The first industrial recommender systems were created to filter messages in email and newsgroups\citep{goldberg1992using}  at the Xerox Palo Alto Research Center based on a growing need to filter incoming information from the web.  The most common recommender systems today are those at Netflix, YouTube, and other large-scale platforms that need a way to surface relevant content to users.
+The first industrial recommender systems were created to filter messages in email and newsgroups \citep{goldberg1992using}  at the Xerox Palo Alto Research Center based on a growing need to filter incoming information from the web.  The most common recommender systems today are those at Netflix, YouTube, and other large-scale platforms that need a way to surface relevant content to users.
 
-The goal of recommender systems is to synthesize and surface items that are relevant to the user using statistical approaches and machine learning. Within the framework of machine learning approaches for recommendation, the main machine learning task is to determine which items to show to a user in a given situation. \citep{castells2023recommender}.
-
-There are several common ways to approach the recommendation problem.
+The goal of recommender systems is surface items that are relevant to the user. Within the framework of machine learning approaches for recommendation, the main machine learning task is to determine which items to show to a user in a given situation.  \citep{castells2023recommender}. There are several common ways to approach the recommendation problem.
 
 \begin{formal}
 \begin{itemize}
 
-  \item \textbf{Collaborative filtering} - The most common approach looks at user activity as recorded in log data (product ratings, clicks on content) in relation to the available items to be rated in order to compute the given utility of an item for a user. There are \textbf{neighborhood models}, where ratings are predicted initially by finding users similar to our given target user and we use similarity functions to compute the closeness of users.
+  \item \textbf{Collaborative filtering} - The most common approach users activity from log data (product ratings, clicks on content) in relation to the available items to be rated in order to compute the given utility of an item for a user. There are \textbf{neighborhood models}, where ratings are predicted initially by finding users similar to our given target user and we use similarity functions to compute the closeness of users.
  
-  Another common approach is using \textbf{model-based} methods such  \textbf{matrix factorization}, the process of representing users and items in a feature matrix made up of low-dimensional factor vectors, which in our case, are also known as embeddings, and learning those feature vectors through the process of minimizing a cost function. This process can be thought of as similar to Word2Vec\citep{levy2014neural}, a deep learning model which we'll discuss in depth in this document.  There are many different approaches to collaborative filtering, including matrix factorization and  \textbf{factorization machines}.
+  Another common approach is using \textbf{model-based} methods such  \textbf{matrix factorization}, the process of representing users and items in a feature matrix made up of low-dimensional factor vectors, which in our case, are also known as embeddings, and learning those feature vectors through the process of minimizing a cost function. This process can be thought of as similar to Word2Vec \citep{levy2014neural}, a deep learning model which we'll discuss in depth in this document.  There are many different approaches to collaborative filtering, including matrix factorization and  \textbf{factorization machines}.
    \item \textbf{Content filtering} - This approach uses metadata available about our items (for example in movies or music, the title, year released, genre, and so on) as initial or additional features input into models and work well when we don't have much information about user activity, although they are often used in combination with collaborative filtering approaches. Many embeddings architectures fall into this category since they help us model the features for our items.  
   \item \textbf{Learn to Rank} - Usually machine learning problems like matrix factorization are formulated by minimizing the error of a cost function. Learn to rank methods focus on ranking items in relation to each other based on a known set of preferred rankings and the error is, instead, cases when pairs or lists of items are ranked incorrectly. Here,the problem is not presenting a single item but a set of items and how they interplay. This step would normally take place after candidate generation, in a filtering step because it's computationally expensive to rank extremely large lists.
-  \item \textbf{Neural Recommendations} - The process of using neural networks to capture the same relationships that matrix factorization does without explicitly having to create a user/item matrix and based on the shape of the input data. This is where deep learning networks, and recently, large language models, come into play. Examples of deep learning architectures used for recommendation include Word2Vec and BERT, which we'll cover in this document, and convolutional and recurrent neural networks for sequential recommendation. The big benefit deep learning brings to the table is the ability to better model content-based recommendations and give us representations of our items in the embedding space.\citep{zhang2019deep}
+  \item \textbf{Neural Recommendations} - The process of using neural networks to capture the same relationships that matrix factorization does without explicitly having to create a user/item matrix and based on the shape of the input data. This is where deep learning networks, and recently, large language models, come into play. Examples of deep learning architectures used for recommendation include Word2Vec and BERT, which we'll cover in this document, and convolutional and recurrent neural networks for sequential recommendation. The big benefit deep learning brings to the table is the ability to better model content-based recommendations and give us representations of our items in the embedding space. \citep{zhang2019deep}
 \end{itemize}
 \end{formal}
 
@@ -724,11 +781,11 @@ at (0,0,\az){(0, 0, \az)};
 \label{fig:my_figure}
 \end{figure}
 
-But how do we repres ent "US" or "UK" in this space? Because modern models converge by performing operations on matrices \citep{lakshmanan2020machine}, we need to encode geography as some sort of numerical value so that the model can calculate them as inputs\footnote{There are some models, specifically decision trees, where you don't need to do text encoding because the tree learns the categorical variables out of the box, however implementations differ, for example the two most popular implementations, scikit-learn and XGBoost\citep{altay_2020}, can't.}. So, once we have a combination of vectors, we can compare it to other points. So in our case, each row of data tells us where to position each bird in relation to any other given bird based on the combination of features.  And that's really what our numerical features allow us to do.
+But how do we repres ent "US" or "UK" in this space? Because modern models converge by performing operations on matrices  \citep{lakshmanan2020machine}, we need to encode geography as some sort of numerical value so that the model can calculate them as inputs\footnote{There are some models, specifically decision trees, where you don't need to do text encoding because the tree learns the categorical variables out of the box, however implementations differ, for example the two most popular implementations, scikit-learn and XGBoost \citep{altay_2020}, can't.}. So, once we have a combination of vectors, we can compare it to other points. So in our case, each row of data tells us where to position each bird in relation to any other given bird based on the combination of features.  And that's really what our numerical features allow us to do.
 
 
 \subsection{From Words to Vectors in Three Easy Pieces}
-In "Operating Systems: Three Easy Pieces", the authors write, "Like any system built by humans, good ideas accumulated in operating systems over time, as engineers learned what was important in their design."\citep{arpaci2018operating} The same is true for today's large language models. They were built on hundreds of foundational ideas over the course of decades.  There are, similarly, several fundamental concepts that make up the work of transforming words to numerical representations.
+In "Operating Systems: Three Easy Pieces", the authors write, "Like any system built by humans, good ideas accumulated in operating systems over time, as engineers learned what was important in their design." \citep{arpaci2018operating} The same is true for today's large language models. They were built on hundreds of foundational ideas over the course of decades.  There are, similarly, several fundamental concepts that make up the work of transforming words to numerical representations.
 
 These show up over and over again, in every deep learning architecture and every NLP-related task\footnote{When we talk about tasks in NLP-based machine learning, we mean very specifically, what the machine learning problem is formulated to do. For example, we have the task of ranking, recommendation, translation, text summarization, and so on.}:
 
@@ -793,7 +850,7 @@ The first approaches to generating textual features were count-based, relying on
 
 \begin{itemize}
   \item Ordinal encoding   
-  \item Dummy encoding
+  \item Indicator encoding
   \item One-Hot encoding
 \end{itemize}
 
@@ -845,11 +902,11 @@ print(result)
 \caption{Ordinal Encoding in Scikit-Learn \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_22_ordinal.ipynb}{source}}
 \end{figure}
 
-\subsubsection{Dummy and one-hot encoding}
+\subsubsection{Indicator and one-hot encoding}
 
-Dummy encoding is, given $n$ categories (i.e. "US", "UK", and "NZ") encodes the variables into $n-1$ categories, creating a new feature for each category. So, if we have three variables, dummy encoding encodes into two dummy variables.  Why would we do this? If the categories are mutually exclusive, as they usually are in point-in-time geolocation estimates, if someone is in the US, we know for sure they're not in the UK and not in NZ, so it reduces computational overhead.
+indicator encoding is, given $n$ categories (i.e. "US", "UK", and "NZ") encodes the variables into $n-1$ categories, creating a new feature for each category. So, if we have three variables, indicator encoding encodes into two indicator variables.  Why would we do this? If the categories are mutually exclusive, as they usually are in point-in-time geolocation estimates, if someone is in the US, we know for sure they're not in the UK and not in NZ, so it reduces computational overhead.
 
-If we instead use all the variables and they are very closely correlated, there is a chance we'll fall into something known as the \textbf{dummy variable trap}. We can predict one variable from the others, which means we no longer have feature independence. This generally isn't a risk for geolocation since there are more than 2 or 3 and if you're not in the US, it's not guaranteed that you're in the UK. So, if we have US = 1, UK = 2, and NZ = 3, and prefer more compact representations, we can use dummy encoding.
+If we instead use all the variables and they are very closely correlated, there is a chance we'll fall into something known as the \textbf{indicator variable trap}. We can predict one variable from the others, which means we no longer have feature independence. This generally isn't a risk for geolocation since there are more than 2 or 3 and if you're not in the US, it's not guaranteed that you're in the UK. So, if we have US = 1, UK = 2, and NZ = 3, and prefer more compact representations, we can use indicator encoding.
 
 However, many modern ML approaches don't require linear feature independence and use L1 regularization\footnote{Regularization is a way to prevent our model from overfitting. Overfitting means our model can exactly predict outcomes based on the training data, but it can't learn new inputs that we show it, which means it can't generalize} to prune feature inputs that don't minimize the error, and as such only use one-hot encoding.
 
@@ -974,7 +1031,7 @@ empty node/.style={fill=none}]
 \end{tikzpicture}
 
 
-The factorization of our feature matrix into these two matrices, where the rows in matrix Q are actually embeddings\citep{levy2014neural} for users and the rows in matrix P are embeddings for tweets, allows us to fill in values for flits that Flutter users have not explicitly liked, and then perform a search across the matrix to find other words they might be interested in. The end-result is our generated recommendation candidates, which we then filter downstream and surface to the user because the core of the recommendation problem is to recommend items to the user.
+The factorization of our feature matrix into these two matrices, where the rows in matrix Q are actually embeddings \citep{levy2014neural} for users and the rows in matrix P are embeddings for tweets, allows us to fill in values for flits that Flutter users have not explicitly liked, and then perform a search across the matrix to find other words they might be interested in. The end-result is our generated recommendation candidates, which we then filter downstream and surface to the user because the core of the recommendation problem is to recommend items to the user.
 
 In this base-case scenario, each column could be a single word in the entire vocabulary of every flit we have and the vector we create, shown in the matrix frequency table, would be an insanely large, sparse vector that has a $0$ of occurrence of words in our vocabulary. The way we can build toward this representation is to start with a structure known as a \textbf{bag of words}, or simply the frequency of appearance of text in a given document (in our case, each flit is a document.) This matrix is the input data structure for many of the early approaches to embedding.
 
@@ -1049,9 +1106,9 @@ dense_vector = [1,2,2,3,0,4,5,8,8,5]
 \end{figure}
 
 
-Sparse vectors result in a number of problems, among these \textbf{cold start}---the idea that we don't know to recommend items that haven't been interacted with, or for users who are new. What we'd like, instead, is to create dense vectors, which will  give us more information about the data, the most important of which is accounting for the weight of a given word in proportion to other words. This is where we leave one-hot encodings and move into approaches that are meant to solve for this sparsity. Dense vectors are just vectors that have mostly non-zero values. We call these dense representations dynamic representations\citep{Wang2020FromST}.
+Sparse vectors result in a number of problems, among these \textbf{cold start}---the idea that we don't know to recommend items that haven't been interacted with, or for users who are new. What we'd like, instead, is to create dense vectors, which will  give us more information about the data, the most important of which is accounting for the weight of a given word in proportion to other words. This is where we leave one-hot encodings and move into approaches that are meant to solve for this sparsity. Dense vectors are just vectors that have mostly non-zero values. We call these dense representations dynamic representations \citep{Wang2020FromST}.
 
-To address the limitations of one-hot encoding, TF-IDF, or term frequency-inverse document frequency was developed. TF-IDF was introduced in the 1970s\footnote{By Karen Spärck Jones, whose paper, \href{https://blog.babbar.tech/who-is-karen-sparck-jones/}{"Synonymy and semantic classification} is fundamental to the field of NLP} as a way to create a vector representation of a document by averaging all the document's word weights. It worked really well for a long time and still does in many cases.  For example, one of the most-used search functions, BM25, uses TF-IDF as a baseline \citep{schutze2008introduction} as a default search strategy in Elasticsearch/Opensearch \footnote{You can read about how Elasticsearch implements BM25 \href{https://www.elastic.co/blog/practical-bm25-part-1-how-shards-affect-relevance-scoring-in-elasticsearch}{here}}. It extends TF-IDF to develop a probability associated with the probability of relevance for each pair of words in a document and it is still being applied in neural search today \citep{svore2009machine}.  
+To address the limitations of one-hot encoding, TF-IDF, or term frequency-inverse document frequency was developed. TF-IDF was introduced in the 1970s\footnote{By Karen Spärck Jones, whose paper, \href{https://blog.babbar.tech/who-is-karen-sparck-jones/}{"Synonymy and semantic classification} is fundamental to the field of NLP} as a way to create a vector representation of a document by averaging all the document's word weights. It worked really well for a long time and still does in many cases.  For example, one of the most-used search functions, BM25, uses TF-IDF as a baseline  \citep{schutze2008introduction} as a default search strategy in Elasticsearch/Opensearch \footnote{You can read about how Elasticsearch implements BM25 \href{https://www.elastic.co/blog/practical-bm25-part-1-how-shards-affect-relevance-scoring-in-elasticsearch}{here}}. It extends TF-IDF to develop a probability associated with the probability of relevance for each pair of words in a document and it is still being applied in neural search today  \citep{svore2009machine}.  
 
 TF-IDF will tell you how important a single word is in a corpus by assigning it a weight and, at the same time, down-weight common words like "the, a, and." This calculated weight gives us a feature for a single word TF-IDF, and also the relevance of the features across the vocabulary.
 
@@ -1164,7 +1221,7 @@ TF-IDF enforces several important ordering rules on our text corpus:
 \begin{itemize}
   \item Uprank term frequency when it occurs many times in a small number of documents
   \item Downrank term frequency when it occurs many times in many documents, aka is not relevant
-  \item Really downrank the term when it appears across your entire document base\citep{schutze2008introduction}.
+  \item Really downrank the term when it appears across your entire document base \citep{schutze2008introduction}.
 \end{itemize}
 
 There are numerous ways to calculate and create weights for individual words in TF-IDF. In each case, we calculate a score for each word that tells us how important that word is in relation to each other word in our corpus.
@@ -1177,7 +1234,7 @@ So, when we perform embedding in the context of recommender systems, we are look
 
 There are many approaches to collaborative filtering including a neighborhood-based approach,  which looks at weighted averages of user ratings and computes \textbf{cosine similarity}, between users.  It then finds groups, or neighborhoods of users which are similar to each other.
 
-A key problem that makes up the fundamental problem in collaborative filtering and in recommendation systems in general is the ability to find similar sets of items among very large collections\citep{leskovec2020mining}.
+A key problem that makes up the fundamental problem in collaborative filtering and in recommendation systems in general is the ability to find similar sets of items among very large collections \citep{leskovec2020mining}.
 
 Mathematically, we can do this by looking at the distance metric between any two given sets of items, and there are a number of different approaches, including  Euclidean distance, edit distance (more specifically, Levenshtein distance and Hamming distance), cosine distance, and more advanced compression approaches like \textbf{minhashing}.
 
@@ -1384,11 +1441,11 @@ flit\_id & bird\_id & hold & fast & dreams & die & life & bird \\ \hline
 
 \end{table}
 
-Not only will it be hard to run computations over an linearly increasing set, once we start generating a large number of features (columns), we start running into the \textbf{curse of dimensionality}, which means that, the more features we accumulate, the more data we need in order to accurately statistically confidently say anything about them, which results in models that may not accurately represent our data\citep{houle2010can} if we have extremely sparse features, which is generally the case in user/item interactions in recommendations.   
+Not only will it be hard to run computations over an linearly increasing set, once we start generating a large number of features (columns), we start running into the \textbf{curse of dimensionality}, which means that, the more features we accumulate, the more data we need in order to accurately statistically confidently say anything about them, which results in models that may not accurately represent our data \citep{houle2010can} if we have extremely sparse features, which is generally the case in user/item interactions in recommendations.   
 
 \subsubsection{Computational complexity}
  
-In production machine learning systems,the statistical properties of our algorithm are important. But just as critical is how quickly our model returns data, or the system's efficiency. System efficiency can be measured in many ways, and it is critical in any well-performing system to find the performance bottleneck that leads to latency, or the time spent waiting before an operation is  performed\citep{gregg2014systems}. If you have a recommendation system in production, you cannot risk showing the user an empty feed or a feed that takes more than a few milliseconds to render. If you have a search system, you cannot risk the results taking more than a few milliseconds to return, particularly in e-commerce settings \cite{arapakis2014impact}.  From the holistic systems perspective then, we can also have latency in how long it takes to generate data for a model, read in data, and train the model.
+In production machine learning systems,the statistical properties of our algorithm are important. But just as critical is how quickly our model returns data, or the system's efficiency. System efficiency can be measured in many ways, and it is critical in any well-performing system to find the performance bottleneck that leads to latency, or the time spent waiting before an operation is  performed \citep{gregg2014systems}. If you have a recommendation system in production, you cannot risk showing the user an empty feed or a feed that takes more than a few milliseconds to render. If you have a search system, you cannot risk the results taking more than a few milliseconds to return, particularly in e-commerce settings \cite{arapakis2014impact}.  From the holistic systems perspective then, we can also have latency in how long it takes to generate data for a model, read in data, and train the model.
 
 The two big drivers of latency are:
 
@@ -1402,7 +1459,7 @@ Generally, TF-IDF performs well in terms of identifying key terms in the documen
 
 This linear time complexity growth becomes an issue when we're trying to process millions or hundreds of millions of \textbf{tokens} -- usually a synonym for words but can also be sub-words such as syllables. This is a problem that became especially prevalent as, over time in industry, storage became cheap.
 
-From newsgroups to emails, and finally, to public internet text, we began to generate a lot of digital exhaust and companies collected it in the form of append-only logs\citep{kreps2014heart}, a sequence of records ordered by time, that's configured to continuously append records.\footnote{Jay Kreps' \href{https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying}{canonical posts} on how logging works are a must-read} .
+From newsgroups to emails, and finally, to public internet text, we began to generate a lot of digital exhaust and companies collected it in the form of append-only logs \citep{kreps2014heart}, a sequence of records ordered by time, that's configured to continuously append records.\footnote{Jay Kreps' \href{https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying}{canonical posts} on how logging works are a must-read} .
 
 Companies started emitting, keeping, and using these endless log streams for data analysis and machine learning. All of a sudden, the algorithms that had worked well on a collection of less than a million documents struggled to keep up.
 
@@ -1415,7 +1472,7 @@ The resulting corpuses for NLP, search, and recommendation problems also explode
 
 \subsection{Support Vector Machines}
 
-The first modeling approaches were \textbf{shallow} models --- models that perform machine learning tasks using only one layer of weights and biases\citep{collobert2008unified}. \textbf{Support vector machines} (SVM), developed at Bell Laboratories in the mid-1990s,  were used in high-dimensional spaces for NLP tasks like text categorization\citep{joachims2005text}. SVMs separate data clusters into points that are linearly separable by a \textbf{hyperplane}, a decision boundary that separates elements into separate classes. In a two-dimensional vector space, the hyperplane is a line, in a three or more dimensional space, the separator also comes in many dimensions.
+The first modeling approaches were \textbf{shallow} models --- models that perform machine learning tasks using only one layer of weights and biases \citep{collobert2008unified}. \textbf{Support vector machines} (SVM), developed at Bell Laboratories in the mid-1990s,  were used in high-dimensional spaces for NLP tasks like text categorization \citep{joachims2005text}. SVMs separate data clusters into points that are linearly separable by a \textbf{hyperplane}, a decision boundary that separates elements into separate classes. In a two-dimensional vector space, the hyperplane is a line, in a three or more dimensional space, the separator also comes in many dimensions.
 
 The goal of the SVM is to find the optimal hyperplane such that the distance between new projections of objects (words in our case) into the space maximizes the distance between the plane and the elements so there's less chance of mis-classifying them.
 
@@ -1471,13 +1528,13 @@ However, as in other cases, when we reach high dimensions, SVMs completely fail 
 
 \subsection{Word2Vec}
 
-To get around the limitations of earlier textual approaches and keep up with growing size of text corpuses, in 2013, researchers at Google came up with an elegant solution to this problem using neural networks, called Word2Vec\citep{mikolov2013efficient}.  
+To get around the limitations of earlier textual approaches and keep up with growing size of text corpuses, in 2013, researchers at Google came up with an elegant solution to this problem using neural networks, called Word2Vec \citep{mikolov2013efficient}.  
 
 So far, we've moved from simple heuristics like one-hot encoding, to machine learning approaches like LSA and LDA that look to learn a dataset's modeled features.  Previously, like our original one-hot encodings, all the approaches to embedding focused on generating sparse vectors much . A sparse vector gives an indication that two words are related, but not that there is a semantic relationship between them. For example, “The dog changed the cat” and “the cat chased the dog” would have the same distance in the vector space, even though they’re two completely different sentences.
 
 Word2Vec is a family of models that has several implementations, each of which focus on transforming the entire input dataset into vector representations and, more importantly, focusing  not only on the inherent labels of individual words, but on the relationship between those representations.
 
-There are two modeling approaches to Word2Vec - \textbf{continuous bag of words} (CBOW) and \textbf{skipgrams}, both of which generate dense vectors of embeddings but model the problem slightly differently. The end-goal of the Word2Vec model in either case is to learn the parameters that maximize that probability of a given word or group of words being an accurate prediction \citep{goldberg2014word2vec}.
+There are two modeling approaches to Word2Vec - \textbf{continuous bag of words} (CBOW) and \textbf{skipgrams}, both of which generate dense vectors of embeddings but model the problem slightly differently. The end-goal of the Word2Vec model in either case is to learn the parameters that maximize that probability of a given word or group of words being an accurate prediction  \citep{goldberg2014word2vec}.
 
 In training skipgrams, we take a word from the initial input corpus and predict the probability that a given set of words surround it. In the case of our initial flit quote, "Hold fast to dreams for if dreams die, life is a broken-winged bird that cannot fly", we train the model to generate a set of embeddings that's the distance between all the words in the dataset and fill in the next several probabilities for the entire phrase, using the word "fast" as input.  
 
@@ -1578,7 +1635,7 @@ responses = ["Hold fast to dreams, for if dreams die, life is a broken-winged bi
 
 Let's start with our input training data, which is our list of flits. To prepare input data for PyTorch, we can use the DataLoader or \hyperlink{https://pytorch.org/text/stable/vocab.html}{Vocab} classes, which splits our text into tokens and \textbf{tokenizes} --- or creates smaller, word-level representations of each sentence --- for processing.  For each line in the file, we generate tokens by splitting each line into single words, removing whitespace and punctuation, and lowercasing each individual word.
 
-This kind of processing pipeline is extremely common in NLP and spending time to get this step right is extremely critical so that we get clean, correct input data. It typically includes\citep{naseem2021comprehensive}:
+This kind of processing pipeline is extremely common in NLP and spending time to get this step right is extremely critical so that we get clean, correct input data. It typically includes \citep{naseem2021comprehensive}:
 
 \begin{itemize}
   \item \textbf{Tokenization} - transforming a sentence or a word into its component character by splitting it
@@ -1737,11 +1794,11 @@ Once we've completed our iteration through our training set, we have learned a m
 
 \section{Modern Embeddings Approaches}
 
-Word2Vec became one of the first neural network architectures to use the concept of embedding to create a fixed feature vocabulary. But neural networks as a whole were gaining popularity for natural language modeling because of several key factors. First, in the 1980s, Geoffrey Hinton, a pioneer in the field of deep learning, co-published a paper on \textbf{backpropagation}\citep{rumelhart1986learning}.  Backpropagation is how a model learns to converge by calculating the gradient of the loss function with respect to the weights of the neural network, using the \textbf{chain rule}, a concept from calculus which allows us to calculate the derivative of a function made up of multiple functions. This mechanism allows the model to understand when it's reached a global minimum for loss and picks the correct weights for the model parameters, but training models through gradient descent. Earlier approaches, such as the perceptron learning rule, tried to do this, but had limitations, such as being able to work only on simple layer architectures, took a long time to converge, and experienced \textbf{vanishing gradients}, which made it hard to effectively update the model's weights.  
+Word2Vec became one of the first neural network architectures to use the concept of embedding to create a fixed feature vocabulary. But neural networks as a whole were gaining popularity for natural language modeling because of several key factors. First, in the 1980s, Geoffrey Hinton, a pioneer in the field of deep learning, co-published a paper on \textbf{backpropagation} \citep{rumelhart1986learning}.  Backpropagation is how a model learns to converge by calculating the gradient of the loss function with respect to the weights of the neural network, using the \textbf{chain rule}, a concept from calculus which allows us to calculate the derivative of a function made up of multiple functions. This mechanism allows the model to understand when it's reached a global minimum for loss and picks the correct weights for the model parameters, but training models through gradient descent. Earlier approaches, such as the perceptron learning rule, tried to do this, but had limitations, such as being able to work only on simple layer architectures, took a long time to converge, and experienced \textbf{vanishing gradients}, which made it hard to effectively update the model's weights.  
 
-These advances gave rise to the first kinds of multi-level neural networks, feed-forward neural networks. In 1998, a paper from used backpropagation over multilayer perceptrons to correctly perform the task of recognizing handwritten digit images\citep{lecun1998gradient}, demonstrating a practical use-case practitioners and researchers could apply This MNIST dataset is now one of the canonical "Hello World" examples of deep learning.
+These advances gave rise to the first kinds of multi-level neural networks, feed-forward neural networks. In 1998, a paper from used backpropagation over multilayer perceptrons to correctly perform the task of recognizing handwritten digit images \citep{lecun1998gradient}, demonstrating a practical use-case practitioners and researchers could apply This MNIST dataset is now one of the canonical "Hello World" examples of deep learning.
 
-Second, in the 2000s, the rise of petabytes of aggregated log data resulted in the creation of large databases of multimodal input data scraped from the internet. This made it possible to conduct wide-ranging experiments to prove that neural networks work on large amounts of data. For example, ImageNet was developed by researchers at Stanford who wanted to focus on improving model performance by creating a gold set of neural network input data, the first step in processing. FeiFei Li assembled a team of students and paid gig workers from Amazon Turk to correctly label a set of 3.2 million images scraped from the internet and organized based on categories according to WordNet, a taxonomy put together by researchers in the 1970s\citep{russakovsky2015imagenet}.
+Second, in the 2000s, the rise of petabytes of aggregated log data resulted in the creation of large databases of multimodal input data scraped from the internet. This made it possible to conduct wide-ranging experiments to prove that neural networks work on large amounts of data. For example, ImageNet was developed by researchers at Stanford who wanted to focus on improving model performance by creating a gold set of neural network input data, the first step in processing. FeiFei Li assembled a team of students and paid gig workers from Amazon Turk to correctly label a set of 3.2 million images scraped from the internet and organized based on categories according to WordNet, a taxonomy put together by researchers in the 1970s \citep{russakovsky2015imagenet}.
 
 Researchers saw the power of using standard datasets. In 2015, Alex Krizhevsky, in collaboration with Ilya Sutskever, who now works at OpenAI as one of the leading researchers behind the GPT series of models that form the basis or the current generative AI wave, submitted an entry to the ImageNet competition called AlexNet. This model was a convolutional neural network that outperformed many other methods. There were two things that were significant about AlexNet. The first was that it had eight stacked layers of weights and biases, which was unusual at the time. Today, 12-layer neural. networks like BERT and other transformers are completely normal, but at the time, more than two layers was revolutionary. The second was that it ran on GPUs, a new architectural concept at the time, since GPUs were used mostly for gaming.
 
@@ -1752,7 +1809,7 @@ Neural networks started to become popular as ways to generate representations of
 
 Neural networks are extensions on traditional machine learning models, but they have a few critical special properties. Let's think back to our definition of a model when we formalized a machine learning problem. A model is a function with a set of learnable input parameters that takes some set of inputs and one set of tabular input features, and gives us an output. In traditional machine learning approaches, there is one set, or layer, of learnable parameters and model. If our data doesn't have complex interactions, our model can learn the feature space fairly easily and make accurate predictions.
 
-However, when we start dealing with extremely large, implicit feature spaces, such as are present in text, audio, or video, we will not be able to derive specific features that wouldn't be obvious if we were manually creating them. A neural network, by stacking neurons, each of which represent some aspect of the model, can tease out these latent representations. Neural networks are extremely good at learning representations of data, with each level of the network transforming a learned representation of the level to a higher level until we get a clear picture of our data\citep{lecun2015deep}.
+However, when we start dealing with extremely large, implicit feature spaces, such as are present in text, audio, or video, we will not be able to derive specific features that wouldn't be obvious if we were manually creating them. A neural network, by stacking neurons, each of which represent some aspect of the model, can tease out these latent representations. Neural networks are extremely good at learning representations of data, with each level of the network transforming a learned representation of the level to a higher level until we get a clear picture of our data \citep{lecun2015deep}.
 
 \subsubsection{Neural Network architectures}
 
@@ -1804,11 +1861,11 @@ Neural networks are complex to build and manage for a number of reasons. First, 
 
 These features made developing and running neural networks prohibitively expensive until the last fifteen years or so. First, the exponential increase in storage space provided by the growing size of commodity hardware both on-prem and in the cloud meant that we could now store that data for computation, and  the explosion of log data gave companies such as Google a lot of training data to work with.  Second,  the rise of the GPU as a tool that takes advantage of the neural network's ability to perform \textbf{embarrassingly parallel} computation --- a characteristic of computation when it's easy to separate steps out into ones that can be performed in parallel, such as word count for example . In a neural network, we can generally parallelize computation in any given number of ways, including at the level of a single neuron.  
 
-While GPUs were initially used for working with computer graphics, in the early 2000s\citep{oancea2014gpgpu}, researchers discovered the potential to use them for general computation, and Nvidia made an enormous bet on this kind of computing by introducing CUDA, an API layer on top of GPUs, specifically for interfacing with PyTorch and Tensorflow and other deep learning frameworks.
+While GPUs were initially used for working with computer graphics, in the early 2000s \citep{oancea2014gpgpu}, researchers discovered the potential to use them for general computation, and Nvidia made an enormous bet on this kind of computing by introducing CUDA, an API layer on top of GPUs, specifically for interfacing with PyTorch and Tensorflow and other deep learning frameworks.
 
-Neural networks could now be trained and experimented with at scale. To come back to a comparison to our previous approaches, when we calculate TF-IDF, we need to loop over each individual word and perform our computations over the entire dataset in sequence to arrive at a score in proportion to all other words, which means that our computational complexity will be $O(N D)$\citep{cong2016novel}.  
+Neural networks could now be trained and experimented with at scale. To come back to a comparison to our previous approaches, when we calculate TF-IDF, we need to loop over each individual word and perform our computations over the entire dataset in sequence to arrive at a score in proportion to all other words, which means that our computational complexity will be $O(N D)$ \citep{cong2016novel}.  
 
-However, with a neural network, we can either distribute the model training across different GPUs in a process known as \textbf{model parallelism}, or compute \textbf{batches} --- the size of the training data fed into the model and used in a training loop before its hyperparameters are updated in parallel and update at the end of each \textbf{minibatch}, which is known as \textbf{data parallelism.}\citep{shallue2018measuring}.
+However, with a neural network, we can either distribute the model training across different GPUs in a process known as \textbf{model parallelism}, or compute \textbf{batches} --- the size of the training data fed into the model and used in a training loop before its hyperparameters are updated in parallel and update at the end of each \textbf{minibatch}, which is known as \textbf{data parallelism.} \citep{shallue2018measuring}.
 
 
 \subsection{Transformers}
@@ -1817,7 +1874,7 @@ Word2Vec is a feed-forward network. The model weights and information only flows
 
 However, it doesn't work well on long ranges of text that require understanding words in context of each other. For example, over the course of a conversation, we might say, "I read that quote by Langston Hughes. I liked it, but didn't really read his later work," we understand that "it" refers to the quote, context from the previous sentence, and "his" refers to "Langston Huges", mentioned two sentences ago.
 
-One of the other limitations was that Word2Vec can't handle \textbf{out-of-vocabulary} words --- words that the model has not been trained on and needs to generalize to. This means that if our users search for a new trending term or we want to recommend a flit that was written after our model was trained, they won't see any relevant results from our model.\citep{di2021considerations}, unless the model is retrained frequently.
+One of the other limitations was that Word2Vec can't handle \textbf{out-of-vocabulary} words --- words that the model has not been trained on and needs to generalize to. This means that if our users search for a new trending term or we want to recommend a flit that was written after our model was trained, they won't see any relevant results from our model. \citep{di2021considerations}, unless the model is retrained frequently.
 
 Another problem is that Word2Vec encounters context collapse around \textbf{polysemy} --- the coexistence of many possible meanings for the same phrase: for example, if you have "jail cell" and "cell phone" in the same sentence, it won't understand that the context of both words is different. Much of the work of NLP based in deep learning has been in understanding and retaining that context to propagate through the model and pull out semantic meaning.   
 
@@ -1874,7 +1931,7 @@ Different approaches were proposed to overcome these limitations. Researchers ex
 
 A problem with traditional RNNs was that because during backpropagation the weights had to be carried through to the previous layers of neurons, they experienced the problem of \textbf{vanishing gradients}. This occurs when we continuously take the derivative such that the partial derivative used in the chain rule during backpropagation approaches zero. Once we approach zero, the neural network assumes it has reached a local optimum and stops training, before convergence.
 
-A very popular variation of an RNN that worked around this problem was the \textbf{long-short term memory network (LSTM)}, developed initially by Schmidhuber\footnote{If you read Schmidhuber, you will come the understanding that everything in deep learning was developed initially by \href{https://people.idsia.ch/~juergen/deep-learning-miraculous-year-1990-1991.html}{Schmidhuber}} and brought to popularity for use in text applications speech recognition and image captioning\citep{karpathy_2015}.  Whereas our previous model takes only a vector at a time as input, RNNs operate on sequences of vectors using a mechanism known as \textbf{gated recurrent units}, which allows the network to control how much information is passed in for analysis. While LSTMs worked fairly well, they had their own limitations. Because they were architecturally complicated, they took much longer to train, and at a higher computational cost, because they couldn't be trained in parallel.
+A very popular variation of an RNN that worked around this problem was the \textbf{long-short term memory network (LSTM)}, developed initially by Schmidhuber\footnote{If you read Schmidhuber, you will come the understanding that everything in deep learning was developed initially by \href{https://people.idsia.ch/~juergen/deep-learning-miraculous-year-1990-1991.html}{Schmidhuber}} and brought to popularity for use in text applications speech recognition and image captioning \citep{karpathy_2015}.  Whereas our previous model takes only a vector at a time as input, RNNs operate on sequences of vectors using a mechanism known as \textbf{gated recurrent units}, which allows the network to control how much information is passed in for analysis. While LSTMs worked fairly well, they had their own limitations. Because they were architecturally complicated, they took much longer to train, and at a higher computational cost, because they couldn't be trained in parallel.
 
 \subsubsection{Encoders/Decoders and Attention}
 Two concepts allowed researchers to overcome computationally expensive issues with remembering long vectors for a larger \textbf{context window} than what was available in RNNs and Word2Vec before it: the \textbf{encoder/decoder architecture}, and the \textbf{attention mechanism}.
@@ -1982,7 +2039,7 @@ class Generator(nn.Module):
 \end{figure}
 
 
-"Attention is All You Need"\citep{vaswani2017attention}, released in 2017,  combined both of these concepts into a single architecture. The paper immediately saw a great deal of success, and today Transformers are one of the de-facto models used for natural language tasks. 
+"Attention is All You Need" \citep{vaswani2017attention}, released in 2017,  combined both of these concepts into a single architecture. The paper immediately saw a great deal of success, and today Transformers are one of the de-facto models used for natural language tasks. 
 
 Based on the success of the original model, a great deal of variations on Transformer architectures have been released, followed by GPT and BERT in 2018, Distilbert, a smaller and more compact version of BERT in 2019, and GPT-3 in 2020\footnote{For a complete visual transformer timeline, check out \href{https://ai.v-gar.de/ml/transformer/timeline/}{this link}}.
 
@@ -2027,7 +2084,7 @@ Transformer architectures themselves are not new, but they contain all the conce
 \caption{Detailed view into transformer layers, inspired by multiple sources \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{including this diagram } }
 \end{figure}
 
-The transformer model described in the paper takes a corpus of text as input\footnote{In theory you can use any modality for transformers without modifying the input other than to label the data with the given modality\citep{xu2023multimodal}, but the early work, such as machine translation, focuses on text, so we will as well}. We first transform our text to token embeddings by tokenizing and mapping every word or subword to an index. This is the same process as in Word2Vec: we simply assign each word to an element in a matrix. However, these alone will not help us with context, so, on top of this, we also learn a \textbf{positional embeddings} with the help of a sine or cosine function that is mapped and compressed into a matrix considering the position of all the other word in the vocabulary. The final output of this process is the positional vector or the word encoding. 
+The transformer model described in the paper takes a corpus of text as input\footnote{In theory you can use any modality for transformers without modifying the input other than to label the data with the given modality \citep{xu2023multimodal}, but the early work, such as machine translation, focuses on text, so we will as well}. We first transform our text to token embeddings by tokenizing and mapping every word or subword to an index. This is the same process as in Word2Vec: we simply assign each word to an element in a matrix. However, these alone will not help us with context, so, on top of this, we also learn a \textbf{positional embeddings} with the help of a sine or cosine function that is mapped and compressed into a matrix considering the position of all the other word in the vocabulary. The final output of this process is the positional vector or the word encoding. 
 
 Next, these positional vectors are passed in parallel to the model. Within the Transformer paper, the model consists of six layers that perform encoding and six that perform decoding. We start with the encoder layer, which consists of two sub-layers: the self-attention layer, and a feed-forward neural network. The self-attention layer is the key piece, which performs the process of learning the relationship of each term in relation to the other through \textbf{scaled dot-product attention.} We can think of self-attention in several ways: as a differentiable lookup table, or as a large lookup dictionary that contains both the terms and their positions, with the weights of each term in relationship to the other obtained from previous layers. 
 
@@ -2041,7 +2098,7 @@ What's great about scaled dot-product attention (and about all of the layers of 
 
 The decoder piece differs slightly from the encoder. It starts with a different input dataset: in the transformer paper, it's the target language dataset we'd like to translate the text into.  So for example if we were translating our Flit from English to Italian, we'd expect to train on the Italian corpus. Otherwise, we perform all the same actions: we create indexed embeddings that we then convert into positional embeddings. We then feed the positional embeddings for the target text into a layer that has three parts: \textbf{masked multi-headed attention}, multiheaded attention, and a feed-forward neural network. The masked multi-headed attention component is just like self-attention, with one extra piece: the mask matrix introduced in this step acts as a filter to prevent the attention head from looking at future tokens, since the input vocabulary for the decoder are our "answers", I.e. what the translated text should be. The output from the masked multi-head self attention layer is passed to the encoder-decoder attention portion, which accepts the final input from the initial six encoder layers for the key and value, and uses the input from the previous decoder layer as the query, and then performs scaled dot-product over this. Each output is then fed into the feed forward layer, to a finalized set of embeddings. 
 
-Once we have the hidden state for each token, we can then attach the task head. In our case, this is prediction of what a word should be.  At each step of the process, the decoder looks at the previous steps and generates based on those steps so we form a complete sentence\citep{rush2018annotated}.We then get the predicted word, just like in Word2Vec.
+Once we have the hidden state for each token, we can then attach the task head. In our case, this is prediction of what a word should be.  At each step of the process, the decoder looks at the previous steps and generates based on those steps so we form a complete sentence \citep{rush2018annotated}.We then get the predicted word, just like in Word2Vec.
 
 Transformers were revolutionary for a number of reasons, because they solved several problems people had been working on: 
 \begin{itemize}
@@ -2059,7 +2116,7 @@ Transformers were revolutionary for a number of reasons, because they solved sev
 \end{figure}
 
 After the explosive success of "Attention is All you Need", a variety of transformer architectures arose, research and implementation in this architecture exploded in deep learning. The next transformer architecture to be considered a significant step forward was \textbf{BERT} released in 2018 by Google. 
-BERT stands for Bi-Directional Encoder and was released 2018\citep{devlin2018bert}, based on a paper written by Google as a way to solve common natural language tasks like sentiment analysis, question-answering, and text summarization. BERT is a transformer model , also based on the attention mechanism, but its architecture is such that it only includes the encoder piece. Its most prominent usage is in Google Search, where it's the algorithm powering surfacing relevant search results. In the blog post they released on including BERT in search ranking in 2019, Google specifically discussed adding context to queries as a replacement for keyword-based methods as a reason they did this.\footnote{\href{https://blog.google/products/search/search-language-understanding-bert/}{BERT search announcement}}
+BERT stands for Bi-Directional Encoder and was released 2018 \citep{devlin2018bert}, based on a paper written by Google as a way to solve common natural language tasks like sentiment analysis, question-answering, and text summarization. BERT is a transformer model , also based on the attention mechanism, but its architecture is such that it only includes the encoder piece. Its most prominent usage is in Google Search, where it's the algorithm powering surfacing relevant search results. In the blog post they released on including BERT in search ranking in 2019, Google specifically discussed adding context to queries as a replacement for keyword-based methods as a reason they did this.\footnote{\href{https://blog.google/products/search/search-language-understanding-bert/}{BERT search announcement}}
 
 BERT works as a \textbf{masked language model}. Masking is simply what we did when we implemented Word2Vec by removing words and building our context window. When we created our representations with Word2Vec, we only looked at sliding windows moving forward. The B in Bert is for bi-directional, which means it pays attention to words in both ways through scaled dot-product attention. BERT has 12 transformer layers. It starts by using \textbf{WordPiece}, an algorithm that segments words into subwords, into tokens. To train BERT, the goal is to predict a token given its context.
 
@@ -2078,7 +2135,7 @@ We've now reached the forefront of what's possible with embeddings in this paper
 With the advent of Transformer models, and more importantly, BERT, generating representations of large, multimodal objects for use in all sorts of machine learning tasks suddenly became much easier, the representations became more accurate, and if the company had GPUs available, computations could now be computed with speed-up in parallel. Now that we understand what embeddings are, what should we do with them? After all, we're not doing this just as a math exercise. If there is one thing to take away from this entire text, it is this: 
 
 \begin{formal}
-The final goal of all industrial machine learning (ML) projects is to develop ML products and rapidly bring them into production.\citep{kreuzberger2022machine}
+The final goal of all industrial machine learning (ML) projects is to develop ML products and rapidly bring them into production. \citep{kreuzberger2022machine}
 \end{formal}
 
 The model that is deployed is always better and more accurate than the model that is only ever a prototype. We've gone through the process of training embeddings end to end here, but there are several modalities for working with embeddings. We can:
@@ -2101,15 +2158,15 @@ Armed with this knowledge, we can think of several use cases of embeddings, give
 
 \subsection{Embeddings in Practice}
 
-Many companies are working with embeddings in all of these contexts today, across areas that span all aspects of information retrieval. Embeddings generated with deep learning models are being generated for use in wide and deep models for App Store recommendations at Google Play\citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock\citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking\citep{grbovic2018real}, using embeddings for content understanding at Netflix\citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock\citep{gomez2022learning}, and many other examples.
+Many companies are working with embeddings in all of these contexts today, across areas that span all aspects of information retrieval. Embeddings generated with deep learning models are being generated for use in wide and deep models for App Store recommendations at Google Play \citep{zhang2019deep}, dual embeddings for product complementary content recommendations at Overstock \citep{kvernadze2022two}, personalization of search results at Airbnb via real-time ranking \citep{grbovic2018real}, using embeddings for content understanding at Netflix \citep{dye_ekandham_saluja_rastogi_2020}, for understanding visual styles at Shutterstock \citep{gomez2022learning}, and many other examples.
 
 \subsubsection{Pinterest}
 
 One notable example is Pinterest. Pinterest as an application has a wide variety of content that needs to be personalized and classified for recommendation to users across multiple surfaces, particularly the Homefeed and shopping tab. The scale of generated content - 350 million monthly users and 2 billion items - Pins --- or cards with an image described by text --- necessitates a strong filtering and ranking policy. 
 
-To represent a user's interest and surface interesting content, Pinterest developed PinnerSage\citep{pal2020pinnersage}, which represents user interests through multiple 256-dimension mebeddings that are clustered based on similarity and represented by \textbf{medioids} --- an item that is a representative of a center of a given interest cluster. 
+To represent a user's interest and surface interesting content, Pinterest developed PinnerSage \citep{pal2020pinnersage}, which represents user interests through multiple 256-dimension mebeddings that are clustered based on similarity and represented by \textbf{medioids} --- an item that is a representative of a center of a given interest cluster. 
 
-The foundation of this system is a set of embeddings developed through an algorithm called PinSage\citep{ying2018graph}. Pinsage generates embeddings using a Graph Convolutional neural network, which is a neural net that takes into account the graph structure of relationships between nodes in the network. The algorithm looks at the nearest neighbors of a pin and samples from nearby pins based on related neighborhood visits. The input is embeddings of a Pin: the image embeddings, and the text embeddings, and finds the nearest neighbors. 
+The foundation of this system is a set of embeddings developed through an algorithm called PinSage \citep{ying2018graph}. Pinsage generates embeddings using a Graph Convolutional neural network, which is a neural net that takes into account the graph structure of relationships between nodes in the network. The algorithm looks at the nearest neighbors of a pin and samples from nearby pins based on related neighborhood visits. The input is embeddings of a Pin: the image embeddings, and the text embeddings, and finds the nearest neighbors. 
 
 Pinsage embeddings are then passed to Pinnersage, which takes the pins the user has acted on for the past 90 days and clusters them. It computes the medioid and takes the top 3 medioids based on importance, and, given a user query that is a medioid, performs an approximate nearest neighbors search using HNSW to find the pins closest to the query in the embedding space. 
 
@@ -2125,11 +2182,11 @@ Pinsage embeddings are then passed to Pinnersage, which takes the pins the user 
 
 YouTube has over 800 million pieces of content (videos) and ~2.6 billion active users that they'd like to recommend those videos to. The application needs to recommend existing content to users, while also generalizing to new content, which is uploaded frequently. They need to be able to serve these recommendations at \textbf{inference time} --- when the user loads a new page --- with low latency.
 
-In this paper\citep{covington2016deep}, YouTube shares how they created a two-stage recommender system for videos based on two deep learning models. The machine learning task is to predict the correct next video to show the user at a given time in YouTube recommendations so that they click.  The final output is formulated as a classification problem: given a user's input features and the input features of a video, can we predict a class for the user that includes the predicted watch time for the user for a specific video with a specific probability. 
+In this paper \citep{covington2016deep}, YouTube shares how they created a two-stage recommender system for videos based on two deep learning models. The machine learning task is to predict the correct next video to show the user at a given time in YouTube recommendations so that they click.  The final output is formulated as a classification problem: given a user's input features and the input features of a video, can we predict a class for the user that includes the predicted watch time for the user for a specific video with a specific probability. 
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.5\textwidth]{figures/youtube_recsys.png}}
-\caption{YouTube's end-to-end video recommender system, including a candidate generator and ranker\citep{covington2016deep}}
+\caption{YouTube's end-to-end video recommender system, including a candidate generator and ranker \citep{covington2016deep}}
 \end{figure}
 
 We set this task given a user, $U$ and \textbf{context} $C$\footnote{In recommender systems, we often think of \href{https://md.ekstrandom.net/blog/2015/10/search-and-recsys}{four relevant items} to formulate our recommender problem - user, item, context, and query. The context is usually the environment, for example the time of day or the geography of the user at inference time }
@@ -2159,16 +2216,16 @@ The DNN is a generalization of the matrix factorization model we discussed earli
 
 \begin{figure}[H]
 \centering{\includegraphics[width=\textwidth]{figures/youtube_model.png}}
-\caption{YouTube's multi-step neural network model for video recommendations using input embeddings\citep{covington2016deep}}
+\caption{YouTube's multi-step neural network model for video recommendations using input embeddings \citep{covington2016deep}}
 \end{figure}
 
 \subsubsection*{Google Play App Store}
-Similar work, although with a different architecture, was done in the App Store in Google Play in "Wide and Deep Learning for Recommender Systems"\citep{cheng2016wide}." This one crosses the search and recommendation space because it returns correct ranked and personalized app recommendations as the result of a search query.  The input is clickstream  data collected when a user visits the app store.
+Similar work, although with a different architecture, was done in the App Store in Google Play in "Wide and Deep Learning for Recommender Systems" \citep{cheng2016wide}." This one crosses the search and recommendation space because it returns correct ranked and personalized app recommendations as the result of a search query.  The input is clickstream  data collected when a user visits the app store.
 
 
 \begin{figure}[H]
 \centering{\includegraphics[width=\textwidth]{figures/wideanddeep_ml_arch.png}}
-\caption{Wide and deep\citep{cheng2016wide}}
+\caption{Wide and deep \citep{cheng2016wide}}
 \end{figure}
 
 The recommendations problem is formulated here as two jointly-trained models. The weights are shared and cross-propagated between the two models between epochs.
@@ -2182,7 +2239,7 @@ Wide and deep is made up of two models that look to complement each other:
   \item A \textbf{deep} model that supports \textbf{generalization} across items that the model has not seen before, using a feed-forward neural network made up of categorical features that are translated to embeddings, such as user language, device class, and whether a given app has an impression. Each of these embeddings range from 0-100 in dimensionality. They are combined jointly into a concatenated embedding space with dense vectors in 1200 dimensions.  and initialized randomly. The embedding values are trained to minimize loss of the final function, which is a logistic loss function common to the deep and wide model.  
 \begin{figure}[H]
 \centering{\includegraphics[width=1.1\textwidth]{figures/deepmodel.png}}
-\caption{The deep part of the wide and deep model\citep{cheng2016wide}}
+\caption{The deep part of the wide and deep model \citep{cheng2016wide}}
 \end{figure}
 \end{itemize}
 
@@ -2192,11 +2249,11 @@ The model is trained on 500 billion examples, and evaluated offline using AUC an
 \subsubsection{Twitter}
 At \textbf{Twitter},  precomputed embeddings were a \href{https://blog.twitter.com/engineering/en_us/topics/insights/2018/embeddingsattwitter}{critical part} recommendations for many app surface areas including user onboarding topic interest prediction, recommended tweets, home timeline construction, users to follow, and recommended ads. 
 
-Twitter had a number of embeddings-based models but we'll cover two projects here: Twice\citep{liu2022twice}, content embeddings for Tweets, which looks to find rich representations of Tweets that include both text and visual data for use in surfacing tweets in the home timeline, Notifications and Topics. Twitter also developed TwHIN\citep{el2022twhin}, Twitter Heterogeneous Information Network, a set of graph-based embeddings\citep{el2022twhin}, developed for tasks like personalized ads rankings, account follow-recommendation, offensive content detection, and search ranking, based on nodes (such as users and advertisers) and edges that represent entity interactions.
+Twitter had a number of embeddings-based models but we'll cover two projects here: Twice \citep{liu2022twice}, content embeddings for Tweets, which looks to find rich representations of Tweets that include both text and visual data for use in surfacing tweets in the home timeline, Notifications and Topics. Twitter also developed TwHIN \citep{el2022twhin}, Twitter Heterogeneous Information Network, a set of graph-based embeddings \citep{el2022twhin}, developed for tasks like personalized ads rankings, account follow-recommendation, offensive content detection, and search ranking, based on nodes (such as users and advertisers) and edges that represent entity interactions.
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.5\textwidth]{figures/twice.png}}
-\caption{Twitter's TWICe Embeddings, a trained BERT model\citep{liu2022twice}}
+\caption{Twitter's TWICe Embeddings, a trained BERT model \citep{liu2022twice}}
 \end{figure}
 
 
@@ -2209,7 +2266,7 @@ Joint embedding is performed by using data from user-tweet engagement, advertisi
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.7\textwidth]{figures/twhin.png}}
-\caption{Twitter's model of the app's heterogenous information network\citep{el2022twhin}}
+\caption{Twitter's model of the app's heterogenous information network \citep{el2022twhin}}
 \end{figure}
 
 
@@ -2219,11 +2276,11 @@ Once we synthesize enough of these architectures, we see some patterns start to 
 
 First, we need a great deal of input data to make accurate predictions from, and that data should have information about either explicit, or, more likely, implicit data like user clicks and purchases so that we can construct our model of user preferences. The reason we need a lot of data is two-fold. First, neural networks are data-hungry and require a large amount of training data to correctly infer relationships in comparison to traditional models. Second, large data requires a large pipeline.  
 
-If we don't have a lot of data, a simpler model will work well-enough, so we need to make sure we are actually at the scale where embeddings and neural networks help our business problem. It's likely the case that we can start much simpler. And in fact, a recent paper by one of the original researchers who developed factorization machines, an important approach in recommendations, argues that simple dot products found as the result of matrix factorization outperform neural networks\citep{rendle2020neural}.  Second, in order to get good embeddings, we will need to spend a great deal of time cleaning and processing data and creating features, as we did in the YouTube paper, so the outcome has to be worth the time spent. 
+If we don't have a lot of data, a simpler model will work well-enough, so we need to make sure we are actually at the scale where embeddings and neural networks help our business problem. It's likely the case that we can start much simpler. And in fact, a recent paper by one of the original researchers who developed factorization machines, an important approach in recommendations, argues that simple dot products found as the result of matrix factorization outperform neural networks \citep{rendle2020neural}.  Second, in order to get good embeddings, we will need to spend a great deal of time cleaning and processing data and creating features, as we did in the YouTube paper, so the outcome has to be worth the time spent. 
 
-Second, we need to be able to understand the latent relationship between users and items they've interacted with. In traditional recommenders, we could use TF-IDF to find the weighted word features as part of a particular flit and compare across documents, as long as our corpus doesn't grow too large. In more advanced recommendation systems, we could perform this same task by looking at either naive association rules, or framing recommendation as an interaction-based collaborative filtering problem not unlike Word2Vec to generate latent features, aka embeddings, of our users and items. In fact, this is exactly what Levy and Goldberg argued in "Neural Word Embedding as Implicit Matrix Factorization"\citep{levy2014neural}. They looked at the skipgram implementation of Word2Vec and find that implicitly it factors a word-context matrix.
+Second, we need to be able to understand the latent relationship between users and items they've interacted with. In traditional recommenders, we could use TF-IDF to find the weighted word features as part of a particular flit and compare across documents, as long as our corpus doesn't grow too large. In more advanced recommendation systems, we could perform this same task by looking at either naive association rules, or framing recommendation as an interaction-based collaborative filtering problem not unlike Word2Vec to generate latent features, aka embeddings, of our users and items. In fact, this is exactly what Levy and Goldberg argued in "Neural Word Embedding as Implicit Matrix Factorization" \citep{levy2014neural}. They looked at the skipgram implementation of Word2Vec and find that implicitly it factors a word-context matrix.
 
-We could alternatively still use tabular features as input into our collaborative filtering problem but use a neural network\citep{he2017neural} instead of simple dot product to converge on the correct relationships and the downstream ranking for the model. 
+We could alternatively still use tabular features as input into our collaborative filtering problem but use a neural network \citep{he2017neural} instead of simple dot product to converge on the correct relationships and the downstream ranking for the model. 
 
 Given our new knowledge about how embeddings and recommender systems work, we can now incorporate embeddings into the recommendations we serve for flits at Flutter.  If we want to recommend relevant content, we might do it in a number of different ways, depending on our business requirements.  In our corpus, we have hundreds of millions of messages that we need to filter down to hundreds to show the user. So we can start with a baseline of Word2Vec or similar and move on to any of the BERT or other neural network approaches to developing model input features, vector similarity search, and ranking, through the power of embeddings. 
 
@@ -2231,7 +2288,7 @@ Embeddings are endlessly flexible and endlessly useful, and can empower and impr
 
 \subsection{Embeddings as an Engineering Problem}
 
-In general, machine learning workflwos add an enormous amount of complexity and overhead to our engineering systems, for a number of reasons\citep{sculley2014machine}. First, they blend data that then needs to be monitored for drift downstream. Second, they are non-deterministic in their outputs, which means they need to be tracked extremely carefully as artifacts, since we generally don't version-control data. Third, they result in processing pipeline jungles. 
+In general, machine learning workflwos add an enormous amount of complexity and overhead to our engineering systems, for a number of reasons \citep{sculley2014machine}. First, they blend data that then needs to be monitored for drift downstream. Second, they are non-deterministic in their outputs, which means they need to be tracked extremely carefully as artifacts, since we generally don't version-control data. Third, they result in processing pipeline jungles. 
 
 
 \begin{quote}
@@ -2245,12 +2302,12 @@ As we can see from several system diagrams, including PinnerSage and the Wide an
   \centering
   \begin{minipage}[b]{0.4\textwidth}
     \includegraphics[width=\textwidth]{figures/pinnersage.png}
-    \caption{PinnerSage model architecture\citep{pal2020pinnersage}}
+    \caption{PinnerSage model architecture \citep{pal2020pinnersage}}
   \end{minipage}
   \hfill
   \begin{minipage}[b]{0.4\textwidth}
     \includegraphics[width=\textwidth]{figures/wideanddeep_arch.png}
-    \caption{Wide and Deep model architecture\citep{cheng2016wide}}
+    \caption{Wide and Deep model architecture \citep{cheng2016wide}}
   \end{minipage}
 \end{figure}
 
@@ -2298,7 +2355,7 @@ However, one of the large benefits of deep learning models is that we can also u
 Training data is the most important part of any given model. Where does it come from for pre-trained large language models? Usually scraping large parts of the internet. In the interest of competitive advantage, how these training datasets are put together is usually not revealed, and there is a fair amount of reverse-engineering and speculation. For example, \href{https://s10251.pcdn.co/pdf/2022-Alan-D-Thompson-Whats-in-my-AI-Rev-0.pdf}{"What's in my AI"} goes into the training data behind the GPT series of models and finds that GPT-3 was trained on Books1 and Books2. Books1 is \href{https://github.com/soskek/bookcorpus/issues/27#issuecomment-716104208}{likely bookcorpus} and books2 is likely \href{https://en.wikipedia.org/wiki/Library_Genesis}{libgen}. GPT also includes the Common Crawl, an large open-source dataset of indexed websites, WebText2, and Wikipedia. This information is important because when we pick  a model we need to at least understand at a high level what it was trained on to be a general-purpose model so we can explain what changes when we fine-tune it. 
 \end{formal}
 
-In \textbf{fine-tuning} a model, we perform all the same steps as we do for training from scratch. We have training data, we have a model, and we minimize a loss function. However, there are several differences. When we create our new model, we copy the existing, pre-trained model with the exception of the final output layer, which we initialize from scratch based on our new task. When we train the model, we initialize these parameters at random and only continue to adjust the parameters of the previous layers so that they focus on this task rather than starting to train from scratch. In this way, if we have a model like BERT that's trained to generalize across the whole internet, but our corpus for Flutter is very sensitive to trending topics and needs to be updated on a daily basis, we can refocus the model without having to train a new one with as few as 10k samples instead of our original hundreds of millions\citep{zhang2020revisiting}. 
+In \textbf{fine-tuning} a model, we perform all the same steps as we do for training from scratch. We have training data, we have a model, and we minimize a loss function. However, there are several differences. When we create our new model, we copy the existing, pre-trained model with the exception of the final output layer, which we initialize from scratch based on our new task. When we train the model, we initialize these parameters at random and only continue to adjust the parameters of the previous layers so that they focus on this task rather than starting to train from scratch. In this way, if we have a model like BERT that's trained to generalize across the whole internet, but our corpus for Flutter is very sensitive to trending topics and needs to be updated on a daily basis, we can refocus the model without having to train a new one with as few as 10k samples instead of our original hundreds of millions \citep{zhang2020revisiting}. 
 
 There are, likewise, BERT embeddings available that we can fine-tune. There are other generalized corpuses available, such as GloVE, Word2Vec, and \href{https://fasttext.cc/docs/en/crawl-vectors.html}{FastText} (also trained with CBOW). We need to make a decision whether to use these, train a model from scratch, or a third option, to query \href{https://platform.openai.com/docs/guides/embeddings/limitations-risks}{embeddings available from an API} as is the case for OpenAI embeddings, although doing so can potentially come at a \href{https://github.com/ray-project/llm-numbers#101----cost-ratio-of-openai-embedding-to-self-hosted-embedding}{higher}, relative to training or fine-tuning our own. Of course, all of this is subject to our particular use-case and is important to evaluate when we start a project. 
 
@@ -2329,11 +2386,11 @@ A general-form embeddings store contains the embeddings themselves, an index to 
 
 The trade-off between full and nearest neighor search is that the latter is less precise, but it's much faster. When we switch between precision and recall in evaluation, we need to be aware of the tradeoffs and think about what our requirements are with respect to how accurate our embeddings are and their inference latency.
 
-Here's an example of the embeddings storage system that Twitter built for exactly this use case, long before vector databases came into the picture. \citep{shiebler2010making}. 
+Here's an example of the embeddings storage system that Twitter built for exactly this use case, long before vector databases came into the picture.  \citep{shiebler2010making}. 
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.6\textwidth]{figures/embedding_pipeline.png}}
-\caption{Twitter's embeddings pipeline\citep{shiebler2010making}}
+\caption{Twitter's embeddings pipeline \citep{shiebler2010making}}
 \end{figure}
 
 Given that Twitter uses embeddings in multiple sources as described in the previous section, Twitter made embeddings "first class citizens" by creating a centralized platform that reprocesses data and generates embeddings downstream into the feature registry.
@@ -2342,14 +2399,14 @@ Given that Twitter uses embeddings in multiple sources as described in the previ
 
 Once we've trained embeddings, we might think we're done. But embeddings, like any machine learning pipeline, need to be refreshed because we might run into \textbf{concept drift}. Concept drift occurs when the data underlying our model changes. For example, let's say that our model includes, as a binary feature, people who have landlines or not. In 2023, this would no longer be as relevant of a feature in most of the world as most people have switched to cell phones as their primary telephones, so the model would lose accuracy. 
 
-This phenomenon is even more prevalent with embeddings that are used for classification. For example, let's say we use embeddings for trending topic detection. The model has to generalize, as in the wide and deep model, to detect new classes, but if our classes change quickly, it may not be able to, so we need to retrain your embeddings frequently. Or, for example, if we model embeddings in a graph, as Pinterest does, and the relationships between nodes in the graph change, we may have to update them\citep{wewer2021updating}. We could also have an influx of spam or corrupted content which changes the relationship in your embeddings, in which case we'll need to retrain.
+This phenomenon is even more prevalent with embeddings that are used for classification. For example, let's say we use embeddings for trending topic detection. The model has to generalize, as in the wide and deep model, to detect new classes, but if our classes change quickly, it may not be able to, so we need to retrain your embeddings frequently. Or, for example, if we model embeddings in a graph, as Pinterest does, and the relationships between nodes in the graph change, we may have to update them \citep{wewer2021updating}. We could also have an influx of spam or corrupted content which changes the relationship in your embeddings, in which case we'll need to retrain.
 
 Embeddings can be hard to understand (so hard that some people have even written entire papers about them) and harder to interpret. What does it mean for a king to be close to queen but far away from the knight? What does it mean for two flits to be close to each other in a projected embedding space?  
 
 We have two ways we can think about this, \textbf{intrinsic} and \textbf{extrinsic} evaluation. For the embeddings themselves (extrinsic evaluation), we can visualize them through either \textbf{UMAP}---Uniform Manifold Approximation and Projection for Dimension Reduction or \textbf{t-sne} --- t-distributed stochastic neighbor embedding, algorithms that allow us to visualize highly-dimensional data in two or three dimensions, much like PCA. Or we can fit embeddings into our downstream task (for example, summarization, or classification), and analyze the same way we would with offline metrics. There are many different approaches
-\citep{wang2019evaluating} but the summary is that embeddings can be objectively hard to evaluate and we'll need to factor the time to perform this evaluation into our modeling time.
+ \citep{wang2019evaluating} but the summary is that embeddings can be objectively hard to evaluate and we'll need to factor the time to perform this evaluation into our modeling time.
 
-Once we retrain our initial baseline model, we now have a secondary issue: how do we compare the first set of embeddings to the second; that is, how do we evaluate whether they are good representations of our data, given the case that embeddings are often unsupervised; i.e. --- how do we know whether "king" should be close to "queen"? On their own, as a first-pass, embeddings can be hard to interpret, because in a multidimensional space it's hard to understand which dimension of a vector corresponds to a decision to place items next to each other\citep{simhi2022interpreting}.  When compared to other sets of embeddings, we might use the offline metrics of the final model task, precision and recall, or we could measure the distance of the distribution of the embeddings in the latent space by comparing the statistical distance between the two probability distributions using a metric known as \textbf{Kullback–Leibler divergence}.
+Once we retrain our initial baseline model, we now have a secondary issue: how do we compare the first set of embeddings to the second; that is, how do we evaluate whether they are good representations of our data, given the case that embeddings are often unsupervised; i.e. --- how do we know whether "king" should be close to "queen"? On their own, as a first-pass, embeddings can be hard to interpret, because in a multidimensional space it's hard to understand which dimension of a vector corresponds to a decision to place items next to each other \citep{simhi2022interpreting}.  When compared to other sets of embeddings, we might use the offline metrics of the final model task, precision and recall, or we could measure the distance of the distribution of the embeddings in the latent space by comparing the statistical distance between the two probability distributions using a metric known as \textbf{Kullback–Leibler divergence}.
 
 Finally, now let's say that we have two sets of embeddings, you need to version them and keep both sets so that, in case your new model doesn't work as well, you can fall back to the old one. This goes hand-in-hand with the problem of model versioning in ML operations, except in this case we need to both version the model and the output data. 
 
@@ -2360,13 +2417,13 @@ There are numerous different approaches to model and data versioning that involv
 
 When working with embeddings, we are operating not only in a theoretical, but practical engineering environment. The most critical engineering part of any machine learning system that works in production is inference time --- how quickly does it take to query the model asset and return a result to an end-user.
 
-For this, we care about latency, which we can roughly define as any time spent waiting and is a critical performance metric in any production system\citep{gregg2014systems}. Generally speaking, it's the time of any operation to complete -- application request, database query, and so on. Latency at the level of the web service is generally measured in milliseconds, and every effort is made to reduce this as close to zero as realistically possible. For use-cases like search and loading a feed of content, the experience needs to be instantaneous or the user experience will degrade and we could even lose revenue. In a study from a while back, Amazon found that every 100ms increase in latency cuts profits by 1\% \citep{flach2013reducing}.
+For this, we care about latency, which we can roughly define as any time spent waiting and is a critical performance metric in any production system \citep{gregg2014systems}. Generally speaking, it's the time of any operation to complete -- application request, database query, and so on. Latency at the level of the web service is generally measured in milliseconds, and every effort is made to reduce this as close to zero as realistically possible. For use-cases like search and loading a feed of content, the experience needs to be instantaneous or the user experience will degrade and we could even lose revenue. In a study from a while back, Amazon found that every 100ms increase in latency cuts profits by 1\%  \citep{flach2013reducing}.
 
 Given this, we need to think about how to reduce the footprint of our model and all the layers in serving it so that the response to the user is instantaneous. We do this by creating observability throughout our machine learning system, starting with the hardware the system is running on, to CPU and GPU utilization, the performance of our model architecture, and how that model interacts with other components. For example, when we are performing nearest neighbor lookup, the way we perform that lookup and the algorithm we use, the programming language we use to write that algorithm, all compound latency concerns.  
 
-As an example, in the wide and deep paper, the recommender ranking model scores over 10 million apps per second. The application was initially single-threaded, with all candidates taking 31 milliseconds. By implementing multithreading, they were able to reduce client-side latency to 14 milliseconds\citep{cheng2016wide}.
+As an example, in the wide and deep paper, the recommender ranking model scores over 10 million apps per second. The application was initially single-threaded, with all candidates taking 31 milliseconds. By implementing multithreading, they were able to reduce client-side latency to 14 milliseconds \citep{cheng2016wide}.
 
-Operations of machine learning systems is an entirely other art and craft of study and one that's best left for another paper\citep{kreuzberger2022machine}.
+Operations of machine learning systems is an entirely other art and craft of study and one that's best left for another paper \citep{kreuzberger2022machine}.
 
 \subsubsection{Online and Offline Model Evaluation}
 We've barely scratched the surface of one of the most critical parts of a model: how it performs in offline and online testing. When we talk about offline tests, we mean analyzing the statistical properties of a model to learn whether the model is a valid model - i.e. does our loss function converge? Does the model overfit or underfit? What the precision and recall are? Do we experience any drift? If it's a recommendation ranker model, are we using metrics like \textbf{NDCG} ---normalized discounted cumulative gain--- to understand whether our new model ranks items better than the previous iteration? 
@@ -2374,11 +2431,11 @@ We've barely scratched the surface of one of the most critical parts of a model:
 Then, there is online evaluation, aka how successful the model actually is in the production context. Usually, this is evaluated through A/B testing where one set of users gets the old model or system and a holdout set of users gets the new system, and looking at the statistical significance of metrics like click-through rate, items served, and time spent on a given area of the site. 
 
 \subsubsection{What makes embeddings projects successful}
-Finally, once we have all our algorithmic and engineering concerns lined up, there is the final matter to consider of what will make our project successful from a business perspective. We should acknowledge that we might not always need embeddings for our machine learning problem, or that we might not need machine learning at all, initially, if our project is based entirely on a handful of heuristic rules that can be determined and analyzed by humans\citep{zinkevich2017rules}.
+Finally, once we have all our algorithmic and engineering concerns lined up, there is the final matter to consider of what will make our project successful from a business perspective. We should acknowledge that we might not always need embeddings for our machine learning problem, or that we might not need machine learning at all, initially, if our project is based entirely on a handful of heuristic rules that can be determined and analyzed by humans \citep{zinkevich2017rules}.
 
-If we conclude that we are operating in a data-rich space where automatically inferring semantic relationships between entities is correct, we need to ask ourselves if we're willing to put in a great deal of effort into producing clean datasets, the baseline of any good machine learning model, even in cases of large language models. In fact, clean, domain data is so important that many of the companies discussed here ended up training their own embeddings models, and, recently companies like Bloomberg\citep{wu2023bloomberggpt} and Replit\citep{Shabani_2023} are even training their own large language models to improve accuracy for their specific business domain.
+If we conclude that we are operating in a data-rich space where automatically inferring semantic relationships between entities is correct, we need to ask ourselves if we're willing to put in a great deal of effort into producing clean datasets, the baseline of any good machine learning model, even in cases of large language models. In fact, clean, domain data is so important that many of the companies discussed here ended up training their own embeddings models, and, recently companies like Bloomberg \citep{wu2023bloomberggpt} and Replit \citep{Shabani_2023} are even training their own large language models to improve accuracy for their specific business domain.
 
-Critically, to get to a stage where we have a machine learning system dealing with embeddings, we need a team that has multilevel alignment around the work that needs to be done. In larger companies, the size of this team will be larger, but most specifically work with embeddings requires someone who can speak to the use case specifically, someone who advocates for the use case and gets it prioritize, and a technical person who can do the work\citep{meil2023ai}.
+Critically, to get to a stage where we have a machine learning system dealing with embeddings, we need a team that has multilevel alignment around the work that needs to be done. In larger companies, the size of this team will be larger, but most specifically work with embeddings requires someone who can speak to the use case specifically, someone who advocates for the use case and gets it prioritize, and a technical person who can do the work \citep{meil2023ai}.
 
 If all of these components come together, we now have an embeddings-based recommender system in production.
 
