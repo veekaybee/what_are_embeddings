@@ -2213,7 +2213,7 @@ Joint embedding is performed by using data from user-tweet engagement, advertisi
 \end{figure}
 
 
-\subsubsection*{Embeddings at Flutter?}
+\subsubsection*{Embeddings at Flutter}
 
 Once we synthesize enough of these architectures, we see some patterns start to emerge that we can think about adapting for developing our relevant recommendation system at Flutter. 
 
@@ -2234,12 +2234,11 @@ Embeddings are endlessly flexible and endlessly useful, and can empower and impr
 In general, machine learning workflwos add an enormous amount of complexity and overhead to our engineering systems, for a number of reasons\citep{sculley2014machine}. First, they blend data that then needs to be monitored for drift downstream. Second, they are non-deterministic in their outputs, which means they need to be tracked extremely carefully as artifacts, since we generally don't version-control data. Third, they result in processing pipeline jungles. 
 
 
-\leftskip=0.5in\bigskip\noindent
+\begin{quote}
 As a special case of glue code, pipeline jungles often appear in data preparation. These can evolve organically, as new signals are identified and new information sources added. Without care, the resulting system for preparing data in an ML-friendly format may become a jungle of scrapes, joins, and sampling steps, often with intermediate files output.
-\leftskip=0pt\bigskip
+\end{quote}
 
-
-As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, recommender systems have many moving components.
+As we can see from several system diagrams, including PinnerSage and the Wide and Deep Model, \href{https://amatriain.net/blog/RecsysArchitectures}{recommender systems in production utilizing embeddings have} many moving components.
 
 
 \begin{figure}[H]
@@ -2255,7 +2254,15 @@ As we can see from several system diagrams, including PinnerSage and the Wide an
   \end{minipage}
 \end{figure}
 
-In addition to our running business logic code, we are now keeping track of
+You may recall that we discussed the simple stages of a recommender system in this diagram. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/recsys.png}
+\caption{Generic system processing embeddings in context}
+\end{figure}
+
+Given all of our production-level requirements for a successful recommendation system, our actual production system generally looks more like this: 
 
 \begin{formal}
 \begin{itemize}
@@ -2266,17 +2273,32 @@ In addition to our running business logic code, we are now keeping track of
   \item updating embeddings
   \item versioning embeddings and data drift
   \item Inference and latency
-  \item Online and offline model evaluation
+  \item Online (A/B test) and offline (metric sweep) model evaluation
 \end{itemize}
 \end{formal}
 
+Given all of our concern space, the diagram of any given production system would look more like this
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/embeddings_arch.png}
+\caption{Recommender systems as a machine learning problem}
+\end{figure}
+
+
 \subsubsection{Embeddings Generation}
 
-We've already seen that embeddings are usually generated as a byproduct of training neural network models, most often the penultimate layer that's used before a layer to classify or regress is added as the final output. We generate them as either the result of training our own models, or by using other, pre-trained models that we can transfer learn from. Considerations here include how many resources we have, both in terms of time and money, to generate our own embeddings, and how accurate pre-trained models are. Something else to consider is whether you want to use pre-trained models or train our own from scratch. Each of these has their own upsides and downsides.
+We've already seen that embeddings are usually generated as a byproduct of training neural network models, most often the penultimate layer that's used before a layer to classify or regress is added as the final output. We have two ways to build them. We can train our own models, as YouTube, Pinterest, and Twitter have done. In the LLM space, there is also \href{https://blog.replit.com/llm-training}{growing interest} in being able to train large language models in-house. 
+
+However, one of the large benefits of deep learning models is that we can also use pre-trained model. A pretrained model 
+
+We generate them as either the result of training our own models, or by using other, pre-trained models that we can transfer learn from. Considerations here include how many resources we have, both in terms of time and money, to generate our own embeddings, and how accurate pre-trained models are. Something else to consider is whether you want to use pre-trained models or train our own from scratch. Each of these has their own upsides and downsides.
 
 There are pre-trained embeddings available.  Pretrained embeddings are based on enormous internet corpuses.  There are a lot of pre-trained word embeddings available: Word2Vec via GenSim, GLoVe, and FastText. BERT embeddings are also available.  We can also query OpenAI embeddings, although doing so comes at a fairly steep cost.
 
 \subsubsection{Storage and Retrieval}
+
+Once we've trained our model, 
 
 Generally when embeddings are generated as part of a Tensorflow (or PyTorch or Gensim) artifact, they initially live in-memory and are then propagated to a model object, which is serialized onto memory and then loaded at re-training or inference time. But if we want to access the embeddings specifically and search through them, as well as potentially do search against other embeddings, we need something that acts as an embeddings store.
 
@@ -2350,14 +2372,15 @@ If all of these components come together, we now have an embeddings-based recomm
 
 \section{Conclusion}
 
-We have now walked through an end-to-end example of what it means to generate and need embeddings, from the early approaches, to modern-day approaches using Transformers and BERT. We've understood the business context of why we might include machine learning models in our application, how they work, how to incorporate them, and where embeddings ---dense representations of deep learning model input and output data -- can be best leveraged.  
+We have now walked through an end-to-end example of what embeddings are. We started 
+with a high-level overview of how embeddings fit into the context of a machine learning application. We then did a deep dive on early approaches to encoding, to building up inutition of embeddings in Word2Vec and then moving on to transformers and BERT. Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more. 
 
-In summary, embeddings are a wonderful tool in any machine learning system, but one that's not it's not always easy to understand, maintain. Generating embeddings using the correct method, with the correct interpretation, is a project that takes  the most important pieces of these being that we need to have clean data, and constantly think about the performance time of our embeddings
+We've understood the engineering context of why we might include machine learning models in our application, how they work, how to incorporate them, and where embeddings ---dense representations of deep learning model input and output data -- can be best leveraged.  
 
-Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more.
+Embeddings are a powerful tool in any machine learning system, but one that comes at a cost of maintenance and interpretability. Generating embeddings using the correct method, with the correct metrics and hardware and software, is a project that takes considerable thought. 
 
 We now hopefully have a solid grasp of the fundamentals of embedding and can either leverage them -- or explain why not to --in our next project.
- 
+
 Good luck navigating embeddings, and hope to see you in the latent space.
 
 
