@@ -637,7 +637,9 @@ We have finally trained our model. Now, we test the model's predictions on the 2
 We just saw a simple example of machine learning as it relates to predicting continuous response variables. When our business question is, "What would be good content to show our users," we are facing the machine learning task for recommendation. Recommender systems are systems set up for \textbf{information retrieval}, a field closely related to NLP that's focused on finding relevant information in large collections of documents.  The goal of information retrieval is to synthesize large collections of unstructured text documents. Within information retrieval, there are two complementary solutions in how we can offer users the correct content in our app: search, and recommendations.
 
 \begin{formal}
-\textbf{Search} is the problem of directed \citep{ekstrand2019recommender} information seeking, i.e. the user offers the system a specific query and would like a set of refined results. Search engines at this point are a well-established traditional solution in the space. \textbf{Recommendation} is a problem where "man is the query." \citep{seaver2022computing}  Here, we don't know what the person is looking for exactly, but we would like to infer what they like, and recommend items based on their learned tastes and preferences.
+\textbf{Search} is the problem of directed \citep{ekstrand2019recommender} information seeking, i.e. the user offers the system a specific query and would like a set of refined results. Search engines at this point are a well-established traditional solution in the space. 
+
+\textbf{Recommendation} is a problem where "man is the query." \citep{seaver2022computing}  Here, we don't know what the person is looking for exactly, but we would like to infer what they like, and recommend items based on their learned tastes and preferences.
 \end{formal}
 
 The first industrial recommender systems were created to filter messages in email and newsgroups \citep{goldberg1992using}  at the Xerox Palo Alto Research Center based on a growing need to filter incoming information from the web.  The most common recommender systems today are those at Netflix, YouTube, and other large-scale platforms that need a way to surface relevant content to users.
@@ -646,13 +648,11 @@ The goal of recommender systems is surface items that are relevant to the user. 
 
 \begin{formal}
 \begin{itemize}
-
-  \item \textbf{Collaborative filtering} - The most common approach users activity from log data (product ratings, clicks on content) in relation to the available items to be rated in order to compute the given utility of an item for a user. There are \textbf{neighborhood models}, where ratings are predicted initially by finding users similar to our given target user and we use similarity functions to compute the closeness of users.
- 
-  Another common approach is using \textbf{model-based} methods such  \textbf{matrix factorization}, the process of representing users and items in a feature matrix made up of low-dimensional factor vectors, which in our case, are also known as embeddings, and learning those feature vectors through the process of minimizing a cost function. This process can be thought of as similar to Word2Vec \citep{levy2014neural}, a deep learning model which we'll discuss in depth in this document.  There are many different approaches to collaborative filtering, including matrix factorization and  \textbf{factorization machines}.
-   \item \textbf{Content filtering} - This approach uses metadata available about our items (for example in movies or music, the title, year released, genre, and so on) as initial or additional features input into models and work well when we don't have much information about user activity, although they are often used in combination with collaborative filtering approaches. Many embeddings architectures fall into this category since they help us model the features for our items.  
-  \item \textbf{Learn to Rank} - Usually machine learning problems like matrix factorization are formulated by minimizing the error of a cost function. Learn to rank methods focus on ranking items in relation to each other based on a known set of preferred rankings and the error is, instead, cases when pairs or lists of items are ranked incorrectly. Here,the problem is not presenting a single item but a set of items and how they interplay. This step would normally take place after candidate generation, in a filtering step because it's computationally expensive to rank extremely large lists.
-  \item \textbf{Neural Recommendations} - The process of using neural networks to capture the same relationships that matrix factorization does without explicitly having to create a user/item matrix and based on the shape of the input data. This is where deep learning networks, and recently, large language models, come into play. Examples of deep learning architectures used for recommendation include Word2Vec and BERT, which we'll cover in this document, and convolutional and recurrent neural networks for sequential recommendation. The big benefit deep learning brings to the table is the ability to better model content-based recommendations and give us representations of our items in the embedding space. \citep{zhang2019deep}
+  \item \textbf{Collaborative filtering} - The most common approach for creating recommendations is to formulate our data as a problem of finding missing user-item interactions in a given set of user-item interaction history. We start by collecting either explicit (ratings) data or \textbf{implicit} user interaction data like clicks, pageviews, or time spent on items, and compute. The simplest form of interactions are \textbf{neighborhood models}, where ratings are predicted initially by finding users similar to our given target user. We use similarity functions to compute the closeness of users.
+  Another common approach is using methods such  \textbf{matrix factorization}, the process of representing users and items in a feature matrix made up of low-dimensional factor vectors, which in our case, are also known as embeddings, and learning those feature vectors through the process of minimizing a cost function. This process can be thought of as similar to Word2Vec \citep{levy2014neural}, a deep learning model which we'll discuss in depth in this document.  There are many different approaches to collaborative filtering, including matrix factorization and  \textbf{factorization machines}.
+   \item \textbf{Content filtering} - This approach uses metadata available about our items (for example in movies or music, the title, year released, genre, and so on) as initial or additional features input into models and work well when we don't have much information about user activity, although they are often used in combination with collaborative filtering approaches. Many embeddings architectures fall into this category since they help us model the textual features for our items.  
+  \item \textbf{Learn to Rank} -  Learn to rank methods focus on ranking items in relation to each other based on a known set of preferred rankings and the error is the number of cases when pairs or lists of items are ranked incorrectly. Here, the problem is not presenting a single item, but a set of items and how they interplay. This step normally takes place after candidate generation, in a filtering step, because it's computationally expensive to rank extremely large lists.
+  \item \textbf{Neural Recommendations} - The process of using neural networks to capture the same relationships that matrix factorization does without explicitly having to create a user/item matrix and based on the shape of the input data. This is where deep learning networks, and recently, large language models, come into play. Examples of deep learning architectures used for recommendation include Word2Vec and BERT, which we'll cover in this document, and convolutional and recurrent neural networks for sequential recommendation (such as is found in music playlists, for example). Deep learning brings allows us to better model content-based recommendations and give us representations of our items in an embedding space. \citep{zhang2019deep}
 \end{itemize}
 \end{formal}
 
@@ -664,24 +664,20 @@ Recommender systems have evolved  their own unique architectures\footnote{For a 
 \caption{Recommender systems as a machine learning problem}
 \end{figure}
 
+\begin{formal}
 \begin{itemize}
   \item \textbf{Candidate Generation} - First, we ingest data from the web app.  This data goes into the initial piece, which hosts our first-pass model generating \textbf{candidate recommendations}. This is where collaborative filtering takes place, and we whittle our list of potential candidates down from millions to thousands or hundreds.
-  \item \textbf{Filtering} - Once we have a generated list of candidates, we want to continue to filter them, using business logic (i.e. we don't want to see NSFW content, or items that are not on sale, for example.). This is generally a heavily heuristic-based step.
   \item \textbf{Ranking} - Finally, we need a way to order the filtered list of recommendations based on what we think the user will prefer the most, so the next stage is \textbf{ranking}, and then we serve them out in the timeline or the ML product interface we're working with.
+  \item \textbf{Filtering} - Once we have a generated list of candidates, we want to continue to filter them, using business logic (i.e. we don't want to see NSFW content, or items that are not on sale, for example.). This is generally a heavily heuristic-based step.
   \item \textbf{Retrieval} - This is the piece where the web application usually hits a model endpoint to get the final list of items served to the user through the product UI.
 \end{itemize}
+\end{formal}
     
-Databases have become the fundamental tool in building backend infrastructure that performs data lookups. Embeddings have become similar building blocks in the creation of many modern search and recommendation product architectures.Embeddings are a type of \textbf{machine learning feature} that we use first as input into the feature engineering stage, and the first set of results that come from our candidate generation stage, that are then incorporated into downstream processing steps of ranking and retrieval to produce the final items the user sees.
-
-\begin{figure}[H]
-\centering{\includegraphics[width=\textwidth]{figures/embed_flow.png}}
-\caption{Embeddings in the context of building an ML candidate generator model}
-\end{figure}
-
+Databases have become the fundamental tool in building backend infrastructure that performs data lookups. Embeddings have become similar building blocks in the creation of many modern search and recommendation product architectures. Embeddings are a type of \textbf{machine learning feature} --- or model input data --- that we use first as input into the feature engineering stage, and the first set of results that come from our candidate generation stage, that are then incorporated into downstream processing steps of ranking and retrieval to produce the final items the user sees.
 
 \subsubsection{Machine learning features}
 
-Now that we have a high-level conceptual view of recommender systems, let's build towards the candidate generation model that will offer relevant flits.
+Now that we have a high-level conceptual view of how machine learning and recommender systems work, let's build towards a candidate generation model that will offer relevant flits.
 
 Let's start by modeling a traditional machine learning problem and contrast it with our NLP problem. For example, let's say that one of our business problems is predicting whether a bird is likely to continue to stay on Flutter or to churn\footnote{An extremely common business problem to solve in almost every industry where either customer population or subscription based on revenues is important} --- disengage and leave the platform.
 
@@ -720,7 +716,7 @@ These are all discrete features that we can feed into our model and learn weight
 The process of formatting data correctly to feed into a model is called \textbf{feature engineering}. When we have a single continuous, numerical feature, like “the age of the flit in days”, it’s easy to feed these features into a model. But, when we have textual data, we need to turn it into numerical representations so that we can compare these representations.  
 
 \subsection{Numerical Feature Vectors}
-Within the context of working with text in machine learning, we represent features as numerical vectors. We can think of each row in our tabular feature data as a vector. And a collection of features, or our tabular representation, is a matrix. For example, in the vector for our first user, $[012, 2, 'US', 5]$, we can see that this particular value is represented by four features. When we create vectors, we can run algorithmic computations over them and use them as inputs into ML models in the numerical form we require.
+Within the context of working with text in machine learning, we represent features as numerical vectors. We can think of each row in our tabular feature data as a vector. And a collection of features, or our tabular representation, is a matrix. For example, in the vector for our first user, \mintinline{python}{[012, 2, 'US', 5]}, we can see that this particular value is represented by four features. When we create vectors, we can run mathematical computations over them and use them as inputs into ML models in the numerical form we require.
 
 Mathematically, vectors are collections of coordinates that tell us where a given point is in space among many dimensions. For example, in two dimensions, we have a point $[2,5]$, representing \mintinline{python}{bird_posts} and \mintinline{python}{bird_likes}.
 
@@ -785,7 +781,7 @@ But how do we repres ent "US" or "UK" in this space? Because modern models conve
 
 
 \subsection{From Words to Vectors in Three Easy Pieces}
-In "Operating Systems: Three Easy Pieces", the authors write, "Like any system built by humans, good ideas accumulated in operating systems over time, as engineers learned what was important in their design." \citep{arpaci2018operating} The same is true for today's large language models. They were built on hundreds of foundational ideas over the course of decades.  There are, similarly, several fundamental concepts that make up the work of transforming words to numerical representations.
+In "Operating Systems: Three Easy Pieces", the authors write, "Like any system built by humans, good ideas accumulated in operating systems over time, as engineers learned what was important in their design." \citep{arpaci2018operating} Today's large language models were likewise built on hundreds of foundational ideas over the course of decades.  There are, similarly, several fundamental concepts that make up the work of transforming words to numerical representations.
 
 These show up over and over again, in every deep learning architecture and every NLP-related task\footnote{When we talk about tasks in NLP-based machine learning, we mean very specifically, what the machine learning problem is formulated to do. For example, we have the task of ranking, recommendation, translation, text summarization, and so on.}:
 
@@ -886,7 +882,7 @@ linenos
 from sklearn.preprocessing import OrdinalEncoder
 
 data = [['US'], ['UK'], ['NZ']]
-print(data)
+>>> print(data)
 [['US']
  ['UK']
  ['NZ']]
@@ -894,7 +890,7 @@ print(data)
 # our label features
 encoder = OrdinalEncoder()
 result = encoder.fit_transform(data)
-print(result)
+>>> print(result)
 [[2.]
  [1.]
  [0.]]
@@ -906,9 +902,7 @@ print(result)
 
 indicator encoding is, given $n$ categories (i.e. "US", "UK", and "NZ") encodes the variables into $n-1$ categories, creating a new feature for each category. So, if we have three variables, indicator encoding encodes into two indicator variables.  Why would we do this? If the categories are mutually exclusive, as they usually are in point-in-time geolocation estimates, if someone is in the US, we know for sure they're not in the UK and not in NZ, so it reduces computational overhead.
 
-If we instead use all the variables and they are very closely correlated, there is a chance we'll fall into something known as the \textbf{indicator variable trap}. We can predict one variable from the others, which means we no longer have feature independence. This generally isn't a risk for geolocation since there are more than 2 or 3 and if you're not in the US, it's not guaranteed that you're in the UK. So, if we have US = 1, UK = 2, and NZ = 3, and prefer more compact representations, we can use indicator encoding.
-
-However, many modern ML approaches don't require linear feature independence and use L1 regularization\footnote{Regularization is a way to prevent our model from overfitting. Overfitting means our model can exactly predict outcomes based on the training data, but it can't learn new inputs that we show it, which means it can't generalize} to prune feature inputs that don't minimize the error, and as such only use one-hot encoding.
+If we instead use all the variables and they are very closely correlated, there is a chance we'll fall into something known as the \textbf{indicator variable trap}. We can predict one variable from the others, which means we no longer have feature independence. This generally isn't a risk for geolocation since there are more than 2 or 3 and if you're not in the US, it's not guaranteed that you're in the UK. So, if we have US = 1, UK = 2, and NZ = 3, and prefer more compact representations, we can use indicator encoding.  However, many modern ML approaches don't require linear feature independence and use L1 regularization\footnote{Regularization is a way to prevent our model from \textbf{overfitting}. Overfitting means our model can exactly predict outcomes based on the training data, but it can't learn new inputs that we show it, which means it can't generalize} to prune feature inputs that don't minimize the error, and as such only use one-hot encoding.
 
 \textbf{One-hot encoding} is the most commonly-used of the count-based methods. This process creates a new variable for each feature that we have.  Everywhere the element is present in the sentence, we place a “1” in the vector. We are creating a mapping of all the elements in the feature space, where $0$ indicates a non-match and $1$ indicates a match, and comparing how similar those vectors are.
 
@@ -928,10 +922,10 @@ enc = OneHotEncoder(handle_unknown='ignore')
 data = np.asarray([['US'], ['UK'], ['NZ']])
 enc.fit(data)
 enc.categories_
-# Result: [array(['NZ', 'UK', 'US'], dtype='<U2')]
+>>> [array(['NZ', 'UK', 'US'], dtype='<U2')]
 onehotlabels = enc.transform(data).toarray()
 onehotlabels
-# Result:
+>>> 
 array([[0., 0., 1.],
    	[0., 1., 0.],
    	[1., 0., 0.]])
@@ -956,7 +950,7 @@ Now that we've encoded our textual features as vectors, we can feed them into th
 
 What we've built is a standard \textbf{logistic regression model}. Generally these days the machine learning community has converged on using gradient-boosted decision tree methods for dealing with tabular data, but we'll see that neural networks build on simple linear and logistic regression models to generate their output, so it's a good starting point.
 
-\textbf{Embeddings as feature inputs}
+\subsubsection*{Embeddings as larger feature inputs}
 
 Once we have encoded our feature data, we can use this input for any type of model that accepts tabular features.  In our machine learning task, we were looking for output that indicated whether a bird was likely to leave the platform based on their location and some usage data. Now, we'd like to focus specifically on surfacing flits that are similar to other flits the user has already interacted with so we'll need feature representations of either/or our users or our content.
 
@@ -984,8 +978,7 @@ We also have other flits we may or may not want to surface in our bird's feed.
 
 How would we turn this into a machine learning problem that takes features as input and a prediction as an output, knowing what we know about how to do this already?  First, in order to build this matrix, we need to turn each word into a feature that's a column value and each user remains a row value.
 
-
-The best way to think of the difference between tabular and free-form representations as model inputs is this illustration, where we're moving from looking at creating a row of individual features per bird, aka \mintinline{Python}{bird1 = [012,2,"US", 5]}, to a row a string of text. In both cases, each of these are vectors, or a list of values that represents a single bird.
+The best way to think of the difference between tabular and free-form representations as model inputs is that a row of tabular data looks like this, \mintinline{Python}{bird1 = [012,2,"US", 5]}, and a "row" or document of text data looks like this, \mintinline{Python}{bird1 = ["No bird soars too high if he soars with his own wings."] } In both cases, each of these are vectors, or a list of values that represents a single bird.
 
 In traditional machine learning, rows are our user data about a single bird and columns are features about the bird. In recommendation systems, our rows are the individual data about each user, and our column data represents the given data about each flit.  If we can factor this matrix, that is decompose it into two matrices ($Q$ and $P^T$) that, when multiplied, the product is our original matrix ($R$), we can learn the "latent factors" or features that allow us to group similar users and items together to recommend them.
 
@@ -1025,13 +1018,13 @@ empty node/.style={fill=none}]
         	&  &  &  &  &  &  &  &  &  &  &  \\
         	&  &  &  &  &  &  &  &  &  &  & \\
 };
-\node[rotate=-90,right=1.5ex of mat3,xshift=-2em,blue] {factors};
+\node[rotate=-90,right=1.5ex of mat3,xshift=-2em,blue] {latent factors};
 \node[above=0ex of mat3,blue] {words};
 \node[below=0.2ex of mat3,scale=2.5,blue] {$\mathsf{P^T}$};
 \end{tikzpicture}
 
 
-The factorization of our feature matrix into these two matrices, where the rows in matrix Q are actually embeddings \citep{levy2014neural} for users and the rows in matrix P are embeddings for tweets, allows us to fill in values for flits that Flutter users have not explicitly liked, and then perform a search across the matrix to find other words they might be interested in. The end-result is our generated recommendation candidates, which we then filter downstream and surface to the user because the core of the recommendation problem is to recommend items to the user.
+The factorization of our feature matrix into these two matrices, where the rows in columns Q are actually embeddings \citep{levy2014neural} for users and the rows in matrix P are embeddings for tweets, allows us to fill in values for flits that Flutter users have not explicitly liked, and then perform a search across the matrix to find other words they might be interested in. The end-result is our generated recommendation candidates, which we then filter downstream and surface to the user because the core of the recommendation problem is to recommend items to the user.
 
 In this base-case scenario, each column could be a single word in the entire vocabulary of every flit we have and the vector we create, shown in the matrix frequency table, would be an insanely large, sparse vector that has a $0$ of occurrence of words in our vocabulary. The way we can build toward this representation is to start with a structure known as a \textbf{bag of words}, or simply the frequency of appearance of text in a given document (in our case, each flit is a document.) This matrix is the input data structure for many of the early approaches to embedding.
 
@@ -1110,7 +1103,7 @@ Sparse vectors result in a number of problems, among these \textbf{cold start}--
 
 To address the limitations of one-hot encoding, TF-IDF, or term frequency-inverse document frequency was developed. TF-IDF was introduced in the 1970s\footnote{By Karen Spärck Jones, whose paper, \href{https://blog.babbar.tech/who-is-karen-sparck-jones/}{"Synonymy and semantic classification} is fundamental to the field of NLP} as a way to create a vector representation of a document by averaging all the document's word weights. It worked really well for a long time and still does in many cases.  For example, one of the most-used search functions, BM25, uses TF-IDF as a baseline  \citep{schutze2008introduction} as a default search strategy in Elasticsearch/Opensearch \footnote{You can read about how Elasticsearch implements BM25 \href{https://www.elastic.co/blog/practical-bm25-part-1-how-shards-affect-relevance-scoring-in-elasticsearch}{here}}. It extends TF-IDF to develop a probability associated with the probability of relevance for each pair of words in a document and it is still being applied in neural search today  \citep{svore2009machine}.  
 
-TF-IDF will tell you how important a single word is in a corpus by assigning it a weight and, at the same time, down-weight common words like "the, a, and." This calculated weight gives us a feature for a single word TF-IDF, and also the relevance of the features across the vocabulary.
+TF-IDF will tell you how important a single word is in a corpus by assigning it a weight and, at the same time, down-weight common words like ,"a", "and", and "the". This calculated weight gives us a feature for a single word TF-IDF, and also the relevance of the features across the vocabulary.
 
 We take all of our input data that's structured in sentences and break it up into individual words, and perform counts on its values, generating the bag of words. TF is term frequency, or the number of times a term appears in a document relative to the other terms in the document.
 
@@ -1238,10 +1231,7 @@ A key problem that makes up the fundamental problem in collaborative filtering a
 
 Mathematically, we can do this by looking at the distance metric between any two given sets of items, and there are a number of different approaches, including  Euclidean distance, edit distance (more specifically, Levenshtein distance and Hamming distance), cosine distance, and more advanced compression approaches like \textbf{minhashing}.
 
-The most commonly used approach in most models where we're trying to ascertain the semantic closeness of two items is \textbf{cosine similarity}, which is the cosine of the angle between two objects represented as vectors, bounded between -1 and 1. -1 means the two items are completely "opposite" of each other and 1 means they are completely the same item. Zero means that you should probably use a distance measure other than cosine similarity because the vectors are entirely unrelated. One point of clarification here is that cosine distance is the actual distance measure and is calculated as $1 - cosine similarity$.
-
-
-
+The most commonly used approach in most models where we're trying to ascertain the semantic closeness of two items is \textbf{cosine similarity}, which is the cosine of the angle between two objects represented as vectors, bounded between -1 and 1. -1 means the two items are completely "opposite" of each other and 1 means they are completely the same item, assuming unit length. Zero means that you should probably use a distance measure other than cosine similarity because the vectors are completely orthogonal to each other. One point of clarification here is that cosine distance is the actual distance measure and is calculated as $1 - {similarity}(\vec{a}, \vec{b})$.
 
 \begin{equation}
 \mathrm{similarity}(\vec{a}, \vec{b}) = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}| |\vec{b}|} = \frac{\sum\limits_{i=1}^{n} a_i b_i}{\sqrt{\sum\limits_{i=1}^{n} a_i^2} \sqrt{\sum\limits_{i=1}^{n} b_i^2}}
@@ -1333,7 +1323,7 @@ Other commonly-used distance measures in semantic similarity and recommendations
 \begin{itemize}
   \item Euclidean distance - calculates the straight-line distance between two points 
   \item Manhattan Distance - Measures the distance between two points by summing the absolute differences of their coordinates
-  \item Jaccard Distance - Computes the dissimilarity between two sets by dividing the size of their intersection by the size of their union. Jaccard distance is caulcuated 
+  \item Jaccard Distance - Computes the dissimilarity between two sets by dividing the size of their intersection by the size of their union. 
   \item Hamming Distance  - Measures the dissimilarity between two sets by dividing the size of their intersection by the size of their union 
 \end{itemize}
 \end{formal}
@@ -1348,61 +1338,10 @@ SVD is a type of matrix factorization that represents a given input feature matr
 
 In the process of performing SVD and decomposing these matrices, we generate a matrix representation that includes the eigenvectors and eigenvalue pairs or the sample covariance pairs.
 
-
-\newcommand{\vect}{\mathbf}
-\newcommand{\nul}{\operatorname{Nul}}
-\newcommand{\col}{\operatorname{Col}}
-\newcommand{\row}{\operatorname{Row}}
-\begin{figure}[H]
-\centering{%
-\small
-\[
-\renewcommand{\arraystretch}{.3}
-   A= U\Sigma V^T=
-  \begin{matrix}
-	\underbrace{\left[\begin{matrix}\vect u_1 & \vect u_2 & \dots & \vect u_r\end{matrix}\right.}&
-	\underbrace{\left.\begin{matrix}\vect u_{r+1} & \dots &  \vect u_m\end{matrix}\right]}\\
-	\col A & \nul A^T
-  \end{matrix}
-  \begin{bmatrix}
-  	\sigma_1 & 0 & \dots & 0 & 0 & \dots & 0 \\
-     	0 & \sigma_2  & \dots & 0 & 0 & \dots & 0 \\
-     	\dots& & & & &  \\
-     	0 & 0 & \dots & \sigma_r  & 0 & \dots & 0 \\
-     	0 & 0 & \dots & 0 & 0 & \dots & 0 \\
-     	\dots& & & & &  \\
-     	0 & 0 & \dots & 0 & 0 & \dots & 0
-  \end{bmatrix}
-  \begin{bmatrix}
-	\vect v_1^T \\ \vect v_2^T \\ \dots \\ \vect v_r^T \\
-	\vect v_{r+1}^T \\ \dots \\ \vect v_n^T
-  \end{bmatrix}
-  \begin{matrix}
-	\left.\vphantom{\begin{bmatrix}
-   	\vect v_1^T \\ \vect v_2^T \\ \dots \\ \vect v_r^T
-   	\end{bmatrix}}\right\}\row A \\
-	\left.\vphantom{\begin{bmatrix}
-  	\vect v_{r+1}^T \\ \dots \\ \vect v_n^T
-	\end{bmatrix}}\right\}\nul A
-  \end{matrix}
-\]
-}
-\caption{SVD decomposes our feature matrix into three matrices}
-\end{figure}
-
-
 PCA uses the same initial input feature matrix, but whereas one-hot encoding simply converts the text features into numerical features that we can work with, PCA also performs compression and projects our items into a two-dimensional feature space.  The first principal component is the scaled eigenvector of the data, the weights of the variables that describe your data best, and the second is the weights of the next set of variables that describe your data best.
 
-The resulting model is a projection of all the words, clustered into a single space based on these dimensions. While we can't get individual meanings of all these components, it’s clear that the clusters of words, aka features, are \textbf{semantically similar}, that is they are close to each other in meaning\footnote{There are many definitions of semantic similarity - what does it mean for "king" and "queen" to be close to each other? - but a high-level approach involves using original sources like thesauri and dictionaries to create a structured knowledge base and offer a structured representation of terms and concepts based on nodes and edges, aka how often they appear near each other. \cite{chandrasekaran2021evolution}}. This can be conceptually hard to visualize, so here's an illustration of the principal components of the iris dataset among three features, represented in two vectors.
-
-\begin{figure}[H]
-    	\center{\includegraphics[width=\textwidth]
-    	{figures/pca.png}}
-    	\caption{PCA creates grouped clusters}
-  	\end{figure}
-
-
-
+The resulting model is a projection of all the words, clustered into a single space based on these dimensions. While we can't get individual meanings of all these components, it’s clear that the clusters of words, aka features, are \textbf{semantically similar}, that is they are close to each other in meaning\footnote{There are many definitions of semantic similarity - what does it mean for "king" and "queen" to be close to each other? - but a high-level approach involves using original sources like thesauri and dictionaries to create a structured knowledge base and offer a structured representation of terms and concepts based on nodes and edges, aka how often they appear near each other. \cite{chandrasekaran2021evolution}}. 
+ 
 The difference between the two is often confusing (people admitted as much in the 80s \cite{gerbrands1981relationships} when these approaches were still being worked out), and for the purposes of this survey paper we'll say that PCA can often be implemented using SVD \footnote{\href{https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html}{This is how it's implemented in the scikit-learn package}}.  
 
 
@@ -1410,7 +1349,7 @@ The difference between the two is often confusing (people admitted as much in th
 
 Because PCA performs computation on each combination of features to generate the two dimensions, it becomes immensely computationally expensive as the number of features grows.  Many of these early methods, like PCA, worked well for smaller datasets, like many of the ones used in traditional NLP research,  but as datasets continued to grow, they didn’t quite scale.  
 
-Other approaches grew out of TF-IDF and PCA to address their limitations, including \textbf{latent semantic analysis} (LSA) and \textbf{latent dirichlet analysis} (LDA) LDA\cite{cvitanic2016lda}.  Both of these approaches start with the input document matrix that we built in the last section. The underlying principle behind both of these models is that words that occur close together more frequently have more important relationships. LSA uses the same word weighting that we used for TF-IDF and looks to combine that matrix into a lower rank matrix, a cosine similarity matrix. In the matrix, the values for the cells range from [-1,1], where -1 represents documents that are complete opposites and 1 means the documents are identical. LSA then runs over the matrix and groups items together.  
+Other approaches grew out of TF-IDF and PCA to address their limitations, including \textbf{latent semantic analysis} (LSA) and \textbf{latent dirichlet analysis} (LDA) \cite{cvitanic2016lda}.  Both of these approaches start with the input document matrix that we built in the last section. The underlying principle behind both of these models is that words that occur close together more frequently have more important relationships. LSA uses the same word weighting that we used for TF-IDF and looks to combine that matrix into a lower rank matrix, a cosine similarity matrix. In the matrix, the values for the cells range from [-1,1], where -1 represents documents that are complete opposites and 1 means the documents are identical. LSA then runs over the matrix and groups items together.  
 
 LDA takes a slightly different approach. Although it uses the same matrix for input, it instead outputs a matrix where the rows are words and columns are documents. The distance measure, instead of cosine similarity, is the numerical value for the topic that the intersection of the word and document provide.  The assumption is that any sentence we input will contain a collection of topics, based on proportions of representation in relation to the input corpus, and that there are a number of topics that we can use to classify a given sentence. We initialize the algorithm by assuming that there is a non-zero probability that each word could appear in a topic. LDA initially assigns words to topics at random, and then iterates until it converges to a point where it maximizes the probability for assigning a current word to a current topic.  In order to do the word-to-topic mapping, LDA generates an embedding that creates a space of clusters of words or sentences that work together semantically.
 
@@ -1530,13 +1469,13 @@ However, as in other cases, when we reach high dimensions, SVMs completely fail 
 
 To get around the limitations of earlier textual approaches and keep up with growing size of text corpuses, in 2013, researchers at Google came up with an elegant solution to this problem using neural networks, called Word2Vec \citep{mikolov2013efficient}.  
 
-So far, we've moved from simple heuristics like one-hot encoding, to machine learning approaches like LSA and LDA that look to learn a dataset's modeled features.  Previously, like our original one-hot encodings, all the approaches to embedding focused on generating sparse vectors much . A sparse vector gives an indication that two words are related, but not that there is a semantic relationship between them. For example, “The dog changed the cat” and “the cat chased the dog” would have the same distance in the vector space, even though they’re two completely different sentences.
+So far, we've moved from simple heuristics like one-hot encoding, to machine learning approaches like LSA and LDA that look to learn a dataset's modeled features.  Previously, like our original one-hot encodings, all the approaches to embedding focused on generating sparse vectors much . A sparse vector gives an indication that two words are related, but not that there is a semantic relationship between them. For example, “The dog chased the cat” and “the cat chased the dog” would have the same distance in the vector space, even though they’re two completely different sentences.
 
 Word2Vec is a family of models that has several implementations, each of which focus on transforming the entire input dataset into vector representations and, more importantly, focusing  not only on the inherent labels of individual words, but on the relationship between those representations.
 
 There are two modeling approaches to Word2Vec - \textbf{continuous bag of words} (CBOW) and \textbf{skipgrams}, both of which generate dense vectors of embeddings but model the problem slightly differently. The end-goal of the Word2Vec model in either case is to learn the parameters that maximize that probability of a given word or group of words being an accurate prediction  \citep{goldberg2014word2vec}.
 
-In training skipgrams, we take a word from the initial input corpus and predict the probability that a given set of words surround it. In the case of our initial flit quote, "Hold fast to dreams for if dreams die, life is a broken-winged bird that cannot fly", we train the model to generate a set of embeddings that's the distance between all the words in the dataset and fill in the next several probabilities for the entire phrase, using the word "fast" as input.  
+In training skipgrams, we take a word from the initial input corpus and predict the probability that a given set of words surround it. In the case of our initial flit quote, "Hold fast to dreams for if dreams die, life is a broken-winged bird that cannot fly", the model's intermediate steps generate a set of embeddings that's the distance between all the words in the dataset and fill in the next several probabilities for the entire phrase, using the word "fast" as input.  
 
 \begin{figure}[H]
     	\center{\includegraphics[width=\textwidth]
@@ -1577,7 +1516,7 @@ At a high level, we have a list of input words that are processed through a seco
         	node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
 
 	% Draw the output layer node
-	\node[output neuron,pin={[pin edge={->}]right:Output Probability}, right of=H-3] (O) {};
+	\node[output neuron,pin={[pin edge={->}]right:Output Probability\\ Of hold-out word being correct}, right of=H-3] (O) {};
 
 	% Connect every node in the input layer with every node in the
 	% hidden layer.
@@ -1594,7 +1533,7 @@ At a high level, we have a list of input words that are processed through a seco
 	\node[annot,left of=hl] {Input Corpus};
 	\node[annot,right of=hl] {Linear \\ Regression};
 \end{tikzpicture}
-\caption{Word2Vec Neural Network architecture}
+\caption{Word2Vec CBOW Neural Network architecture}
 \end{figure}
 
 We'll run this implementation in PyTorch, the popular library for building neural network models. The best way to implement Word2Vec, especially if you're dealing with smaller datasets, is using \hyperlink{https://radimrehurek.com/gensim/}{Gensim}, but Gensim abstracts away the layers into inner classes, which makes for a fantastic user experience. But, since we're just learning about them, we'd like to see a bit more explicitly how they work, and PyTorch, although it does not have a native implementation of Word2Vec, lets us see the inner workings a bit more clearly.
@@ -1670,7 +1609,7 @@ class TextPreProcessor:
     	)
     	return vocab
 \end{minted}
-\caption{Processing our input vocabulary and building a Vocabulary object from our dataset in PyTorch\href{https://github.com/veekaybee/viberary/tree/main/word2vec}{source}}
+\caption{Processing our input vocabulary and building a Vocabulary object from our dataset in PyTorch \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{source}}
 \end{figure}
 
 Now that we have an input vocabulary object we can work with, the next step is to create one-hot encodings of each word to a numerical position, and each position back to a word, so that we can easily reference both our words and vectors. The goal is to be able to map back and forth when we do lookups and retrieval.
