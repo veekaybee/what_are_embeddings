@@ -5,6 +5,8 @@ on:
   push:
     branches:
     - main
+    paths:
+      - ['embeddings.bib, embeddings.tex']
   pull_request:
     branches:
     - main
