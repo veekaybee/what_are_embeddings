@@ -29,6 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          sudo pip3 install virtualenv 
           cd notebooks
           virtualenv embed
           source embed/bin/activate
