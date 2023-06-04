@@ -6,7 +6,8 @@ on:
     branches:
     - main
     paths:
-      - ['embeddings.bib, embeddings.tex']
+    - embeddings.bib
+    - embeddings.tex
   pull_request:
     branches:
     - main
