@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/veekaybee/what_are_embeddings/blob/main/docs/assets/embeddings.png" />
+  <img src="https://github.com/veekaybee/what_are_embeddings/blob/main/kandinsky.png" />
 </p>
 
 
@@ -12,7 +12,7 @@ This repository contains the generated LaTex document, website, and complementar
 
 Over the past decade, embeddings --- numerical representations of non-tabular machine learning features used as input to deep learning models --- have become a foundational data structure in industrial machine learning systems. TF-IDF, PCA, and one-hot encoding have always been key tools in machine learning systems as ways to compress and make sense of large amounts of textual data.  However, traditional approaches were limited in the amount of context they could reason about with increasing amounts of data. As the volume, velocity, and variety of data captured by modern applications has exploded, creating approaches specifically tailored to scale has become increasingly important. 
 
-[Google's Word2Vec paper](https://arxiv.org/abs/1301.3781) made an important step in moving from simple statistical representations to semantic meaning of words. The subsequent rise of the [Transformer architecture](https://arxiv.org/abs/1706.03762) and transfer learning, as well as the latest surge in generative methods has enabled the growth of embeddings as a foundational machine learning data structure. This survey paper aims provide a deep dive into what embeddings are, their history, and usage patterns in industry. 
+[Google's Word2Vec paper](https://arxiv.org/abs/1301.3781) made an important step in moving from simple statistical representations to semantic meaning of words. The subsequent rise of the [Transformer architecture](https://arxiv.org/abs/1706.03762) and transfer learning, as well as the latest surge in generative methods has enabled the growth of embeddings as a foundational machine learning data structure. This survey paper aims to provide a deep dive into what embeddings are, their history, and usage patterns in industry. 
 
 ## Running
 
@@ -24,7 +24,7 @@ If you have any changes that you'd like to make to the document including clarif
 
 1. Fork the repo and create your branch from `main`. 
 2. Make your changes in your fork. 
-3. Make sure that your LaTeX document compiles. The GH action that triggers the PDF is set to run on PR. 
+3. Make sure that your LaTeX document compiles. The GH action that triggers the PDF is set to run on PR into main. 
 4. Ensure that the document compiles to a PDF correctly and inspect the output. 
 5. Make sure your code lints.
 6. Issue that pull request!
