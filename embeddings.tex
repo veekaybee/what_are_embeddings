@@ -215,7 +215,7 @@ coordinate (aux) (aux-|\tikz@fig@name.west)
 %----------------------------------------------------------------------------------------
 
 \begin{abstract}
-Over the past decade, embeddings --- numerical representations of non-tabular machine learning features used as input to deep learning models --- have become a foundational data structure in industrial machine learning systems. TF-IDF, PCA, and one-hot encoding have always been key tools in machine learning systems as ways to compress and make sense of large amounts of textual data.  However, traditional approaches were limited in the amount of context they could reason about with increasing amounts of data. As the volume, velocity, and variety of data captured by modern applications has exploded, creating approaches specifically tailored to scale has become increasingly important.
+Over the past decade, embeddings --- numerical representations of machine learning features used as input to deep learning models --- have become a foundational data structure in industrial machine learning systems. TF-IDF, PCA, and one-hot encoding have always been key tools in machine learning systems as ways to compress and make sense of large amounts of textual data.  However, traditional approaches were limited in the amount of context they could reason about with increasing amounts of data. As the volume, velocity, and variety of data captured by modern applications has exploded, creating approaches specifically tailored to scale has become increasingly important.
 
 Google's \href{https://arxiv.org/abs/1301.3781}{Word2Vec paper} made an important step in moving from simple statistical representations to semantic meaning of words. The subsequent rise of the \href{https://arxiv.org/abs/1706.03762}{Transformer architecture} and transfer learning, as well as the latest surge in generative methods has enabled the growth of embeddings as a foundational machine learning data structure. This survey paper aims provide a deep dive into what embeddings are, their history, and usage patterns in industry.
 
@@ -386,7 +386,7 @@ print (len(tokenized_text))
 \caption{Analyzing Embeddings with BERT. See full notebook \href{https://github.com/veekaybee/embeddings_code/blob/main/fig_4_bert.ipynb}{source}}
 \end{figure}
 
-We can see that this embedding is a PyTorch tensor object, a multidimensional matrix containing multiple levels of embeddings, and that's because in BERT's embedding representation, we have 13 different layers, each of which represents our given \textbf{token} --- or simply a sequence of characters--in this case word, one for each layer of our neural network. We can get the final embedding by pooling several layers, details we'll get into as we work our way up to understanding embeddings generated using BERT.
+We can see that this embedding is a PyTorch tensor object, a multidimensional matrix containing multiple levels of embeddings, and that's because in BERT's embedding representation, we have 13 different layers. One embedding layer is computed for each layer of the neural network. Each level represents a different view of our given \textbf{token} --- or simply a sequence of characters. We can get the final embedding by pooling several layers, details we'll get into as we work our way up to understanding embeddings generated using BERT.
 
 When we create an embedding for a word, sentence, or image that represents the artifact in the multidimensional space, we can do any number of things with this embedding. For example, for tasks that focus on content understanding in machine learning, we are often interested in comparing two given items to see how similar they are. Projecting text as a vector allows us to do so with mathematical rigor and compare words in a shared embedding space.  
 
@@ -478,9 +478,8 @@ At the feature level, though, we see that it not only includes the typical CRUD 
 
 \subsection{Rules-based systems versus machine learning}
 
-Machine learning-based systems live within the backend of web applications. They are typically integrated into production workflows, but they process data much differently, and use the application's data to generate machine learning models that act upon and feed data back into the application, to the user. For more on the specifics of how to think about these data-centric engineering systems, see Kleppmann\cite{kleppmann2017designing}.
+To understand where embeddings fit into these systems, it first  makes sense to understand where machine learning fits in at Flutter, or any given company, as a whole. In a typical consumer company, the user-facing app is made up of product features written in code, typically written as services or parts of services. To add a new web app feature, we write code based on a set of business logic requirements. This code acts on data in the app to develop our new feature. 
 
-To understand where embeddings fit here, it first  makes sense to understand how machine learning works at Flutter, or any given company, as a whole. In a typical consumer company, the user-facing app is made up of product features written in code. To add a new web app feature, we add business logic, which acts on data in the app to develop our new feature and add that back into the application.  
 
 In a  typical data-centric software development lifecycle, we start with the business logic. For example, let's take the ability to post messages. We'd like users to be able to input text and emojis in their language of choice, have the messages sorted chronologically, and render correctly on web and mobile. These are the business requirements. We use the input data, in this case, user messages, and format them correctly and sort chronologically, at low latency, in the UI.
 
@@ -490,7 +489,9 @@ In a  typical data-centric software development lifecycle, we start with the bus
 \caption{A typical application development lifecycle}
 \end{figure}
 
-For applications powered by machine learning, though, we need to start not with code that shows text in the app, but input data that we use to build a model that will suggest pieces of content, such as personalized channel suggestions for example. This requires thinking about application development slightly differently, and when we write an application that includes machine learning models as input, however, we’re inverting the traditional app lifecycle. What we have instead, is data + our desired outcome. The data is combined into a model, and it is this model which instead generates our business logic that builds features.
+Machine learning-based systems are typically also services in the backend of web applications. They are integrated into production workflows. But, they process data much differently. In these systems, we don't start with business logic. We start with input data that we use to build a model that will suggest the business logic for us. For more on the specifics of how to think about these data-centric engineering systems, see Kleppmann\cite{kleppmann2017designing}.
+
+This requires thinking about application development slightly differently, and when we write an application that includes machine learning models as input, however, we’re inverting the traditional app lifecycle. What we have instead, is data plus our desired outcome. The data is combined into a model, and it is this model which instead generates our business logic that builds features.
 
 \begin{figure}[H]
 \centering
@@ -498,12 +499,20 @@ For applications powered by machine learning, though, we need to start not with 
 \caption{ML Development lifecycle}
 \end{figure}
 
-In short, the difference between programming and machine learning development is that we are not generating answers through business rules, but business rules through data. These rules are then re-incorporated into the application.
+In short, the difference between programming and machine learning development is that we are not generating answers through business rules, but business rules through data. These rules are then re-incorporated into the application. 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=.75\textwidth]{figures/rules_ml.png}
 \caption{Generating answers via machine learning. The top chart shows a classical programming approach with rules and data as inputs, while the bottom chart shows a machine learning approach with data and answers as inputs.  \citep{chollet2021deep}}
+\end{figure}
+
+As an example, with Slack, for channel recommendations product feature, we are not hard-coding a list of channels that need to be called from the organization's API. We are feeding in data about the organization's users (what other channels they've joined, how long they've been users, what channels the people they've interacted the most with Slack in), and building a model on that data that recommends a non-deterministic, personalized list of channels for each user that we then surface through the UI. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.95\textwidth]{figures/mlnotml.png}
+\caption{Traditional versus ML architecture and infra}
 \end{figure}
 
 \subsection{Building a web app with machine learning}
@@ -1136,46 +1145,54 @@ import math
 documentA  = ['Hold','fast','to','dreams','for','if','dreams','die,' ,'life','is','a','broken-winged','bird','that','cannot','fly']
 documentB =  ['No','bird','soars','too','high','if', 'he','soars','with','his','own','wings']
 
-def tf(term: str, document:list[str]) -> float:
-    '''Term frequency of a word in a document  / total words in document'''
-    term_count = 0
-    total_count = 0
+def tf(doc_dict: dict, doc_elements: list[str]) -> dict:
+    """Term frequency of a word in a document  over total words in document"""
+    tf_dict = {}
+    corpus_count = len(doc_elements)
+    for word, count in doc_dict.items():
+        tf_dict[word] = count / float(corpus_count)  
+    return tf_dict
 
-    for word in document:
-   	 total_count +=1
-   	 if word == term:
-   		 term_count += 1
+def idf(doc_list: list[str]) -> dict:
+    """The number of documents in which the term appears per term"""
+    idf_dict = {}
+    N = len(doc_list)
+    idf_dict = dict.fromkeys(doc_list[0].keys(), 0)
+    for word, val in idf_dict.items():
+        idf_dict[word] = math.log10(N / (float(val) + 1))
+    return idf_dict
 
-    return (term_count / total_count)
+# All inverse document frequencies for all words 
+idfs = idf([dict_a, dict_b])
 
-def idf(term:str, doc_list:list[str]) -> float:
-    '''Inverse frequency of term across a set of documents'''
-    total_docs = 0
-    total_docs_with_term = 0
+def tfidf(doc_elements: list[str], idfs)-> dict:
+    """TF * IDF per word given a single word and number of docs the term appears"""
+    tfidf_dict = {}
+    for word, val in doc_elements.items():
+        tfidf_dict[word] = val * idfs[word]
+    return tfidf_dict
 
-    for doc in doc_list:
-   	 total_docs +=1
-   	 if term in doc:
-   		 total_docs_with_term +=1
+# Calculate the term frequency for each document individually
+tf_a = tf(dict_a, document_a)
+tf_b = tf(dict_b, document_b)
 
-    idf = math.log(total_docs / total_docs_with_term)
-    return idf
+# Calculate the inverse document frequency given each term frequency
+tfidf_a = tfidf(tf_a, idfs)
+tfidf_b = tfidf(tf_b, idfs)
 
-def tf_idf(tf:float, idf:float) -> float:
-    tfidf = tf*idf
-    print("TF-IDF:{:0.4f}".format(tfidf))
-
-tf = tf('dreams', documentA)
-idf_docs = idf('dreams',[documentA, documentB])
-
-
-tf_idf(tf, idf_docs)
-# TF-IDF:0.0866
+# Return weight of each word in each document wrt to the total corpus
+document_tfidf = pd.DataFrame([tfidf_a, tfidf_b])
+document_tfidf.T
+#  	       doc 0 	 doc 1
+a 	    0.018814 	0.000000
+dreams 	0.037629 	0.000000
+No 	    0.000000 	0.025086
+Hold 	0.018814 	0.000000
 \end{minted}
-\caption{Implementation of TF-IDF\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb}{source}}
+\caption{Truncated implementation of TF-IDF, see full \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb} {source}}
 \end{figure}
 
-Once we understand the underlying fundamental concept, we can use the scikit-learn implementation which does the same thing, and also surfaces the TF-IDF of each word in the vocabulary.
+Once we understand the underlying fundamental concept, we can use the scikit-learn implementation which does the same thing, and also surfaces the TF-IDF of each word in the vocabulary. 
 
 \begin{figure}[H]
 \begin{minted}
@@ -1188,26 +1205,34 @@ breaklines,
 linenos
 ]{python}
 from sklearn.feature_extraction.text import TfidfVectorizer
-corpus = ["Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly.",
-      	"No bird soars too high if he soars with his own wings."]
+corpus = [
+    "Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly.",
+    "No bird soars too high if he soars with his own wings.",
+]
+
+text_titles = ["quote_langstonhughes", "quote_william_blake"]
 
 vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(corpus)
+vector = vectorizer.fit_transform(corpus)
 dict(zip(vectorizer.get_feature_names_out(), X.toarray()[0]))
 
-# How common or unique a word is in a vocabulary
-{'bird': 0.17250274745682542,
- 'broken': 0.24244659260336252,
- 'cannot': 0.24244659260336252,
- 'die': 0.24244659260336252,
- 'dreams': 0.48489318520672503,
- 'fast': 0.24244659260336252,
+tfidf_df = pd.DataFrame(vector.toarray(), index=text_titles, columns=vectorizer.get_feature_names_out())
+
+tfidf_df.loc['00_Document Frequency'] = (tfidf_df > 0).sum()
+tfidf_df.T
+
+# How common or unique a word is in a given document wrt to the vocabulary
+dreams_langstonhughes 	quote_william_blake 	00_Document Frequency
+bird 	0.172503 	0.197242 	2.0
+broken 	0.242447 	0.000000 	1.0
+cannot 	0.242447 	0.000000 	1.0
+die 	0.242447 	0.000000 	1.0
 ......}
 \end{minted}
 \caption{Implementation of TF-IDF in scikit-learn\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb}{source}}
 \end{figure}
 
-Given that inverse document frequency is a measure of whether the word is common or not across the documents, we can see that "dreams" is important because they are rare across the documents and therefore interesting to us more so than "bird." You'll also note the results are different than in our from-scratch implementation and this is dependent on how scikit processes the vocabulary.  
+Given that inverse document frequency is a measure of whether the word is common or not across the documents, we can see that "dreams" is important because they are rare across the documents and therefore interesting to us more so than "bird."We see that the tf-idf for a given word, "dreams", is slightly different for each of these implementations, and that's because Scikit-learn normalizes the denominator and uses \href{https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html#sklearn.feature_extraction.text.TfidfTransformer}{a slightly different formula.}  You'll also note that in the first implementation we separate the corpus words ourselves, don't remove any stop words, and don't lowercase everything. Many of these steps are done automatically in scikit-learn or can be set as parameters into the processing pipeline. We'll see later that these are critical NLP steps that we perform each time we work with text. 
 
 TF-IDF enforces several important ordering rules on our text corpus:
 
@@ -1217,9 +1242,7 @@ TF-IDF enforces several important ordering rules on our text corpus:
   \item Really downrank the term when it appears across your entire document base \citep{schutze2008introduction}.
 \end{itemize}
 
-There are numerous ways to calculate and create weights for individual words in TF-IDF. In each case, we calculate a score for each word that tells us how important that word is in relation to each other word in our corpus.
-
-Once we figure out how common each word is in the set of all possible flits and get a weighted score for the entire sentence in relation to other sentences.
+There are numerous ways to calculate and create weights for individual words in TF-IDF. In each case, we calculate a score for each word that tells us how important that word is in relation to each other word in our corpus, which gives it a weight. Once we figure out how common each word is in the set of all possible flits and get a weighted score for the entire sentence in relation to other sentences.
 
 Generally, when we work with textual representations, we’re trying to understand which words, phrases, or concepts are similar to each other. Within our specific recommendations task, we are trying to understand which pieces of content are similar to each other, so that we can recommend content that users will like based on either their item history or the user history of users similar to them.
 
@@ -1516,7 +1539,7 @@ At a high level, we have a list of input words that are processed through a seco
         	node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
 
 	% Draw the output layer node
-	\node[output neuron,pin={[pin edge={->}]right:Output Probability\\ Of hold-out word being correct}, right of=H-3] (O) {};
+	\node[output neuron,pin={[pin edge={->}]right:Output Probability\\ of hold-out word \\being correct}, right of=H-3] (O) {};
 
 	% Connect every node in the input layer with every node in the
 	% hidden layer.
@@ -1726,7 +1749,7 @@ linenos
     	torch.save(self.model.state_dict(), self.model_path)
     	logging.warning(f'Save model to {self.model_path}')
 \end{minted}
-\caption Word2Vec CBOW implementation in PyTorch, \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{ see full implementation here}
+\caption word2Vec CBOW implementation in PyTorch\\ \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{ see full implementation here}
 \end{figure}
 
 Once we've completed our iteration through our training set, we have learned a model that retrieves both the probability of a given word being the correct word, and the entire embedding space for our vocabulary.
@@ -2015,12 +2038,12 @@ Based on the success of the original model, a great deal of variations on Transf
 \caption{Timeline of Transformer Models}
 \end{figure}
 
-Transformer architectures themselves are not new, but they contain all the concepts we've discussed so far: vectors, encodings, and hash maps. The ultimate goal of a transformer model is to take a piece of multimodal content, and learn the latent relationships by creating multiple views of groups of words in the input corpus (multiple context windows). The self-attention mechanism, implemented as scaled dot-product attention in the Transformer paper, creates different context windows of the data a number of times through the six encoder and six decoder layers. The output is the result of the specific machine learning task --- a translated sentence, a summarized paragraph -- and the next-to-last layer is the model's embeddings, which we can use for downstream work. 
+Transformer architectures themselves are not new, but they contain all the concepts we've discussed so far: vectors, encodings, and hash maps. The goal of a transformer model is to take a piece of multimodal content, and learn the latent relationships by creating multiple views of groups of words in the input corpus (multiple context windows). The self-attention mechanism, implemented as scaled dot-product attention in the Transformer paper, creates different context windows of the data a number of times through the six encoder and six decoder layers. The output is the result of the specific machine learning task --- a translated sentence, a summarized paragraph -- and the next-to-last layer is the model's embeddings, which we can use for downstream work. 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=.9\textwidth]{figures/transformer_v.png}
-\caption{Detailed view into transformer layers, inspired by multiple sources \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{including this diagram } }
+\caption{View into transformer layers, inspired by multiple sources \href{https://lilianweng.github.io/posts/2018-06-24-attention/}{including this diagram } }
 \end{figure}
 
 The transformer model described in the paper takes a corpus of text as input\footnote{In theory you can use any modality for transformers without modifying the input other than to label the data with the given modality \citep{xu2023multimodal}, but the early work, such as machine translation, focuses on text, so we will as well}. We first transform our text to token embeddings by tokenizing and mapping every word or subword to an index. This is the same process as in Word2Vec: we simply assign each word to an element in a matrix. However, these alone will not help us with context, so, on top of this, we also learn a \textbf{positional embeddings} with the help of a sine or cosine function that is mapped and compressed into a matrix considering the position of all the other word in the vocabulary. The final output of this process is the positional vector or the word encoding. 
@@ -2051,7 +2074,7 @@ Transformers were revolutionary for a number of reasons, because they solved sev
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.8\textwidth]{figures/encoder_only.png}}
-\caption{BERT encoder-only architecture}
+\caption{Encoder-only architecture}
 \end{figure}
 
 After the explosive success of "Attention is All you Need", a variety of transformer architectures arose, research and implementation in this architecture exploded in deep learning. The next transformer architecture to be considered a significant step forward was \textbf{BERT} released in 2018 by Google. 
@@ -2186,13 +2209,13 @@ The model is trained on 500 billion examples, and evaluated offline using AUC an
 
 
 \subsubsection{Twitter}
-At \textbf{Twitter},  precomputed embeddings were a \href{https://blog.twitter.com/engineering/en_us/topics/insights/2018/embeddingsattwitter}{critical part} recommendations for many app surface areas including user onboarding topic interest prediction, recommended Tweets, home timeline construction, users to follow, and recommended ads. 
+At \textbf{Twitter},  pre-computed embeddings were a \href{https://blog.twitter.com/engineering/en_us/topics/insights/2018/embeddingsattwitter}{critical part} recommendations for many app surface areas including user onboarding topic interest prediction, recommended Tweets, home timeline construction, users to follow, and recommended ads. 
 
 Twitter had a number of embeddings-based models but we'll cover two projects here: Twice \citep{liu2022twice}, content embeddings for Tweets, which looks to find rich representations of Tweets that include both text and visual data for use in surfacing Tweets in the home timeline, Notifications and Topics. Twitter also developed TwHIN \citep{el2022twhin}, Twitter Heterogeneous Information Network, a set of graph-based embeddings \citep{el2022twhin}, developed for tasks like personalized ads rankings, account follow-recommendation, offensive content detection, and search ranking, based on nodes (such as users and advertisers) and edges that represent entity interactions.
 
 \begin{figure}[H]
 \centering{\includegraphics[width=.5\textwidth]{figures/twice.png}}
-\caption{Twitter's TWICe Embeddings, a trained BERT model \citep{liu2022twice}}
+\caption{Twitter's Twice Embeddings, a trained BERT model \citep{liu2022twice}}
 \end{figure}
 
 
@@ -2382,16 +2405,10 @@ If all of these components come together, we now have an embeddings-based recomm
 
 \section{Conclusion}
 
-We have now walked through an end-to-end example of what embeddings are. We started 
-with a high-level overview of how embeddings fit into the context of a machine learning application. We then did a deep dive on early approaches to encoding, to building up intuition of embeddings in Word2Vec and then moving on to transformers and BERT. Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more. 
+We have now walked through an end-to-end example of what embeddings are. We started with a high-level overview of how embeddings fit into the context of a machine learning application. We then did a deep dive on early approaches to encoding, to building up intuition of embeddings in Word2Vec and then moving on to transformers and BERT. Although reducing dimensionality as a concept has always been important in machine learning systems to to decrease computational and storage complexity, compression has become even more important in the modern explosion of multimodal representations of data that comes from application log files, images, video, and audio, and the explosion of Transformer, generative, and diffusion models, combined with the cheap storage and explosion of data, has amended itself to architectures where embeddings are used more and more. 
 
-We've understood the engineering context of why we might include machine learning models in our application, how they work, how to incorporate them, and where embeddings ---dense representations of deep learning model input and output data -- can be best leveraged.  
-
-Embeddings are a powerful tool in any machine learning system, but one that comes at a cost of maintenance and interpretability. Generating embeddings using the correct method, with the correct metrics and hardware and software, is a project that takes considerable thought. 
-
-We now hopefully have a solid grasp of the fundamentals of embedding and can either leverage them -- or explain why not to --in our next project.
-
-Good luck navigating embeddings, and hope to see you in the latent space.
+We've understood the engineering context of why we might include machine learning models in our application, how they work, how to incorporate them, and where embeddings ---dense representations of deep learning model input and output data -- can be best leveraged.  Embeddings are a powerful tool in any machine learning system, but one that comes at a cost of maintenance and interpretability. Generating embeddings using the correct method, with the correct metrics and hardware and software, is a project that takes considerable thought.  We now hopefully have a solid grasp of the fundamentals of embedding and can either leverage them -- or explain why not to --in our next project.
+Good luck navigating embeddings, see you in the latent space!
 
 
 \newpage
