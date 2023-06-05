@@ -266,8 +266,8 @@ The usage of embeddings to generate compressed, context-specific representations
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/embeddings_1.png}
-\caption{Embeddings papers in Arxiv by month. \href{https://github.com/veekaybee/embeddings_code/blob/main/fig_2_embeddings_papers.ipynb}{source}}
+\includegraphics[width=.7\linewidth]{figures/embeddings_1.png}
+\caption{Embeddings papers in Arxiv by month. It's interesting to note the decline in frequency of embeddings-specific papers, possibly in tandem with the rise of deep learning architectures like GPT \href{https://github.com/veekaybee/embeddings_code/blob/main/fig_2_embeddings_papers.ipynb}{source}}
 \end{figure}
 
 Building and expanding on the concepts in Word2Vec, the Transformer  \citep{vaswani2017attention} architecture, with its self-attention mechanism, a much more specialized case of calculating context around a given word, has become the de-facto way to learn representations of growing multimodal vocabularies, and its rise in popularity both in academia and in industry has caused embeddings to become a staple of deep learning workflows.
@@ -1229,9 +1229,8 @@ bird     0.172503     0.197242     2.0
 broken     0.242447     0.000000     1.0
 cannot     0.242447     0.000000     1.0
 die     0.242447     0.000000     1.0
-......}
 \end{minted}
-\caption{Implementation of TF-IDF in scikit-learn\href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb}{source}}
+\caption{Implementation of TF-IDF in scikit-learn \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb}{source}}
 \end{figure}
 
 Given that inverse document frequency is a measure of whether the word is common or not across the documents, we can see that "dreams" is important because they are rare across the documents and therefore interesting to us more so than "bird."We see that the tf-idf for a given word, "dreams", is slightly different for each of these implementations, and that's because Scikit-learn normalizes the denominator and uses \href{https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html#sklearn.feature_extraction.text.TfidfTransformer}{a slightly different formula.}  You'll also note that in the first implementation we separate the corpus words ourselves, don't remove any stop words, and don't lowercase everything. Many of these steps are done automatically in scikit-learn or can be set as parameters into the processing pipeline. We'll see later that these are critical NLP steps that we perform each time we work with text.
@@ -1541,7 +1540,7 @@ At a high level, we have a list of input words that are processed through a seco
    		 node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
 
     % Draw the output layer node
-    \node[output neuron,pin={[pin edge={->}]right:Output Probability\\ of hold-out word \\being correct}, right of=H-3] (O) {};
+    \node[output neuron,pin={[pin edge={->}]right:Output Probability}, right of=H-3] (O) {};
 
     % Connect every node in the input layer with every node in the
     % hidden layer.
@@ -1751,7 +1750,7 @@ linenos
    	 torch.save(self.model.state_dict(), self.model_path)
    	 logging.warning(f'Save model to {self.model_path}')
 \end{minted}
-\caption word2Vec CBOW implementation in PyTorch\\ \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{ see full implementation here}
+\caption Word2Vec CBOW implementation in PyTorch\\ \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{ see full implementation here}
 \end{figure}
 
 Once we've completed our iteration through our training set, we have learned a model that retrieves both the probability of a given word being the correct word, and the entire embedding space for our vocabulary.
