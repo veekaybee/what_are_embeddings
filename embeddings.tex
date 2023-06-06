@@ -362,7 +362,6 @@ tokenized_text = tokenizer.tokenize(text)
 
 # Print out the tokens.
 print (tokenized_text)
-print (len(tokenized_text))
 
 ['[CLS]', 'hold', 'fast', 'to', 'dreams', ',', 'for', 'if', 'dreams', 'die', ',', 'life', 'is', 'a', 'broken', '-', 'winged', 'bird', 'that', 'cannot', 'fly', '.', '[SEP]']
 
@@ -383,7 +382,7 @@ print (len(tokenized_text))
 		 2.1277e+00])
 
 \end{minted}
-\caption{Analyzing Embeddings with BERT. See full notebook \href{https://github.com/veekaybee/embeddings_code/blob/main/fig_4_bert.ipynb}{source}}
+\caption{Analyzing Embeddings with BERT. See full notebook \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_4_bert.ipynb}{source}}
 \end{figure}
 
 We can see that this embedding is a PyTorch tensor object, a multidimensional matrix containing multiple levels of embeddings, and that's because in BERT's embedding representation, we have 13 different layers. One embedding layer is computed for each layer of the neural network. Each level represents a different view of our given \textbf{token} --- or simply a sequence of characters. We can get the final embedding by pooling several layers, details we'll get into as we work our way up to understanding embeddings generated using BERT.
