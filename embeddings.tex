@@ -946,10 +946,14 @@ array([[0., 0., 1.],
  \centering
     \caption{Our one-hot encoded data with labels}
 \begin{tabular}{llll}
+\hline
 \rowcolor[HTML]{D5E7F7}  
 bird\_id & US & UK & NZ \\
+\hline
 012 	 & 1  & 0  & 0  \\
+\hline
 013 	 & 0  & 1  & 0  \\
+\hline
 056 	 & 0  & 0  & 1
 \end{tabular}
 \end{table}
@@ -987,7 +991,9 @@ We also have other flits we may or may not want to surface in our bird's feed.
 
 How would we turn this into a machine learning problem that takes features as input and a prediction as an output, knowing what we know about how to do this already?  First, in order to build this matrix, we need to turn each word into a feature that's a column value and each user remains a row value.
 
-The best way to think of the difference between tabular and free-form representations as model inputs is that a row of tabular data looks like this, \mintinline{Python}{bird1 = [012,2,"US", 5]}, and a "row" or document of text data looks like this, \mintinline{Python}{bird1 = ["No bird soars too high if he soars with his own wings."] } In both cases, each of these are vectors, or a list of values that represents a single bird.
+\begin{flushleft}
+The best way to think of the difference between tabular and free-form representations as model inputs is that a row of tabular data looks like this,\mintinline{python}{ [012,2,"US", 5]}, and a "row" or document of text data looks like this, \mintinline{python}{["No bird soars too high if he soars with his own wings."]} In both cases, each of these are vectors, or a list of values that represents a single bird.
+\end{flushleft}
 
 In traditional machine learning, rows are our user data about a single bird and columns are features about the bird. In recommendation systems, our rows are the individual data about each user, and our column data represents the given data about each flit.  If we can factor this matrix, that is decompose it into two matrices ($Q$ and $P^T$) that, when multiplied, the product is our original matrix ($R$), we can learn the "latent factors" or features that allow us to group similar users and items together to recommend them.
 
@@ -1045,6 +1051,7 @@ In scikit-learn, we can create an initial matrix of our inputs across documents 
 \begin{minted}
 [
 frame=lines,
+autogobble,
 framesep=2mm,
 baselinestretch=1.2,
 fontsize=\footnotesize,
@@ -1069,17 +1076,17 @@ term_document_matrix['total_count'] = term_document_matrix.sum(axis=1)
 
 print(term_document_matrix.drop(columns=['total_count']).head(10))
 
-		 flit_1  flit_2  flit_3
-an   		 0  	 0  	 1
-answer   	 0  	 0  	 1
-because  	 0  	 0  	 1
-bird 		 1  	 1  	 1
-broken   	 1  	 0  	 0
-cannot   	 1  	 0  	 0
-die  		 1  	 0  	 0
-does 		 0  	 0  	 1
-dreams   	 1  	 0  	 0
-fast 		 1  	 0  	 0
+          flit_1  flit_2  flit_3
+an         0       0       1
+answer     0       0       1
+because    0       0       1
+bird       1       1       1
+broken     1       0       0
+cannot     1       0       0
+die        1       0       0
+does       0       0       1
+dreams     1       0       0
+fast       1       0       0
 
 
 \end{minted}
@@ -1184,11 +1191,11 @@ tfidf_b = tfidf(tf_b, idfs)
 # Return weight of each word in each document wrt to the total corpus
 document_tfidf = pd.DataFrame([tfidf_a, tfidf_b])
 document_tfidf.T
-# 	    	doc 0      doc 1
-a     	0.018814     0.000000
-dreams     0.037629     0.000000
-No     	0.000000     0.025086
-Hold     0.018814     0.000000
+# 	    doc 0      doc 1
+    a        0.018814   0.000000
+    dreams   0.037629   0.000000
+    No       0.000000   0.025086
+    Hold     0.018814   0.000000
 \end{minted}
 \caption{Truncated implementation of TF-IDF, see full \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb} {source}}
 \end{figure}
@@ -1223,11 +1230,11 @@ tfidf_df.loc['00_Document Frequency'] = (tfidf_df > 0).sum()
 tfidf_df.T
 
 # How common or unique a word is in a given document wrt to the vocabulary
-dreams_langstonhughes     quote_william_blake     00_Document Frequency
-bird     0.172503     0.197242     2.0
-broken     0.242447     0.000000     1.0
-cannot     0.242447     0.000000     1.0
-die     0.242447     0.000000     1.0
+dreams_langstonhughes    quote_william_blake    00_Document Frequency
+bird                    0.172503              0.197242              2.0
+broken                  0.242447              0.000000              1.0
+cannot                  0.242447              0.000000              1.0
+die                     0.242447              0.000000              1.0
 \end{minted}
 \caption{Implementation of TF-IDF in scikit-learn \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb}{source}}
 \end{figure}
