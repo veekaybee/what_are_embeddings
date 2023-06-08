@@ -8,6 +8,8 @@
 This repository contains the generated LaTex document, website, and complementary notebook code for 
 ["What are Embeddings".](https://vickiboykis.com/what_are_embeddings/)
 
+[![DOI](https://zenodo.org/badge/644343479.svg)](https://zenodo.org/badge/latestdoi/644343479)
+
 ## Abstract 
 
 Over the past decade, embeddings --- numerical representations of non-tabular machine learning features used as input to deep learning models --- have become a foundational data structure in industrial machine learning systems. TF-IDF, PCA, and one-hot encoding have always been key tools in machine learning systems as ways to compress and make sense of large amounts of textual data.  However, traditional approaches were limited in the amount of context they could reason about with increasing amounts of data. As the volume, velocity, and variety of data captured by modern applications has exploded, creating approaches specifically tailored to scale has become increasingly important. 
@@ -30,3 +32,16 @@ If you have any changes that you'd like to make to the document including clarif
 6. Issue that pull request!
 
 
+## Citing 
+
+```bibtex
+@software{Boykis_What_are_embeddings_2023,
+author = {Boykis, Vicki},
+doi = {10.5281/zenodo.8015029},
+month = jun,
+title = {{What are embeddings?}},
+url = {https://github.com/veekaybee/what_are_embeddings},
+version = {1.0.1},
+year = {2023}
+}
+```
