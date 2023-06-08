@@ -34,7 +34,9 @@ jobs:
         run: |
           git config --local user.email "vicki.boykis@gmail.com"
           git config --local user.name "Vicki Boykis"
+          git fetch origin main
+          git rebase origin/main # keep all other changes
           git add embeddings.pdf
-          git commit -m "Generated PDF" 
+          git commit -m "Regenerate PDF from ${{ github.sha }}" 
           git push --force # overwrite old PDF
         if: github.event_name != 'pull_request'
