@@ -35,7 +35,9 @@ jobs:
           git config --local user.email "vicki.boykis@gmail.com"
           git config --local user.name "Vicki Boykis"
           git fetch origin main
+          git stash
           git rebase origin/main # keep all other changes
+          git stash pop
           git add embeddings.pdf
           git commit -m "Regenerate PDF from ${{ github.sha }}" 
           git push --force # overwrite old PDF
