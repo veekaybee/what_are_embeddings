@@ -355,7 +355,7 @@ from transformers import BertTokenizer, BertModel
 # Load pre-trained model tokenizer (vocabulary)
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
-text = """Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly.""""
+text = """Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly."""
 
 # Tokenize the sentence with the BERT tokenizer.
 tokenized_text = tokenizer.tokenize(text)
@@ -447,7 +447,7 @@ In subscription-based platforms\footnote{In ad-based services, the line between 
 The main task of our recommender system at Netflix is to help our members discover content that they will watch and enjoy to maximize their long-term satisfaction. This is a challenging problem for many reasons, including that every person is unique, has a multitude of interests that can vary in different contexts, and needs a recommender system most when they are not sure what they want to watch. Doing this well means that each member gets a unique experience that allows them to get the most out of Netflix. As a monthly subscription service, member satisfaction is tightly coupled to a person’s likelihood to retain with our service, which directly impacts our revenue.
 \end{quote}
 
-Knowing this business context, how and why might we use embeddings in machine learning workflows in Flutter to show users flits that are interesting to them personally, knowing that personalized content is more relevant and generally gets higher rates of engagement? \citep{jannach2010recommender}  than non-personalized forms of recommendation on online platforms \footnote{For more, see  \href{http://www.recommenderbook.net/media/Recommender_Systems_An_Introduction_Chapter08_Case_study.pdf}{this case study} on personalized recommendations as well as \href{https://www.arxiv-vanity.com/papers/1906.03109/}{the intro section of this paper} which covers many personalization use-cases}  We need to first understand how web apps work and where embeddings fit into them.
+Knowing this business context, and given that personalized content is more relevant and generally gets higher rates of engagement \citep{jannach2010recommender} than non-personalized forms of recommendation on online platforms,\footnote{For more, see  \href{http://www.recommenderbook.net/media/Recommender_Systems_An_Introduction_Chapter08_Case_study.pdf}{this case study} on personalized recommendations as well as \href{https://www.arxiv-vanity.com/papers/1906.03109/}{the intro section of this paper} which covers many personalization use-cases.}  how and why might we use embeddings in machine learning workflows in Flutter to show users flits that are interesting to them personally? We need to first understand how web apps work and where embeddings fit into them.
 
 \subsection{Building a web app}
 
@@ -906,7 +906,7 @@ result = encoder.fit_transform(data)
 
 \subsubsection{Indicator and one-hot encoding}
 
-indicator encoding is, given $n$ categories (i.e. "US", "UK", and "NZ") encodes the variables into $n-1$ categories, creating a new feature for each category. So, if we have three variables, indicator encoding encodes into two indicator variables.  Why would we do this? If the categories are mutually exclusive, as they usually are in point-in-time geolocation estimates, if someone is in the US, we know for sure they're not in the UK and not in NZ, so it reduces computational overhead.
+Indicator encoding, given $n$ categories (i.e. "US", "UK", and "NZ"), encodes the variables into $n-1$ categories, creating a new feature for each category. So, if we have three variables, indicator encoding encodes into two indicator variables.  Why would we do this? If the categories are mutually exclusive, as they usually are in point-in-time geolocation estimates, if someone is in the US, we know for sure they're not in the UK and not in NZ, so it reduces computational overhead.
 
 If we instead use all the variables and they are very closely correlated, there is a chance we'll fall into something known as the \textbf{indicator variable trap}. We can predict one variable from the others, which means we no longer have feature independence. This generally isn't a risk for geolocation since there are more than 2 or 3 and if you're not in the US, it's not guaranteed that you're in the UK. So, if we have US = 1, UK = 2, and NZ = 3, and prefer more compact representations, we can use indicator encoding.  However, many modern ML approaches don't require linear feature independence and use L1 regularization\footnote{Regularization is a way to prevent our model from \textbf{overfitting}. Overfitting means our model can exactly predict outcomes based on the training data, but it can't learn new inputs that we show it, which means it can't generalize} to prune feature inputs that don't minimize the error, and as such only use one-hot encoding.
 
@@ -1497,7 +1497,7 @@ However, as in other cases, when we reach high dimensions, SVMs completely fail 
 
 To get around the limitations of earlier textual approaches and keep up with growing size of text corpuses, in 2013, researchers at Google came up with an elegant solution to this problem using neural networks, called Word2Vec \citep{mikolov2013efficient}.  
 
-So far, we've moved from simple heuristics like one-hot encoding, to machine learning approaches like LSA and LDA that look to learn a dataset's modeled features.  Previously, like our original one-hot encodings, all the approaches to embedding focused on generating sparse vectors much . A sparse vector gives an indication that two words are related, but not that there is a semantic relationship between them. For example, “The dog chased the cat” and “the cat chased the dog” would have the same distance in the vector space, even though they’re two completely different sentences.
+So far, we've moved from simple heuristics like one-hot encoding, to machine learning approaches like LSA and LDA that look to learn a dataset's modeled features.  Previously, like our original one-hot encodings, all the approaches to embedding focused on generating sparse vectors that can give an indication that two words are related, but not that there is a semantic relationship between them. For example, “The dog chased the cat” and “the cat chased the dog” would have the same distance in the vector space, even though they’re two completely different sentences.
 
 Word2Vec is a family of models that has several implementations, each of which focus on transforming the entire input dataset into vector representations and, more importantly, focusing  not only on the inherent labels of individual words, but on the relationship between those representations.
 
@@ -1606,9 +1606,9 @@ This kind of processing pipeline is extremely common in NLP and spending time to
 
 \begin{itemize}
   \item \textbf{Tokenization} - transforming a sentence or a word into its component character by splitting it
-  \item Removing noise - Including URLs, punctuation, and anything else in the text  that is not relevant to the task at hand
+  \item \textbf{Removing noise} - Including URLs, punctuation, and anything else in the text  that is not relevant to the task at hand
   \item \textbf{Word segmentation} - Splitting our sentences into individual words
-  \item Correcting spelling mistakes
+  \item \textbf{Correcting spelling mistakes}
 \end{itemize}
 
 
@@ -2082,8 +2082,8 @@ Transformers were revolutionary for a number of reasons, because they solved sev
 \caption{Encoder-only architecture}
 \end{figure}
 
-After the explosive success of "Attention is All you Need", a variety of transformer architectures arose, research and implementation in this architecture exploded in deep learning. The next transformer architecture to be considered a significant step forward was \textbf{BERT} released in 2018 by Google.
-BERT stands for Bi-Directional Encoder and was released 2018 \citep{devlin2018bert}, based on a paper written by Google as a way to solve common natural language tasks like sentiment analysis, question-answering, and text summarization. BERT is a transformer model , also based on the attention mechanism, but its architecture is such that it only includes the encoder piece. Its most prominent usage is in Google Search, where it's the algorithm powering surfacing relevant search results. In the blog post they released on including BERT in search ranking in 2019, Google specifically discussed adding context to queries as a replacement for keyword-based methods as a reason they did this.\footnote{\href{https://blog.google/products/search/search-language-understanding-bert/}{BERT search announcement}}
+After the explosive success of "Attention is All you Need", a variety of transformer architectures arose, research and implementation in this architecture exploded in deep learning. The next transformer architecture to be considered a significant step forward was \textbf{BERT}.
+BERT stands for Bi-Directional Encoder and was released 2018 \citep{devlin2018bert}, based on a paper written by Google as a way to solve common natural language tasks like sentiment analysis, question-answering, and text summarization. BERT is a transformer model, also based on the attention mechanism, but its architecture is such that it only includes the encoder piece. Its most prominent usage is in Google Search, where it's the algorithm powering surfacing relevant search results. In the blog post they released on including BERT in search ranking in 2019, Google specifically discussed adding context to queries as a replacement for keyword-based methods as a reason they did this.\footnote{\href{https://blog.google/products/search/search-language-understanding-bert/}{BERT search announcement}}
 
 BERT works as a \textbf{masked language model}. Masking is simply what we did when we implemented Word2Vec by removing words and building our context window. When we created our representations with Word2Vec, we only looked at sliding windows moving forward. The B in Bert is for bi-directional, which means it pays attention to words in both ways through scaled dot-product attention. BERT has 12 transformer layers. It starts by using \textbf{WordPiece}, an algorithm that segments words into subwords, into tokens. To train BERT, the goal is to predict a token given its context.
 
@@ -2326,7 +2326,7 @@ Training data is the most important part of any given model. Where does it come 
 
 In \textbf{fine-tuning} a model, we perform all the same steps as we do for training from scratch. We have training data, we have a model, and we minimize a loss function. However, there are several differences. When we create our new model, we copy the existing, pre-trained model with the exception of the final output layer, which we initialize from scratch based on our new task. When we train the model, we initialize these parameters at random and only continue to adjust the parameters of the previous layers so that they focus on this task rather than starting to train from scratch. In this way, if we have a model like BERT that's trained to generalize across the whole internet, but our corpus for Flutter is very sensitive to trending topics and needs to be updated on a daily basis, we can refocus the model without having to train a new one with as few as 10k samples instead of our original hundreds of millions \citep{zhang2020revisiting}.
 
-There are, likewise, BERT embeddings available that we can fine-tune. There are other generalized corpuses available, such as GloVE, Word2Vec, and \href{https://fasttext.cc/docs/en/crawl-vectors.html}{FastText} (also trained with CBOW). We need to make a decision whether to use these, train a model from scratch, or a third option, to query \href{https://platform.openai.com/docs/guides/embeddings/limitations-risks}{embeddings available from an API} as is the case for OpenAI embeddings, although doing so can potentially come at a \href{https://github.com/ray-project/llm-numbers#101----cost-ratio-of-openai-embedding-to-self-hosted-embedding}{higher}, relative to training or fine-tuning our own. Of course, all of this is subject to our particular use-case and is important to evaluate when we start a project.
+There are, likewise, BERT embeddings available that we can fine-tune. There are other generalized corpuses available, such as GloVE, Word2Vec, and \href{https://fasttext.cc/docs/en/crawl-vectors.html}{FastText} (also trained with CBOW). We need to make a decision whether to use these, train a model from scratch, or a third option, to query \href{https://platform.openai.com/docs/guides/embeddings/limitations-risks}{embeddings available from an API} as is the case for OpenAI embeddings, although doing so can potentially come at a \href{https://github.com/ray-project/llm-numbers#101----cost-ratio-of-openai-embedding-to-self-hosted-embedding}{higher cost}, relative to training or fine-tuning our own. Of course, all of this is subject to our particular use-case and is important to evaluate when we start a project.
 
 \subsubsection{Storage and Retrieval}
 
