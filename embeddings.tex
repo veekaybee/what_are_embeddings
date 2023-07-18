@@ -1096,7 +1096,7 @@ fast       1       0       0
 
 \subsubsection{TF-IDF}
 
-One-hot encoding just deals with presence and absence of a term in a document. However it is preferable that we differentiate the importance/weightage of terms in context of the document collection as a whole instead of just the individual document.
+One-hot encoding just deals with presence and absence of a single term in a single document. However, when we have large amounts of data, we'd like to consider the weights of each term in relation to all the other terms in a collection of documents.
 
 To address the limitations of one-hot encoding, TF-IDF, or term frequency-inverse document frequency was developed. TF-IDF was introduced in the 1970s\footnote{By Karen Spärck Jones, whose paper, \href{https://blog.babbar.tech/who-is-karen-sparck-jones/}{"Synonymy and semantic classification} is fundamental to the field of NLP} as a way to create a vector representation of a document by averaging all the document's word weights. It worked really well for a long time and still does in many cases.  For example, one of the most-used search functions, BM25, uses TF-IDF as a baseline  \citep{schutze2008introduction} as a default search strategy in Elasticsearch/Opensearch \footnote{You can read about how Elasticsearch implements BM25 \href{https://www.elastic.co/blog/practical-bm25-part-1-how-shards-affect-relevance-scoring-in-elasticsearch}{here}}. It extends TF-IDF to develop a probability associated with the probability of relevance for each pair of words in a document and it is still being applied in neural search today  \citep{svore2009machine}.  
 
