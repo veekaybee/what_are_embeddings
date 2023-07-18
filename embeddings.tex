@@ -1096,25 +1096,7 @@ fast       1       0       0
 
 \subsubsection{TF-IDF}
 
-There is a problem with the vectors we created in one-hot encoding: they are sparse. A sparse vector is one that is mostly populated by zeroes. They are sparse because most sentences don't contain all the same words as other sentences. For example, in our flit, we might encounter the word "bird" in two sentences simultaneously, but the rest of the words will be completely different.
-
-\begin{figure}[H]
-\begin{minted}
-[
-frame=lines,
-framesep=2mm,
-baselinestretch=1.2,
-fontsize=\footnotesize,
-linenos
-]{python}
-sparse_vector = [1,0,0,0,0,0,0,0,0,0]
-dense_vector = [1,2,2,3,0,4,5,8,8,5]
-\end{minted}
-\caption{Two types of vectors in text processing}
-\end{figure}
-
-
-Sparse vectors result in a number of problems, among these \textbf{cold start}---the idea that we don't know to recommend items that haven't been interacted with, or for users who are new. What we'd like, instead, is to create dense vectors, which will  give us more information about the data, the most important of which is accounting for the weight of a given word in proportion to other words. This is where we leave one-hot encodings and move into approaches that are meant to solve for this sparsity. Dense vectors are just vectors that have mostly non-zero values. We call these dense representations dynamic representations \citep{Wang2020FromST}.
+One-hot encoding just deals with presence and absence of a single term in a single document. However, when we have large amounts of data, we'd like to consider the weights of each term in relation to all the other terms in a collection of documents.
 
 To address the limitations of one-hot encoding, TF-IDF, or term frequency-inverse document frequency was developed. TF-IDF was introduced in the 1970s\footnote{By Karen Spärck Jones, whose paper, \href{https://blog.babbar.tech/who-is-karen-sparck-jones/}{"Synonymy and semantic classification} is fundamental to the field of NLP} as a way to create a vector representation of a document by averaging all the document's word weights. It worked really well for a long time and still does in many cases.  For example, one of the most-used search functions, BM25, uses TF-IDF as a baseline  \citep{schutze2008introduction} as a default search strategy in Elasticsearch/Opensearch \footnote{You can read about how Elasticsearch implements BM25 \href{https://www.elastic.co/blog/practical-bm25-part-1-how-shards-affect-relevance-scoring-in-elasticsearch}{here}}. It extends TF-IDF to develop a probability associated with the probability of relevance for each pair of words in a document and it is still being applied in neural search today  \citep{svore2009machine}.  
 
@@ -1357,6 +1339,27 @@ Other commonly-used distance measures in semantic similarity and recommendations
 \end{formal}
 
 \subsubsection{SVD and PCA}
+
+There is a problem with the vectors we created in one-hot encoding and TF-IDF: they are sparse. A sparse vector is one that is mostly populated by zeroes. They are sparse because most sentences don't contain all the same words as other sentences. For example, in our flit, we might encounter the word "bird" in two sentences simultaneously, but the rest of the words will be completely different.
+
+\begin{figure}[H]
+\begin{minted}
+[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+fontsize=\footnotesize,
+linenos
+]{python}
+sparse_vector = [1,0,0,0,0,0,0,0,0,0]
+dense_vector = [1,2,2,3,0,4,5,8,8,5]
+\end{minted}
+\caption{Two types of vectors in text processing}
+\end{figure}
+
+
+Sparse vectors result in a number of problems, among these \textbf{cold start}---the idea that we don't know to recommend items that haven't been interacted with, or for users who are new. What we'd like, instead, is to create dense vectors, which will  give us more information about the data, the most important of which is accounting for the weight of a given word in proportion to other words. This is where we leave one-hot encodings and TD-IDF to move into approaches that are meant to solve for this sparsity. Dense vectors are just vectors that have mostly non-zero values. We call these dense representations dynamic representations \citep{Wang2020FromST}.
+
 
 Several other related early approaches were used in lieu of TF-IDF for creating compact representations of items: \textbf{principal components analysis} (PCA) and \textbf{singular value decomposition} (SVD).  
 
