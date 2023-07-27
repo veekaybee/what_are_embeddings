@@ -630,7 +630,7 @@ As the first round of training starts, we have our data. We \textbf{train} --- o
 y = 2\beta_1 + 5\beta_2 + \varepsilon
 \end{equation}
 
-How do we know our model is good? We initialize it with some set of values, weights, and we iterate on those weights, usually by minimizing a \textbf{cost function}. The cost function is a function that models the difference between our model's predicted value and the actual output for the training data. The first output may not be the most optimal, so we iterate over the model space many times, optimizing for the specific metric that will make the model as representative of reality as possible and minimize the difference between the actual and predicted values. So in our case, we compare $y\string^$ to $y$. The average squared difference between an observation’s actual and predicted values is the cost, otherwise known as \textbf{MSE} - mean squared error.
+How do we know our model is good? We initialize it with some set of values, weights, and we iterate on those weights, usually by minimizing a \textbf{cost function}. The cost function is a function that models the difference between our model's predicted value and the actual output for the training data. The first output may not be the most optimal, so we iterate over the model space many times, optimizing for the specific metric that will make the model as representative of reality as possible and minimize the difference between the actual and predicted values. So in our case, we compare $\hat{y}$ to $y$. The average squared difference between an observation’s actual and predicted values is the cost, otherwise known as \textbf{MSE} - mean squared error.
 
 \begin{equation}
 MSE =  \frac{1}{N} \sum_{i=1}^{n} (y_i - (m x_i + b))^2
