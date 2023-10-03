@@ -22,7 +22,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{diazessay}[2019/01/13 Diaz Essay class v1.0]
 
-\PassOptionsToPackage{pdfa}{hyperref}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}} % Pass through any options to the base class
 \ProcessOptions\relax % Process given options
 

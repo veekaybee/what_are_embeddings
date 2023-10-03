@@ -38,19 +38,8 @@
 %----------------------------------------------------------------------------------------
 
 \usepackage[]{xcolor}
-\usepackage{hyperref}
-\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue, citecolor=blue}
-%% or
-% \hypersetup{colorlinks=false,pdfborder=000}
-% hack into hyperref
-\makeatletter
-\DeclareUrlCommand\ULurl@@{%
-  \def\UrlFont{\ttfamily\color{blue}}%
-  \def\UrlLeft{\uline\bgroup}%
-  \def\UrlRight{\egroup}}
-\def\ULurl@#1{\hyper@linkurl{\ULurl@@{#1}}{#1}}
-\DeclareRobustCommand*\ULurl{\hyper@normalize\ULurl@}
-\makeatother
+
+
 
 %----------------------------------------------------------------------------------------
 %    FORMAL QUOTES
