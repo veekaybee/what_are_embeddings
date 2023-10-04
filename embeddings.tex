@@ -1510,7 +1510,7 @@ In training CBOW, we do the opposite: we remove a word from the middle of a phra
 \arg\max_\theta \prod_{w\in Text}\left[\prod_{c \in C(w)} p(c|w;\theta)\right]
 \end{equation}
 
-If we optimize these parameters - theta and Pi - and maximize the probability that the word belongs in the sentences, we'll learn good embeddings for our input corpus.
+If we optimize these parameters - theta - and maximize the probability that the word belongs in the sentences, we'll learn good embeddings for our input corpus.
 
 Let's focus on a detailed implementation of CBOW to better understand how this works. This time, for the code portion, we'll move on from scikit-learn, which works great for smaller data, to PyTorch for neural net operations.  
 
