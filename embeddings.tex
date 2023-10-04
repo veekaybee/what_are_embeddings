@@ -1192,7 +1192,7 @@ text_titles = ["quote_langstonhughes", "quote_william_blake"]
 
 vectorizer = TfidfVectorizer()
 vector = vectorizer.fit_transform(corpus)
-dict(zip(vectorizer.get_feature_names_out(), X.toarray()[0]))
+dict(zip(vectorizer.get_feature_names_out(), vector.toarray()[0]))
 
 tfidf_df = pd.DataFrame(vector.toarray(), index=text_titles, columns=vectorizer.get_feature_names_out())
 
