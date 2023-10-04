@@ -31,6 +31,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
+
 \usepackage[english]{babel} % English language hyphenation
 
 \usepackage{graphicx} % Required for including images
