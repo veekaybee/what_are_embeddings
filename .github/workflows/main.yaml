@@ -25,7 +25,7 @@ jobs:
           root_file: embeddings.tex
           latexmk_shell_escape: true
           continue_on_error: true
-          docker_image: ghcr.io/xu-cheng/texlive-full:20231001
+          docker_image: ghcr.io/xu-cheng/texlive-full:20230701
       - name: Upload PDF file
         uses: actions/upload-artifact@v3
         with:
