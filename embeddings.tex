@@ -1140,11 +1140,12 @@ def idf(doc_list: list[str]) -> dict:
     	idf_dict[word] = math.log10(N / (float(val) + 1))
 	return idf_dict
 
-# All inverse document frequencies for all words
+# inverse document frequencies for all words
+# dicts are frequency counts of words per doc e.g. dict.fromkeys(corpus, 0)
 idfs = idf([dict_a, dict_b])
 
 def tfidf(doc_elements: list[str], idfs)-> dict:
-	"""TF * IDF per word given a single word and number of docs the term appears"""
+	"""TF * IDF per word given a word and number of docs the term appears in"""
 	tfidf_dict = {}
 	for word, val in doc_elements.items():
     	tfidf_dict[word] = val * idfs[word]
@@ -1165,7 +1166,6 @@ document_tfidf.T
     a        0.018814   0.000000
     dreams   0.037629   0.000000
     No       0.000000   0.025086
-    Hold     0.018814   0.000000
 \end{minted}
 \caption{Truncated implementation of TF-IDF, see full \href{https://github.com/veekaybee/what_are_embeddings/blob/main/notebooks/fig_24_tf_idf_from_scratch.ipynb} {source}}
 \end{figure}
