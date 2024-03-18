@@ -31,6 +31,11 @@ If you have any changes that you'd like to make to the document including clarif
 5. Make sure your code lints.
 6. Issue that pull request!
 
+## build pdf
+```
+pdflatex -shell-escape embeddings.tex  && bibtex embeddings && pdflatex -shell-escape embeddings.tex && pdflatex -shell-escape embeddings.tex
+```
+
 
 ## Citing 
 
