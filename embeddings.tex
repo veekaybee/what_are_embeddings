@@ -1183,12 +1183,15 @@ breaklines,
 linenos
 ]{python}
 from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
+
 corpus = [
 	"Hold fast to dreams, for if dreams die, life is a broken-winged bird that cannot fly.",
 	"No bird soars too high if he soars with his own wings.",
 ]
 
-text_titles = ["quote_langstonhughes", "quote_william_blake"]
+# langston hughes and william blake
+text_titles = ["quote_lh", "quote_wb"] 
 
 vectorizer = TfidfVectorizer()
 vector = vectorizer.fit_transform(corpus)
@@ -1196,11 +1199,11 @@ dict(zip(vectorizer.get_feature_names_out(), vector.toarray()[0]))
 
 tfidf_df = pd.DataFrame(vector.toarray(), index=text_titles, columns=vectorizer.get_feature_names_out())
 
-tfidf_df.loc['00_Document Frequency'] = (tfidf_df > 0).sum()
+tfidf_df.loc['doc_freq'] = (tfidf_df > 0).sum()
 tfidf_df.T
 
 # How common or unique a word is in a given document wrt to the vocabulary
-dreams_langstonhughes    quote_william_blake    00_Document Frequency
+                        quote_lh              quote_wb              doc_freq
 bird                    0.172503              0.197242              2.0
 broken                  0.242447              0.000000              1.0
 cannot                  0.242447              0.000000              1.0
