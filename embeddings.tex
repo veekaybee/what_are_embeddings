@@ -1633,7 +1633,7 @@ class TextPreProcessor:
    	 )
    	 return vocab
 \end{minted}
-\caption{Processing our input vocabulary and building a Vocabulary object from our dataset in PyTorch \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{source}}
+\caption{Processing our input vocabulary and building a Vocabulary object from our dataset in PyTorch}
 \end{figure}
 
 Now that we have an input vocabulary object we can work with, the next step is to create one-hot encodings of each word to a numerical position, and each position back to a word, so that we can easily reference both our words and vectors. The goal is to be able to map back and forth when we do lookups and retrieval.
@@ -1679,7 +1679,7 @@ class CBOW(torch.nn.Module):
    	 self.linear2 = nn.Linear(128, self.vocab_size)
    	 self.activation_function2 = nn.LogSoftmax(dim=-1)
 \end{minted}
-\caption{Word2Vec CBOW implementation in Pytorch. \href{https://github.com/veekaybee/viberary/tree/main/word2vec}{source}}
+\caption{Word2Vec CBOW implementation in Pytorch. \href{https://github.com/veekaybee/viberary/blob/722c4b576bf1bdaf59c806661b23bd3afaabf883/src/notebooks/cbow.ipynb#L12}{source}}
 \end{figure}
 
 
