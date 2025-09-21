@@ -168,22 +168,16 @@ coordinate (aux) (aux-|\tikz@fig@name.west)
 %----------------------------------------------------------------------------------------
 
 
-
-
 \usepackage{hyperref}
+\usepackage[normalem]{ulem}
+
 \hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=blue,
-    urlcolor=blue,
-    citecolor=blue,
-    pdfborder={0 0 1},
+    colorlinks=false,
+    urlbordercolor=blue,
+    linkbordercolor=blue,
+    pdfborderstyle={/S/U/W 1}, 
+    allbordercolors=blue
 }
-
-
-
-
-
 %----------------------------------------------------------------------------------------
 %    TITLE SECTION
 %----------------------------------------------------------------------------------------
@@ -1105,7 +1099,7 @@ fast       1       0       0
 
 One-hot encoding just deals with presence and absence of a single term in a single document. However, when we have large amounts of data, we'd like to consider the weights of each term in relation to all the other terms in a collection of documents.
 
-To address the limitations of one-hot encoding, TF-IDF, or term frequency-inverse document frequency was developed. TF-IDF was introduced in the 1970s\footnote{By Karen Spärck Jones, whose paper, \href{https://blog.babbar.tech/who-is-karen-sparck-jones/}{"Synonymy and semantic classification} is fundamental to the field of NLP} as a way to create a vector representation of a document by averaging all the document's word weights. It worked really well for a long time and still does in many cases.  For example, one of the most-used search functions, BM25, uses TF-IDF as a baseline  \citep{schutze2008introduction} as a default search strategy in Elasticsearch/Opensearch \footnote{You can read about how Elasticsearch implements BM25 \href{https://www.elastic.co/blog/practical-bm25-part-1-how-shards-affect-relevance-scoring-in-elasticsearch}{here}}. It extends TF-IDF to develop a probability associated with the probability of relevance for each pair of words in a document and it is still being applied in neural search today  \citep{svore2009machine}.  
+To address the limitations of one-hot encoding, TF-IDF, or term frequency-inverse document frequency was developed. TF-IDF was introduced in the 1970s\footnote{By Karen Spärck Jones, whose paper, \href{https://blog.babbar.tech/who-is-karen-sparck-jones/}{"Synonymy and semantic classification"} is fundamental to the field of NLP} as a way to create a vector representation of a document by averaging all the document's word weights. It worked really well for a long time and still does in many cases.  For example, one of the most-used search functions, BM25, uses TF-IDF as a baseline  \citep{schutze2008introduction} as a default search strategy in Elasticsearch/Opensearch \footnote{You can read about how Elasticsearch implements BM25 \href{https://www.elastic.co/blog/practical-bm25-part-1-how-shards-affect-relevance-scoring-in-elasticsearch}{here}}. It extends TF-IDF to develop a probability associated with the probability of relevance for each pair of words in a document and it is still being applied in neural search today  \citep{svore2009machine}.  
 
 TF-IDF will tell you how important a single word is in a corpus by assigning it a weight and, at the same time, down-weight common words like, "a", "and", and "the". This calculated weight gives us a feature for a single word TF-IDF, and also the relevance of the features across the vocabulary.
 
